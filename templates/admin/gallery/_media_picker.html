@@ -1,0 +1,58 @@
+<div class="admin-media-picker-field mb-3">
+    <label class="form-label" for="image">Media Path <span class="text-danger">*</span></label>
+    <p class="text-muted small mb-2" id="galleryMediaPathHelp">Primary image, video file, or <strong>After</strong> photo for Before &amp; After items.</p>
+    <div class="input-group mb-2">
+        {{ form.image(class="form-control", id="image") }}
+        <a href="{{ url_for('admin.media_library', folder='gallery') }}" class="btn btn-outline-secondary" target="_blank" rel="noopener">Browse Library</a>
+    </div>
+    {% if form.image.data %}
+    {% set ext = form.image.data.rsplit('.', 1)[-1].lower() if form.image.data and '.' in form.image.data else '' %}
+    {% if ext in ['mp4', 'webm', 'mov', 'avi', 'mkv'] %}
+    <div class="admin-gallery-preview admin-gallery-preview--video">
+        <i class="bi bi-camera-video" aria-hidden="true"></i>
+        <span>{{ form.image.data }}</span>
+    </div>
+    {% else %}
+    <img src="{{ url_for('static', filename=form.image.data) }}" alt="Media preview" class="admin-gallery-preview" loading="lazy">
+    {% endif %}
+    {% endif %}
+    <div class="admin-media-picker-grid mt-2">
+        {% for asset in media_assets[:24] %}
+        <button type="button"
+                class="admin-media-picker-btn"
+                data-target="image"
+                data-path="{{ asset.storage_path }}"
+                title="{{ asset.title or asset.storage_path }}">
+            {% if asset.media_type == 'video' %}
+            <span class="admin-media-picker-video"><i class="bi bi-play-btn-fill" aria-hidden="true"></i></span>
+            {% else %}
+            <img src="{{ url_for('static', filename=asset.storage_path) }}" alt="{{ asset.title }}" loading="lazy">
+            {% endif %}
+        </button>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="admin-gallery-before-after-fields mb-3" id="galleryBeforeAfterFields">
+    <h3 class="h6">Before &amp; After Images</h3>
+    <p class="text-muted small">Set category to <strong>Before &amp; After</strong>, then choose a before photo and an after photo.</p>
+    <label class="form-label" for="og_image">Before Image <span class="text-danger">*</span></label>
+    <div class="input-group mb-2">
+        {{ form.og_image(class="form-control", id="og_image") }}
+        <a href="{{ url_for('admin.media_library', folder='gallery') }}" class="btn btn-outline-secondary" target="_blank" rel="noopener">Browse Library</a>
+    </div>
+    {% if form.og_image.data %}
+    <img src="{{ url_for('static', filename=form.og_image.data) }}" alt="Before preview" class="admin-gallery-preview mb-3" loading="lazy">
+    {% endif %}
+    <div class="admin-media-picker-grid mb-0">
+        {% for asset in media_assets[:12] if asset.media_type != 'video' %}
+        <button type="button"
+                class="admin-media-picker-btn"
+                data-target="og_image"
+                data-path="{{ asset.storage_path }}"
+                title="{{ asset.title or asset.storage_path }}">
+            <img src="{{ url_for('static', filename=asset.storage_path) }}" alt="{{ asset.title }}" loading="lazy">
+        </button>
+        {% endfor %}
+    </div>
+</div>

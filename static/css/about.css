@@ -1,0 +1,254 @@
+/**
+ * GURUH Construction — About Page (layout-specific styles)
+ * Shared shell: sections-shared.css + page-builder.css
+ */
+
+.page-about .pb-bg--dark {
+    background-color: var(--guruh-dark-deep);
+    color: var(--guruh-white);
+}
+
+.page-about .pb-bg--dark .section-title,
+.page-about .pb-bg--dark .premium-card-title { color: var(--guruh-white); }
+
+.page-about .pb-bg--dark .premium-card-text,
+.page-about .pb-bg--dark .section-intro,
+.page-about .pb-bg--dark .pb-prose p { color: rgba(255, 255, 255, 0.86); }
+
+.page-about .partner-card a:focus-visible {
+    border-radius: var(--section-radius-sm);
+}
+
+/* ================================================================== */
+/*  Directors message                                                  */
+/* ================================================================== */
+.page-about .pb-quote-mark {
+    font-size: 3rem;
+    line-height: 1;
+    color: var(--guruh-primary);
+    opacity: 0.35;
+    margin-bottom: 0.5rem;
+}
+
+.page-about .pb-director-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(51, 168, 255, 0.15), rgba(51, 168, 255, 0.05));
+    color: var(--guruh-primary);
+    font-size: 1.35rem;
+    flex-shrink: 0;
+}
+
+.page-about .pb-director-card { border: none; }
+
+/* ================================================================== */
+/*  Vision & Mission                                                   */
+/* ================================================================== */
+.page-about .pb-vision-card {
+    border: none;
+    border-top: 4px solid var(--guruh-primary);
+}
+
+/* ================================================================== */
+/*  Timeline                                                           */
+/* ================================================================== */
+.page-about .pb-timeline {
+    position: relative;
+    padding-left: 1.75rem;
+}
+
+.page-about .pb-timeline::before {
+    content: "";
+    position: absolute;
+    left: 0.45rem;
+    top: 0.75rem;
+    bottom: 0.75rem;
+    width: 2px;
+    background: linear-gradient(180deg, var(--guruh-primary), var(--guruh-accent));
+    border-radius: 2px;
+}
+
+.page-about .pb-timeline-item {
+    position: relative;
+    padding-left: 1.85rem;
+    margin-bottom: 1.25rem;
+}
+
+.page-about .pb-timeline-item:last-child { margin-bottom: 0; }
+
+.page-about .pb-timeline-marker {
+    position: absolute;
+    left: -0.05rem;
+    top: 1.35rem;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--guruh-primary);
+    box-shadow: 0 0 0 4px rgba(51, 168, 255, 0.18);
+}
+
+.page-about .pb-timeline-content {
+    border: none;
+    transition: transform var(--section-transition), box-shadow var(--section-transition);
+}
+
+@media (hover: hover) {
+    .page-about .pb-timeline-content:hover {
+        transform: translateX(4px);
+        box-shadow: var(--section-shadow);
+    }
+}
+
+/* ================================================================== */
+/*  Feature list                                                       */
+/* ================================================================== */
+.page-about .pb-feature-list-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 0.875rem;
+    background: var(--guruh-white);
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.3s ease;
+}
+
+@media (hover: hover) {
+    .page-about .pb-feature-list-item:hover {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    }
+}
+
+.page-about .pb-feature-list-icon {
+    color: var(--guruh-primary);
+    font-size: 1.25rem;
+    margin-top: 0.15rem;
+    flex-shrink: 0;
+}
+
+/* ================================================================== */
+/*  Card grid meta                                                     */
+/* ================================================================== */
+.page-about .pb-card-meta-list {
+    margin-top: 0.875rem;
+    padding-top: 0.875rem;
+    border-top: 1px solid var(--guruh-border);
+}
+
+.page-about .pb-card-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    font-size: 0.8125rem;
+    margin-bottom: 0.35rem;
+}
+
+.page-about .pb-card-meta-row:last-child { margin-bottom: 0; }
+
+.page-about .pb-card-meta-label {
+    color: var(--pb-muted);
+    font-weight: 600;
+    margin: 0;
+}
+
+.page-about .pb-card-meta-value {
+    color: var(--guruh-dark);
+    margin: 0;
+}
+
+.page-about .pb-card-grid-item { border: none; }
+
+/* ================================================================== */
+/*  Statistics                                                         */
+/* ================================================================== */
+.page-about .pb-layout--stats-row {
+    overflow: hidden;
+    color: var(--guruh-white);
+}
+
+.page-about .pb-stats-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--guruh-dark-deep) 0%, #1a4a6e 100%);
+}
+
+.page-about .pb-layout--stats-row .section-title,
+.page-about .pb-layout--stats-row .section-subheading,
+.page-about .pb-layout--stats-row .section-intro {
+    color: var(--guruh-white);
+}
+
+.page-about .pb-layout--stats-row .section-subheading {
+    color: var(--guruh-primary-light);
+}
+
+/* ================================================================== */
+/*  Team cards                                                         */
+/* ================================================================== */
+.page-about .pb-team-card { border: none; }
+
+.page-about .pb-team-avatar-fallback {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(51, 168, 255, 0.15), rgba(51, 168, 255, 0.05));
+    color: var(--guruh-primary);
+    font-size: 2rem;
+}
+
+.page-about .pb-team-photo {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+}
+
+/* ================================================================== */
+/*  Partners                                                           */
+/* ================================================================== */
+.page-about .pb-partners-empty {
+    max-width: var(--pb-prose-max);
+    color: var(--guruh-gray);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+}
+
+/* ================================================================== */
+/*  Responsive & large screens                                         */
+/* ================================================================== */
+@media (max-width: 991.98px) {
+    .page-about .pb-timeline { padding-left: 1.25rem; }
+}
+
+@media (max-width: 575.98px) {
+    .page-about .pb-feature-list-item {
+        padding: 1rem 1.125rem;
+    }
+
+    .page-about .premium-card-body {
+        padding: 1.25rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-about .pb-timeline-content,
+    .page-about .pb-feature-list-item,
+    .page-about .premium-card {
+        transition: none;
+    }
+
+    @media (hover: hover) {
+        .page-about .pb-timeline-content:hover,
+        .page-about .premium-card:hover {
+            transform: none;
+        }
+    }
+}

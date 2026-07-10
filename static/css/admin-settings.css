@@ -1,0 +1,170 @@
+/**
+ * GURUH Admin — Website Settings module styles
+ */
+
+.admin-settings-layout {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.admin-settings-nav {
+    position: sticky;
+    top: calc(var(--admin-header-height) + 1rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.75rem;
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+    box-shadow: var(--admin-shadow);
+    max-height: calc(100vh - var(--admin-header-height) - 2rem);
+    overflow-y: auto;
+}
+
+.admin-settings-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: 8px;
+    color: var(--admin-text);
+    text-decoration: none;
+    font-size: 0.88rem;
+}
+
+.admin-settings-nav-link:hover {
+    background: var(--admin-primary-soft);
+    color: var(--admin-primary-dark);
+}
+
+.admin-settings-nav-link.active {
+    background: var(--admin-primary-soft);
+    color: var(--admin-primary-dark);
+    font-weight: 600;
+}
+
+.admin-settings-content {
+    min-width: 0;
+}
+
+.admin-settings-form .admin-panel {
+    padding: 1.25rem;
+}
+
+.admin-settings-form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--admin-border);
+}
+
+.admin-settings-hub-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+}
+
+.admin-settings-hub-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1rem;
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+    text-decoration: none;
+    color: inherit;
+    box-shadow: var(--admin-shadow);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.admin-settings-hub-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--admin-primary);
+}
+
+.admin-settings-hub-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--admin-primary-soft);
+    color: var(--admin-primary-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.admin-settings-hub-label {
+    font-weight: 600;
+}
+
+.admin-settings-hub-desc {
+    font-size: 0.82rem;
+    color: var(--admin-text-muted);
+}
+
+.admin-settings-table th {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--admin-text-muted);
+}
+
+.admin-settings-empty {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.admin-settings-alert {
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.admin-settings-color-preview {
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid var(--admin-border);
+    margin-top: -0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+@media (max-width: 991.98px) {
+    .admin-settings-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-settings-nav {
+        position: static;
+        max-height: none;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .admin-settings-nav-link span {
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .admin-settings-nav {
+        flex-direction: column;
+    }
+}
+
+[data-admin-theme="dark"] .admin-settings-form .form-control,
+[data-admin-theme="dark"] .admin-settings-form .form-select {
+    background: var(--admin-surface-elevated);
+    border-color: var(--admin-border);
+    color: var(--admin-text);
+}
+
+[data-admin-theme="dark"] .table {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--admin-text);
+}

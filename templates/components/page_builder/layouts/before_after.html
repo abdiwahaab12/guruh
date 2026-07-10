@@ -1,0 +1,57 @@
+{# Before & After comparison gallery #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{% from 'macros/media.html' import smart_image %}
+{% set items = before_after_items if before_after_items else [] %}
+{% set block_items = block.items if block and block.items else [] %}
+{% set media_items = gallery_images if gallery_images else [] %}
+{% set use_dynamic = items | length > 0 %}
+{% set use_seed = (not use_dynamic) and block_items %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+    </div>
+    <div class="row g-4 g-lg-5">
+        {% if use_dynamic %}
+        {% for item in items if item.is_active %}
+        <div class="col-lg-4" data-animate>
+            <article class="pb-before-after-card">
+                <h3 class="pb-before-after-title">{{ item.title }}</h3>
+                {% if item.project_title %}<p class="small text-muted mb-3">{{ item.project_title }}{% if item.location %} · {{ item.location }}{% endif %}</p>{% endif %}
+                <div class="pb-before-after-compare" role="group" aria-label="{{ item.title }} before and after">
+                    <figure class="pb-before-after-pane">
+                        <span class="pb-before-after-label">Before</span>
+                        {{ smart_image(item.before_image, 'Before — ' ~ item.title, 'default', 'pb-before-after-image', lazy=true) }}
+                    </figure>
+                    <figure class="pb-before-after-pane">
+                        <span class="pb-before-after-label pb-before-after-label--after">After</span>
+                        {{ smart_image(item.after_image, 'After — ' ~ item.title, 'project', 'pb-before-after-image', lazy=true) }}
+                    </figure>
+                </div>
+            </article>
+        </div>
+        {% endfor %}
+        {% elif use_seed %}
+        {% for item in block_items if item.is_active %}
+        {% set ex = item.extra if item.extra else {} %}
+        <div class="col-lg-4" data-animate>
+            <article class="pb-before-after-card">
+                <h3 class="pb-before-after-title">{{ item.title }}</h3>
+                {% if ex.project_title %}<p class="small text-muted mb-3">{{ ex.project_title }}{% if ex.location %} · {{ ex.location }}{% endif %}</p>{% endif %}
+                <div class="pb-before-after-compare" role="group" aria-label="{{ item.title }} before and after">
+                    <figure class="pb-before-after-pane">
+                        <span class="pb-before-after-label">Before</span>
+                        {{ smart_image(ex.before_image, 'Before — ' ~ item.title, 'default', 'pb-before-after-image', lazy=true) }}
+                    </figure>
+                    <figure class="pb-before-after-pane">
+                        <span class="pb-before-after-label pb-before-after-label--after">After</span>
+                        {{ smart_image(ex.after_image, 'After — ' ~ item.title, 'project', 'pb-before-after-image', lazy=true) }}
+                    </figure>
+                </div>
+            </article>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{{ pb_close_section() }}

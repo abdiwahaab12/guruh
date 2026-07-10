@@ -1,0 +1,45 @@
+{# Department contacts — card grid with direct lines #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+    </div>
+    {% if block and block.items %}
+    <div class="row g-4">
+        {% for item in block.items if item.is_active %}
+        <div class="col-sm-6 col-lg-4" data-animate>
+            <div class="premium-card pb-dept-card h-100">
+                <div class="premium-card-body">
+                    {% if item.icon %}
+                    <div class="premium-card-icon"><i class="bi {{ item.icon }}" aria-hidden="true"></i></div>
+                    {% endif %}
+                    <h3 class="premium-card-title">{{ item.title }}</h3>
+                    {% if item.subtitle %}
+                    <p class="pb-dept-person text-primary small fw-semibold mb-2">{{ item.subtitle }}</p>
+                    {% endif %}
+                    {% if item.short_summary %}
+                    <p class="premium-card-text">{{ item.short_summary }}</p>
+                    {% endif %}
+                    <dl class="pb-dept-contact-list mb-0">
+                        {% if item.extra and item.extra.phone %}
+                        <div class="pb-dept-contact-row">
+                            <dt><i class="bi bi-telephone" aria-hidden="true"></i> Phone</dt>
+                            <dd><a href="tel:{{ item.extra.phone_tel if item.extra and item.extra.phone_tel else item.extra.phone }}">{{ item.extra.phone }}</a></dd>
+                        </div>
+                        {% endif %}
+                        {% if item.extra and item.extra.email %}
+                        <div class="pb-dept-contact-row">
+                            <dt><i class="bi bi-envelope" aria-hidden="true"></i> Email</dt>
+                            <dd><a href="mailto:{{ item.extra.email }}">{{ item.extra.email }}</a></dd>
+                        </div>
+                        {% endif %}
+                    </dl>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{{ pb_close_section() }}

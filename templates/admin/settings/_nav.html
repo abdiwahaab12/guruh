@@ -1,0 +1,16 @@
+<nav class="admin-settings-nav" aria-label="Website settings sections">
+    <a href="{{ url_for('admin.settings_hub') }}"
+       class="admin-settings-nav-link{% if not settings_active_section %} active{% endif %}"
+       {% if not settings_active_section %}aria-current="page"{% endif %}>
+        <i class="bi bi-grid" aria-hidden="true"></i>
+        <span>All Sections</span>
+    </a>
+    {% for section in settings_sections %}
+    <a href="{{ url_for(section.endpoint) }}"
+       class="admin-settings-nav-link{% if settings_active_section == section.slug %} active{% endif %}"
+       {% if settings_active_section == section.slug %}aria-current="page"{% endif %}>
+        <i class="bi {{ section.icon }}" aria-hidden="true"></i>
+        <span>{{ section.label }}</span>
+    </a>
+    {% endfor %}
+</nav>

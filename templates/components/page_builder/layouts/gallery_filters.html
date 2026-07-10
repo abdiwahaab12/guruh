@@ -1,0 +1,92 @@
+{# Advanced gallery filters — multi-dimension + keyword search #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{% set extra = block.extra if block and block.extra else {} %}
+{% set opts = gallery_filter_options if gallery_filter_options else none %}
+{% set filter_opts = extra.filter_options if extra.filter_options else {} %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-4" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+    </div>
+    <div class="pb-gallery-advanced-filters"
+         id="galleryAdvancedFilters"
+         role="search"
+         aria-label="Filter gallery media"
+         data-animate>
+        <div class="row g-3 align-items-end">
+            <div class="col-lg-4 col-md-6">
+                <label class="form-label pb-filter-label" for="gallerySearchInput">Keyword Search</label>
+                <div class="input-group">
+                    <span class="input-group-text" aria-hidden="true"><i class="bi bi-search"></i></span>
+                    <input type="search"
+                           class="form-control"
+                           id="gallerySearchInput"
+                           placeholder="Search titles, projects, locations…"
+                           autocomplete="off"
+                           aria-controls="galleryMediaGrid">
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <label class="form-label pb-filter-label" for="galleryFilterProject">Project</label>
+                <select class="form-select pb-gallery-select" id="galleryFilterProject" data-filter-key="project">
+                    <option value="">All Projects</option>
+                    {% for val in (opts.projects if opts else filter_opts.get('projects', [])) %}
+                    <option value="{{ val }}">{{ val }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <label class="form-label pb-filter-label" for="galleryFilterService">Service</label>
+                <select class="form-select pb-gallery-select" id="galleryFilterService" data-filter-key="service">
+                    <option value="">All Services</option>
+                    {% for val in (opts.services if opts else filter_opts.get('services', [])) %}
+                    <option value="{{ val }}">{{ val }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <label class="form-label pb-filter-label" for="galleryFilterEquipment">Equipment</label>
+                <select class="form-select pb-gallery-select" id="galleryFilterEquipment" data-filter-key="equipment">
+                    <option value="">All Equipment</option>
+                    {% for val in (opts.equipment if opts else filter_opts.get('equipment', [])) %}
+                    <option value="{{ val }}">{{ val }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <label class="form-label pb-filter-label" for="galleryFilterCategory">Category</label>
+                <select class="form-select pb-gallery-select" id="galleryFilterCategory" data-filter-key="category">
+                    <option value="">All Categories</option>
+                    {% for val in (opts.categories if opts else filter_opts.get('categories', [])) %}
+                    <option value="{{ val }}">{{ val }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <label class="form-label pb-filter-label" for="galleryFilterCounty">County</label>
+                <select class="form-select pb-gallery-select" id="galleryFilterCounty" data-filter-key="county">
+                    <option value="">All Counties</option>
+                    {% for val in (opts.counties if opts else filter_opts.get('counties', [])) %}
+                    <option value="{{ val }}">{{ val }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <label class="form-label pb-filter-label" for="galleryFilterYear">Year</label>
+                <select class="form-select pb-gallery-select" id="galleryFilterYear" data-filter-key="year">
+                    <option value="">All Years</option>
+                    {% for val in (opts.years if opts else filter_opts.get('years', [])) %}
+                    <option value="{{ val }}">{{ val }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <button type="button" class="btn btn-outline-secondary w-100" id="galleryFilterReset">
+                    <i class="bi bi-arrow-counterclockwise me-2" aria-hidden="true"></i>Reset Filters
+                </button>
+            </div>
+        </div>
+        <p class="pb-gallery-results-count small text-muted mt-3 mb-0" id="galleryResultsCount" aria-live="polite"></p>
+    </div>
+</div>
+{{ pb_close_section() }}

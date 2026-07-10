@@ -1,0 +1,104 @@
+{% extends 'admin/careers/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field %}
+
+{% block careers_actions %}
+{% if is_edit is defined and is_edit and delete_form is defined %}
+<form method="post" action="{{ url_for('admin.careers_delete', job_id=job.id) }}" class="d-inline" onsubmit="return confirm('Soft-delete this job?');">
+    {{ delete_form.hidden_tag() }}
+    <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+</form>
+{% endif %}
+<a href="{{ url_for('admin.careers_list') }}" class="btn btn-outline-secondary btn-sm">Back to List</a>
+{% endblock %}
+
+{% block careers_content %}
+<form method="post" class="admin-careers-form" novalidate>
+    {{ form.hidden_tag() }}
+    {{ form.job_id }}
+
+    <ul class="nav nav-tabs admin-careers-form-tabs" role="tablist">
+        {% for tab in form_tabs %}
+        <li class="nav-item" role="presentation">
+            <button class="nav-link{% if active_tab == tab.slug %} active{% endif %}"
+                    type="button"
+                    data-bs-toggle="tab"
+                    data-bs-target="#tab-{{ tab.slug }}"
+                    role="tab">
+                <i class="bi {{ tab.icon }} me-1" aria-hidden="true"></i>{{ tab.label }}
+            </button>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div class="tab-content admin-panel admin-careers-tab-content">
+        <div class="tab-pane fade{% if active_tab == 'general' %} show active{% endif %}" id="tab-general" role="tabpanel">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    {{ render_field(form.title) }}
+                    {{ render_field(form.slug, 'Auto-generated from title if blank.') }}
+                    {{ render_field(form.short_description) }}
+                    <div class="row g-3">
+                        <div class="col-md-6">{{ render_field(form.department) }}</div>
+                        <div class="col-md-6">{{ render_field(form.location) }}</div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">{{ render_field(form.employment_type) }}</div>
+                        <div class="col-md-6">{{ render_field(form.status) }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    {{ render_field(form.sort_order) }}
+                    <div class="form-check form-switch">{{ form.is_active(class="form-check-input") }}{{ form.is_active.label(class="form-check-label") }}</div>
+                    {% if is_edit %}
+                    <p class="text-muted small mt-3 mb-0">Created {{ job.created_at_label }} · Updated {{ job.updated_at_label }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade{% if active_tab == 'details' %} show active{% endif %}" id="tab-details" role="tabpanel">
+            {{ render_field(form.description) }}
+            {{ render_field(form.requirements) }}
+            {{ render_field(form.experience_required) }}
+            <div class="mb-3">
+                <label class="form-label" for="image">Featured Image (Media Path)</label>
+                <div class="input-group">
+                    {{ form.image(class="form-control", id="image") }}
+                    <a href="{{ url_for('admin.media_library', folder='careers') }}" class="btn btn-outline-secondary" target="_blank" rel="noopener">Browse Library</a>
+                </div>
+            </div>
+            {{ render_field(form.responsibilities) }}
+            {{ render_field(form.qualifications) }}
+            {{ render_field(form.skills) }}
+            {{ render_field(form.benefits) }}
+        </div>
+
+        <div class="tab-pane fade{% if active_tab == 'application' %} show active{% endif %}" id="tab-application" role="tabpanel">
+            {{ render_field(form.deadline, 'Application deadline (YYYY-MM-DD).') }}
+            <div class="form-check form-switch mb-3">{{ form.accept_applications(class="form-check-input") }}{{ form.accept_applications.label(class="form-check-label") }}</div>
+            <div class="form-check form-switch mb-3">{{ form.is_featured(class="form-check-input") }}{{ form.is_featured.label(class="form-check-label") }}</div>
+            {{ render_field(form.notify_email, 'HR email for new application notifications.') }}
+            <div class="form-check form-switch mb-3">{{ form.auto_reply_enabled(class="form-check-input") }}{{ form.auto_reply_enabled.label(class="form-check-label") }}</div>
+            {{ render_field(form.auto_reply_message) }}
+        </div>
+
+        <div class="tab-pane fade{% if active_tab == 'seo' %} show active{% endif %}" id="tab-seo" role="tabpanel">
+            {{ render_field(form.meta_title) }}
+            {{ render_field(form.meta_description) }}
+            <div class="mb-3">
+                <label class="form-label" for="og_image">OG Image (Media Path)</label>
+                <div class="input-group">
+                    {{ form.og_image(class="form-control", id="og_image") }}
+                    <a href="{{ url_for('admin.media_library', folder='careers') }}" class="btn btn-outline-secondary" target="_blank" rel="noopener">Browse Library</a>
+                </div>
+            </div>
+            {{ render_field(form.canonical_url) }}
+        </div>
+    </div>
+
+    <div class="admin-settings-form-actions mt-3">
+        {{ form.submit(class="btn btn-primary btn-lg") }}
+        <a href="{{ url_for('admin.careers_list') }}" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,39 @@
+{# Premium services grid cards #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{% from 'macros/media.html' import smart_image %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+        {% if block and block.full_content %}
+        <p class="section-intro mx-auto text-center">{{ block.full_content }}</p>
+        {% endif %}
+    </div>
+    {% if block and block.items %}
+    <div class="row g-4">
+        {% for item in block.items %}
+        {% if item.is_active %}
+        <div class="col-sm-6 col-lg-3" data-animate>
+            <article class="premium-card pb-service-card h-100">
+                {{ smart_image(item.image, item.title, 'service', 'pb-service-card-image', lazy=true) }}
+                <div class="premium-card-body">
+                    {% if item.icon %}
+                    <div class="pb-service-card-icon" aria-hidden="true"><i class="bi {{ item.icon }}"></i></div>
+                    {% endif %}
+                    <h3 class="premium-card-title">{{ item.title }}</h3>
+                    <p class="premium-card-text">{{ item.short_summary or item.full_content }}</p>
+                    {% set learn_url = item.extra.learn_more_url if item.extra and item.extra.learn_more_url else '#' %}
+                    <a href="{{ learn_url | safe_href }}"
+                       class="premium-card-link"
+                       aria-label="Learn more about {{ item.title }}">
+                        Learn More <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </article>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{{ pb_close_section() }}

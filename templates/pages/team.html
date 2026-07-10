@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% from 'macros/page_layout.html' import render_page_seo %}
+{% from 'macros/page_builder.html' import render_page_sections %}
+{% block title %}{{ page.meta_title if page else 'Team' }} | {{ company.name }}{% endblock %}
+{% block meta_description %}{{ page.meta_description if page else company.tagline }}{% endblock %}
+{% block body_class %}page-team{% endblock %}
+
+{% block seo_meta %}
+{% set team_og = url_for('static', filename=page.banner_image, _external=True) if page and page.banner_image else og_image_url %}
+{{ render_page_seo(page, company, canonical_url, og_image_url, breadcrumbs, image=team_og) }}
+{% endblock %}
+
+{% block extra_head %}
+{% set site_root = url_for('main.index', _external=True) %}
+{% if page and page.banner_image %}
+<link rel="preload" as="image" href="{{ url_for('static', filename=page.banner_image) }}">
+{% endif %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": {{ (canonical_url ~ '#webpage') | tojson }},
+      "url": {{ canonical_url | tojson }},
+      "name": {{ (page.meta_title if page else 'Team & Leadership') | tojson }},
+      "description": {{ (page.meta_description if page else company.tagline) | tojson }},
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": {{ (site_root ~ '#website') | tojson }},
+        "name": {{ company.name | tojson }},
+        "url": {{ site_root | tojson }}
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": {{ (site_root ~ '#organization') | tojson }},
+      "name": {{ company.name | tojson }},
+      "url": {{ site_root | tojson }},
+      "telephone": {{ company.phone_primary | tojson }},
+      "email": {{ company.email | tojson }},
+      "employee": [
+        {% for member in team if member.is_active %}
+        {
+          "@type": "Person",
+          "name": {{ member.name | tojson }},
+          "jobTitle": {{ member.position | tojson }},
+          "worksFor": {
+            "@type": "Organization",
+            "name": {{ company.name | tojson }}
+          }
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }{% if directors %},
+    {
+      "@type": "ItemList",
+      "@id": {{ (canonical_url ~ '#directors') | tojson }},
+      "name": "Board of Directors",
+      "itemListElement": [
+        {% for member in directors %}
+        {
+          "@type": "ListItem",
+          "position": {{ loop.index }},
+          "item": {
+            "@type": "Person",
+            "name": {{ member.name | tojson }},
+            "jobTitle": {{ member.position | tojson }},
+            "description": {{ member.bio | tojson }}
+          }
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }{% endif %}
+  ]
+}
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sections-shared.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page-builder.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/team.css') }}">
+{% endblock %}
+
+{% block content %}
+{% if page_composition and page_composition.sections %}
+{{ render_page_sections(page_composition.sections, page, team=team) }}
+{% endif %}
+{% endblock %}

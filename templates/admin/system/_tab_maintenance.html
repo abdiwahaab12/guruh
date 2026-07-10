@@ -1,0 +1,47 @@
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="admin-system-panel">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h6 mb-0">Maintenance Mode</h2>
+                <span class="badge bg-{{ 'danger' if maintenance.enabled else 'success' }}">
+                    {{ 'Enabled' if maintenance.enabled else 'Disabled' }}
+                </span>
+            </div>
+            <p class="text-muted small">When enabled, the public website can be taken offline. Admin access remains available to authorized users.</p>
+
+            <form method="post" action="{{ url_for('admin.system_maintenance_message') }}" class="mb-3">
+                {{ maintenance_form.hidden_tag() }}
+                <div class="mb-3">
+                    <label class="form-label" for="message">Custom Message</label>
+                    <textarea class="form-control" id="message" name="message" rows="4" required>{{ maintenance.message }}</textarea>
+                </div>
+                <button type="submit" name="submit_message" value="Save Message" class="btn btn-outline-primary btn-sm">Save Message</button>
+            </form>
+
+            <div class="d-flex flex-wrap gap-2">
+                <form method="post" action="{{ url_for('admin.system_maintenance_enable') }}" class="d-inline">
+                    {{ maintenance_form.hidden_tag() }}
+                    <div class="visually-hidden">
+                        <textarea name="message">{{ maintenance.message }}</textarea>
+                    </div>
+                    <button type="submit" name="submit_enable" value="Enable Maintenance Mode" class="btn btn-warning btn-sm"{% if maintenance.enabled %} disabled{% endif %}>
+                        <i class="bi bi-cone-striped me-1"></i> Enable
+                    </button>
+                </form>
+                <form method="post" action="{{ url_for('admin.system_maintenance_disable') }}">
+                    {{ maintenance_form.hidden_tag() }}
+                    <button type="submit" name="submit_disable" value="Disable Maintenance Mode" class="btn btn-success btn-sm"{% if not maintenance.enabled %} disabled{% endif %}>
+                        <i class="bi bi-check-circle me-1"></i> Disable
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="admin-system-panel">
+            <h2 class="h6 mb-3">Allowed IPs</h2>
+            <p class="small text-muted mb-2">Configured via Website Settings (read-only here).</p>
+            <code class="d-block small">{{ maintenance.allowed_ips or 'None configured' }}</code>
+        </div>
+    </div>
+</div>

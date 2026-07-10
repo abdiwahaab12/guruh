@@ -1,0 +1,19 @@
+{% extends 'admin/system/layout.html' %}
+
+{% block system_content %}
+{% if active_tab == 'overview' %}
+{% include 'admin/system/_tab_overview.html' %}
+{% elif active_tab == 'maintenance' %}
+{% include 'admin/system/_tab_maintenance.html' %}
+{% elif active_tab == 'backup' %}
+{% include 'admin/system/_tab_backup.html' %}
+{% elif active_tab == 'health' %}
+{% include 'admin/system/_tab_health.html' %}
+{% elif active_tab == 'logs' %}
+{% include 'admin/system/_tab_logs.html' %}
+{% elif active_tab == 'storage' %}
+{% include 'admin/system/_tab_storage.html' %}
+{% elif active_tab == 'cache' %}
+{% include 'admin/system/_tab_cache.html' %}
+{% endif %}
+{% endblock %}

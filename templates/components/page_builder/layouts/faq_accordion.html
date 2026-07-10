@@ -1,0 +1,43 @@
+{# FAQ accordion #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="pb-section-head text-center mb-5" data-animate>
+                {{ pb_heading(section, block, 'center') }}
+            </div>
+            {% if block and block.items %}
+            {% set accordion_id = section.seo_anchor ~ '-accordion' %}
+            <div class="accordion pb-faq-accordion" id="{{ accordion_id }}" data-animate>
+                {% for item in block.items %}
+                {% if item.is_active %}
+                {% set collapse_id = section.seo_anchor ~ '-' ~ item.item_key %}
+                <div class="accordion-item pb-faq-item">
+                    <h3 class="accordion-header" id="heading-{{ collapse_id }}">
+                        <button class="accordion-button{% if not loop.first %} collapsed{% endif %}"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#{{ collapse_id }}"
+                                aria-expanded="{{ 'true' if loop.first else 'false' }}"
+                                aria-controls="{{ collapse_id }}">
+                            {{ item.title }}
+                        </button>
+                    </h3>
+                    <div id="{{ collapse_id }}"
+                         class="accordion-collapse collapse{% if loop.first %} show{% endif %}"
+                         aria-labelledby="heading-{{ collapse_id }}"
+                         data-bs-parent="#{{ accordion_id }}">
+                        <div class="accordion-body pb-faq-answer">
+                            {{ item.full_content or item.short_summary }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{{ pb_close_section() }}

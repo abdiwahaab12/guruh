@@ -1,0 +1,81 @@
+{% extends 'admin/messages/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field %}
+
+{% block messages_actions %}
+<a href="{{ url_for('admin.messages_inbox', tab=active_tab) }}" class="btn btn-outline-secondary btn-sm">Back to Inbox</a>
+<div class="btn-group btn-group-sm">
+    <form method="post" action="{{ url_for('admin.messages_item_action', tab=message.tab, item_id=message.id, action='star' if not message.is_starred else 'unstar') }}" class="d-inline">
+        {{ action_form.hidden_tag() }}
+        <button type="submit" class="btn btn-outline-secondary">{% if message.is_starred %}Unstar{% else %}Star{% endif %}</button>
+    </form>
+    <form method="post" action="{{ url_for('admin.messages_item_action', tab=message.tab, item_id=message.id, action='archive' if not message.is_archived else 'unarchive') }}" class="d-inline">
+        {{ action_form.hidden_tag() }}
+        <button type="submit" class="btn btn-outline-secondary">{% if message.is_archived %}Unarchive{% else %}Archive{% endif %}</button>
+    </form>
+    {% if message.is_deleted %}
+    <form method="post" action="{{ url_for('admin.messages_item_action', tab=message.tab, item_id=message.id, action='restore') }}" class="d-inline">
+        {{ action_form.hidden_tag() }}
+        <button type="submit" class="btn btn-outline-success">Restore</button>
+    </form>
+    {% else %}
+    <form method="post" action="{{ url_for('admin.messages_item_action', tab=message.tab, item_id=message.id, action='delete') }}" class="d-inline" onsubmit="return confirm('Soft-delete this message?');">
+        {{ action_form.hidden_tag() }}
+        <button type="submit" class="btn btn-outline-danger">Delete</button>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block messages_content %}
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="admin-panel">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <h2 class="h5 mb-1">{{ message.title }}</h2>
+                    <p class="text-muted small mb-0">From {{ message.name }} · {{ message.email }}{% if message.phone %} · {{ message.phone }}{% endif %}</p>
+                </div>
+                <div>
+                    {% if not message.is_read %}<span class="badge bg-primary">Unread</span>{% endif %}
+                    {% if message.is_starred %}<span class="badge bg-warning text-dark">Starred</span>{% endif %}
+                    {% if message.is_archived %}<span class="badge bg-secondary">Archived</span>{% endif %}
+                </div>
+            </div>
+            {% if message.job_listing_title %}
+            <p class="small"><strong>Job listing:</strong> {{ message.job_listing_title }}</p>
+            {% endif %}
+            <hr>
+            <div class="admin-message-body">{{ message.body | replace('\n', '<br>') | safe }}</div>
+            {% if message.extra_fields %}
+            <hr>
+            <h3 class="h6">Additional Details</h3>
+            <dl class="row small mb-0">
+                {% for label, value in message.extra_fields.items() %}
+                {% if value %}
+                <dt class="col-sm-4">{{ label }}</dt>
+                <dd class="col-sm-8">{{ value }}</dd>
+                {% endif %}
+                {% endfor %}
+            </dl>
+            {% endif %}
+            <p class="text-muted small mt-3 mb-0">Received {{ message.created_at_label }}</p>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="admin-panel">
+            <h2 class="h6 mb-3">Reply</h2>
+            <form method="post" novalidate>
+                {{ reply_form.hidden_tag() }}
+                {{ render_field(reply_form.reply_subject) }}
+                {{ render_field(reply_form.reply_body) }}
+                {{ render_field(reply_form.admin_notes, 'Internal notes — not sent to the sender.') }}
+                {{ reply_form.submit(class="btn btn-primary") }}
+            </form>
+            {% if message.replied_at_label != '—' %}
+            <p class="text-muted small mt-3 mb-0">Last reply saved {{ message.replied_at_label }}</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

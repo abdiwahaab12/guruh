@@ -1,0 +1,27 @@
+{% extends 'admin/layouts/base.html' %}
+
+{% block title %}{{ module_label }} | GURUH CMS{% endblock %}
+
+{% block content %}
+<div class="admin-page-header">
+    <div>
+        <h1 class="admin-page-title">{{ module_label }}</h1>
+        <p class="admin-page-subtitle">This module will be implemented in a future step. Navigation is ready.</p>
+    </div>
+    <span class="badge admin-badge-soon">Coming Soon</span>
+</div>
+
+<div class="admin-placeholder-card">
+    <div class="admin-placeholder-icon">
+        <i class="bi bi-tools" aria-hidden="true"></i>
+    </div>
+    <h2 class="h4">Module Foundation Prepared</h2>
+    <p class="text-muted mb-4">
+        The <strong>{{ module_label }}</strong> CRUD interface is not built yet. The sidebar, permissions,
+        and routing shell are in place for Step 15+ development.
+    </p>
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-primary">
+        <i class="bi bi-arrow-left me-1" aria-hidden="true"></i> Back to Dashboard
+    </a>
+</div>
+{% endblock %}

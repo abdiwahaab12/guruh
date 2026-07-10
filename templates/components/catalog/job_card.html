@@ -1,0 +1,15 @@
+{# Job listing card — expects `job` variable #}
+<div class="card job-card h-100 border-0 shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title">{{ job.title }}</h5>
+        <div class="job-meta small text-muted mb-3">
+            {% if job.department %}<span class="me-3"><i class="bi bi-building me-1"></i>{{ job.department }}</span>{% endif %}
+            {% if job.location %}<span class="me-3"><i class="bi bi-geo-alt me-1"></i>{{ job.location }}</span>{% endif %}
+            {% if job.employment_type %}<span><i class="bi bi-clock me-1"></i>{{ job.employment_type }}</span>{% endif %}
+        </div>
+        <p class="card-text">{{ job.description | truncate(200) }}</p>
+        {% if job.deadline %}
+        <p class="small text-muted mb-0"><i class="bi bi-calendar me-1"></i>Apply by: {{ job.deadline }}</p>
+        {% endif %}
+    </div>
+</div>

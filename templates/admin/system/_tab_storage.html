@@ -1,0 +1,20 @@
+<div class="row g-3">
+    {% for metric in storage_metrics %}
+    <div class="col-md-6 col-xl-4">
+        <div class="admin-system-panel h-100">
+            <h3 class="h6">{{ metric.label }}</h3>
+            <p class="text-muted small mb-2"><code>{{ metric.path }}</code></p>
+            <dl class="row small mb-0">
+                <dt class="col-5">Used</dt><dd class="col-7">{{ metric.used_label }}</dd>
+                <dt class="col-5">Free</dt><dd class="col-7">{{ metric.free_label }}</dd>
+                <dt class="col-5">Total</dt><dd class="col-7">{{ metric.total_label }}</dd>
+            </dl>
+            {% if metric.percent_used %}
+            <div class="progress mt-2" style="height:6px">
+                <div class="progress-bar" style="width: {{ metric.percent_used }}%"></div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>

@@ -1,0 +1,24 @@
+{% extends 'admin/layouts/base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin-settings.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-page-header">
+    <div>
+        <h1 class="admin-page-title">{% block settings_title %}{{ page_title }}{% endblock %}</h1>
+        <p class="admin-page-subtitle">{% block settings_subtitle %}Manage global website configuration for GURUH Construction.{% endblock %}</p>
+    </div>
+    <div class="admin-page-actions">
+        {% block settings_actions %}{% endblock %}
+    </div>
+</div>
+
+<div class="admin-settings-layout">
+    {% include 'admin/settings/_nav.html' %}
+    <div class="admin-settings-content">
+        {% block settings_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

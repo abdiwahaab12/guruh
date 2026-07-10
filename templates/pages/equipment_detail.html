@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% from 'macros/page_layout.html' import render_page_seo %}
+{% from 'macros/page_builder.html' import render_page_sections %}
+{% block title %}{{ page.meta_title if page else equipment_item.name }} | {{ company.name }}{% endblock %}
+{% block meta_description %}{{ page.meta_description if page else equipment_item.short_description }}{% endblock %}
+{% block body_class %}page-equipment page-equipment-detail{% endblock %}
+
+{% block seo_meta %}
+{% set detail_og = url_for('static', filename=equipment_item.image, _external=True) if equipment_item.image else og_image_url %}
+{{ render_page_seo(page, company, canonical_url, og_image_url, breadcrumbs, image=detail_og) }}
+{% endblock %}
+
+{% block extra_head %}
+{% set site_root = url_for('main.index', _external=True) %}
+{% if equipment_item.image %}
+{% if equipment_item.image %}
+<link rel="preload" as="image" href="{{ url_for('static', filename=equipment_item.image) }}">
+{% endif %}
+{% endif %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": {{ (canonical_url ~ '#webpage') | tojson }},
+      "url": {{ canonical_url | tojson }},
+      "name": {{ (page.meta_title if page else equipment_item.name) | tojson }},
+      "description": {{ (page.meta_description if page else equipment_item.short_description) | tojson }},
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": {{ (site_root ~ '#website') | tojson }},
+        "name": {{ company.name | tojson }},
+        "url": {{ site_root | tojson }}
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": {{ (canonical_url ~ '#equipment') | tojson }},
+      "name": {{ equipment_item.name | tojson }},
+      "description": {{ equipment_item.description | tojson }},
+      "url": {{ canonical_url | tojson }},
+      "category": {{ equipment_item.category | tojson }},
+      "image": {{ url_for('static', filename=equipment_item.image, _external=True) | tojson }},
+      "brand": {
+        "@type": "Brand",
+        "name": {{ company.name | tojson }}
+      },
+      "manufacturer": {
+        "@type": "Organization",
+        "name": {{ company.name | tojson }},
+        "url": {{ site_root | tojson }}
+      },
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "Capacity",
+          "value": {{ equipment_item.capacity | tojson }}
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "Condition",
+          "value": {{ equipment_item.condition | tojson }}
+        }
+      ]
+    }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sections-shared.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page-builder.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/equipment.css') }}">
+{% endblock %}
+
+{% block content %}
+{% if page_composition and page_composition.sections %}
+{{ render_page_sections(page_composition.sections, page, projects, services, equipment=equipment, equipment_item=equipment_item) }}
+{% endif %}
+{% endblock %}

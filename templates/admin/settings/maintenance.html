@@ -1,0 +1,22 @@
+{% extends 'admin/settings/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field, form_actions %}
+
+{% block settings_subtitle %}Take the public website offline while keeping admin access available.{% endblock %}
+
+{% block settings_content %}
+<form method="post" class="admin-settings-form" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="admin-panel">
+        <div class="alert alert-info admin-settings-alert" role="status">
+            Maintenance mode affects the public website only. Admin routes remain accessible to authorized users.
+        </div>
+        <div class="form-check form-switch mb-3">
+            {{ form.enabled(class="form-check-input") }}
+            {{ form.enabled.label(class="form-check-label") }}
+        </div>
+        {{ render_field(form.message) }}
+        {{ render_field(form.allowed_ips, 'IPs that can still view the public site during maintenance.') }}
+        {{ form_actions(form) }}
+    </div>
+</form>
+{% endblock %}

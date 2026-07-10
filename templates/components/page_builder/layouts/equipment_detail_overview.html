@@ -1,0 +1,83 @@
+{# Equipment specifications, capacity, usage, maintenance — prefers equipment_item #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading, pb_paragraphs %}
+{% from 'macros/media.html' import smart_image %}
+{% set item = equipment_item if equipment_item else none %}
+{% set extra = block.extra if block and block.extra else {} %}
+{% set overview_image = item.image if item and item.image else (block.hero_image if block else '') %}
+{% set overview_usage = item.usage if item and item.usage else extra.usage %}
+{% set overview_capacity = item.capacity if item else extra.capacity %}
+{% set overview_condition = item.condition if item else extra.condition %}
+{% set overview_maintenance = item.maintenance_status if item else extra.maintenance_status %}
+{% set overview_specs = item.specifications if item and item.specifications else [] %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="row g-5 align-items-start">
+        <div class="col-lg-7 order-lg-2" data-animate>
+            {{ pb_heading(section, block, 'left') }}
+            {% if item and item.description %}
+            <div class="pb-equipment-description mb-4">
+                {{ pb_paragraphs(item.description) }}
+            </div>
+            {% elif block and block.full_content %}
+            <div class="pb-equipment-description mb-4">
+                {{ pb_paragraphs(block.full_content) }}
+            </div>
+            {% endif %}
+            {% if overview_usage %}
+            <div class="pb-equipment-usage mb-4">
+                <h3 class="pb-equipment-detail-label">Typical Usage</h3>
+                {{ pb_paragraphs(overview_usage) }}
+            </div>
+            {% endif %}
+            {% if overview_specs %}
+            <div class="pb-equipment-specs">
+                <h3 class="pb-equipment-detail-label">Specifications</h3>
+                <dl class="pb-equipment-spec-list">
+                    {% for spec in overview_specs %}
+                    <div class="pb-equipment-spec-row">
+                        <dt>{{ spec.label }}</dt>
+                        <dd>{{ spec.value }}</dd>
+                    </div>
+                    {% endfor %}
+                </dl>
+            </div>
+            {% elif block and block.items %}
+            <div class="pb-equipment-specs">
+                <h3 class="pb-equipment-detail-label">Specifications</h3>
+                <dl class="pb-equipment-spec-list">
+                    {% for spec_item in block.items if spec_item.is_active %}
+                    <div class="pb-equipment-spec-row">
+                        <dt>{{ spec_item.title }}</dt>
+                        <dd>{{ spec_item.subtitle }}</dd>
+                    </div>
+                    {% endfor %}
+                </dl>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-lg-5 order-lg-1" data-animate>
+            {{ smart_image(overview_image, section.section_title, 'project', 'img-fluid rounded pb-section-image mb-4', lazy=true) }}
+            <dl class="pb-equipment-facts">
+                {% if overview_capacity %}
+                <div class="pb-equipment-fact">
+                    <dt><i class="bi bi-speedometer2" aria-hidden="true"></i> Capacity</dt>
+                    <dd>{{ overview_capacity }}</dd>
+                </div>
+                {% endif %}
+                {% if overview_condition %}
+                <div class="pb-equipment-fact">
+                    <dt><i class="bi bi-check-circle" aria-hidden="true"></i> Condition</dt>
+                    <dd>{{ overview_condition }}</dd>
+                </div>
+                {% endif %}
+                {% if overview_maintenance %}
+                <div class="pb-equipment-fact">
+                    <dt><i class="bi bi-wrench-adjustable" aria-hidden="true"></i> Maintenance Status</dt>
+                    <dd>{{ overview_maintenance }}</dd>
+                </div>
+                {% endif %}
+            </dl>
+        </div>
+    </div>
+</div>
+{{ pb_close_section() }}

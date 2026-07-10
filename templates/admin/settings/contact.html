@@ -1,0 +1,19 @@
+{% extends 'admin/settings/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field, form_actions %}
+
+{% block settings_subtitle %}Primary contact details displayed across the public website.{% endblock %}
+
+{% block settings_content %}
+<form method="post" class="admin-settings-form" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="admin-panel">
+        <div class="row g-3">
+            <div class="col-md-6">{{ render_field(form.phone) }}</div>
+            <div class="col-md-6">{{ render_field(form.email) }}</div>
+            <div class="col-12">{{ render_field(form.address) }}</div>
+            <div class="col-md-6">{{ render_field(form.office_hours) }}</div>
+        </div>
+        {{ form_actions(form) }}
+    </div>
+</form>
+{% endblock %}

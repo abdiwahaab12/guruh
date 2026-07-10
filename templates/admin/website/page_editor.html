@@ -1,0 +1,196 @@
+{% extends 'admin/website/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field %}
+
+{% block website_actions %}
+<a href="{{ page_editor.preview_url }}" class="btn btn-outline-secondary btn-sm" target="_blank" rel="noopener">View Live</a>
+<a href="{{ url_for('admin.website_dashboard') }}" class="btn btn-outline-secondary btn-sm">All Pages</a>
+{% endblock %}
+
+{% block website_content %}
+<div class="row g-4">
+    <div class="col-lg-8">
+        {% if page_editor.slug == 'home' %}
+        <div class="admin-panel mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h2 class="h5 mb-1">Home Hero Slider</h2>
+                    <p class="text-muted small mb-0">Up to {{ max_hero_slides }} slides — images from Media Library ({{ hero_slide_count }}/{{ max_hero_slides }}).</p>
+                </div>
+                {% if hero_slide_count < max_hero_slides %}
+                <a href="{{ url_for('admin.website_hero_slide_edit') }}" class="btn btn-sm btn-primary">Add Slide</a>
+                {% else %}
+                <span class="badge bg-secondary align-self-start">Maximum slides reached</span>
+                {% endif %}
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Image</th>
+                            <th scope="col">Status</th>
+                            <th scope="col" class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for slide in hero_slides %}
+                        <tr class="{% if not slide.is_active %}table-secondary{% endif %}">
+                            <td>{{ slide.sort_order }}</td>
+                            <td>
+                                <div class="fw-semibold">{{ slide.title }}</div>
+                                <div class="text-muted small">{{ slide.subtitle }}</div>
+                            </td>
+                            <td>
+                                {% if slide.image %}
+                                <img src="{{ url_for('static', filename=slide.image) }}" alt="" style="height:44px;width:72px;object-fit:cover;border-radius:.35rem;" loading="lazy">
+                                {% else %}
+                                <span class="text-muted small">Uses page banner</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if slide.is_active %}
+                                <span class="badge bg-success">Active</span>
+                                {% else %}
+                                <span class="badge bg-secondary">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ url_for('admin.website_hero_slide_edit', slide_id=slide.id) }}" class="btn btn-outline-primary">Edit</a>
+                                    <form method="post" action="{{ url_for('admin.website_hero_slide_action', slide_id=slide.id, action='up') }}" class="d-inline">
+                                        {{ hero_slide_action_form.hidden_tag() }}
+                                        <button type="submit" class="btn btn-outline-secondary" title="Move up">↑</button>
+                                    </form>
+                                    <form method="post" action="{{ url_for('admin.website_hero_slide_action', slide_id=slide.id, action='down') }}" class="d-inline">
+                                        {{ hero_slide_action_form.hidden_tag() }}
+                                        <button type="submit" class="btn btn-outline-secondary" title="Move down">↓</button>
+                                    </form>
+                                    <form method="post" action="{{ url_for('admin.website_hero_slide_action', slide_id=slide.id, action='toggle') }}" class="d-inline">
+                                        {{ hero_slide_action_form.hidden_tag() }}
+                                        <button type="submit" class="btn btn-outline-secondary">{{ 'Hide' if slide.is_active else 'Show' }}</button>
+                                    </form>
+                                    <form method="post" action="{{ url_for('admin.website_hero_slide_action', slide_id=slide.id, action='delete') }}" class="d-inline" onsubmit="return confirm('Delete this hero slide?');">
+                                        {{ hero_slide_action_form.hidden_tag() }}
+                                        <button type="submit" class="btn btn-outline-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-muted text-center py-3">No slides yet. <a href="{{ url_for('admin.website_hero_slide_edit') }}">Add the first slide</a>.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="admin-panel">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h5 mb-0">Page Sections</h2>
+                <span class="text-muted small">Ordered by display_order</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle admin-website-sections-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Section</th>
+                            <th scope="col">Block</th>
+                            <th scope="col">Visible</th>
+                            <th scope="col" class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for section in page_editor.sections %}
+                        <tr class="{% if not section.is_visible %}table-secondary{% endif %}">
+                            <td>{{ section.display_order }}</td>
+                            <td>
+                                <div class="fw-semibold">{{ section.section_title }}</div>
+                                <div class="text-muted small">{{ section.section_key }} · {{ section.layout_type }}</div>
+                            </td>
+                            <td>
+                                {% if section.block_key %}
+                                <code>{{ section.block_key }}</code>
+                                {% else %}
+                                <span class="text-muted">System</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if section.is_visible %}
+                                <span class="badge bg-success">Shown</span>
+                                {% else %}
+                                <span class="badge bg-secondary">Hidden</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm flex-wrap justify-content-end" role="group" aria-label="Section actions">
+                                    {% if section.id %}
+                                    <a href="{{ url_for('admin.website_section_edit', slug=page_editor.slug, section_id=section.id) }}" class="btn btn-outline-primary">Edit</a>
+                                    <form method="post" action="{{ url_for('admin.website_section_action', slug=page_editor.slug, section_id=section.id, action='toggle') }}" class="d-inline">
+                                        {{ section_action_form.hidden_tag() }}
+                                        <button type="submit" class="btn btn-outline-secondary">{{ 'Hide' if section.is_visible else 'Show' }}</button>
+                                    </form>
+                                    <form method="post" action="{{ url_for('admin.website_section_action', slug=page_editor.slug, section_id=section.id, action='up') }}" class="d-inline">
+                                        {{ section_action_form.hidden_tag() }}
+                                        <button type="submit" class="btn btn-outline-secondary" title="Move up">↑</button>
+                                    </form>
+                                    <form method="post" action="{{ url_for('admin.website_section_action', slug=page_editor.slug, section_id=section.id, action='down') }}" class="d-inline">
+                                        {{ section_action_form.hidden_tag() }}
+                                        <button type="submit" class="btn btn-outline-secondary" title="Move down">↓</button>
+                                    </form>
+                                    <form method="post" action="{{ url_for('admin.website_section_action', slug=page_editor.slug, section_id=section.id, action='preview') }}" class="d-inline">
+                                        {{ section_action_form.hidden_tag() }}
+                                        <button type="submit" class="btn btn-outline-secondary">Preview</button>
+                                    </form>
+                                    {% if section.block_key %}
+                                    <a href="{{ url_for('admin.website_block_edit', block_key=section.block_key, page_slug=page_editor.slug, section_id=section.id) }}" class="btn btn-outline-primary">Block</a>
+                                    {% endif %}
+                                    {% else %}
+                                    <span class="text-muted small">Seed only</span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-muted text-center py-4">
+                                No sections yet. Run <code>seed_page_sections.py</code> or edit a section to materialize rows.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="admin-panel mb-4">
+            <h2 class="h5 mb-2">Hero Banner</h2>
+            <p class="text-muted small">Background image, title, and subtitle shown at the top of the public page.</p>
+            <form method="post" novalidate>
+                {{ seo_form.hidden_tag() }}
+                {{ render_field(seo_form.title) }}
+                {{ render_field(seo_form.banner_subtitle) }}
+                {% with field_id='banner_image', field_name='banner_image', label=seo_form.banner_image.label.text, value=seo_form.banner_image.data, media_assets=media_assets %}
+                {% include 'admin/website/_hero_banner_picker.html' %}
+                {% endwith %}
+                <hr class="my-3">
+                <h3 class="h6 mb-3">SEO &amp; Publishing</h3>
+                {{ render_field(seo_form.meta_title) }}
+                {{ render_field(seo_form.meta_description) }}
+                {{ render_field(seo_form.canonical_url, 'Defaults to the public page URL if blank.') }}
+                <div class="form-check form-switch mb-3">
+                    {{ seo_form.is_published(class="form-check-input") }}
+                    {{ seo_form.is_published.label(class="form-check-label") }}
+                </div>
+                {{ seo_form.submit(class="btn btn-primary w-100", value="Save Page") }}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

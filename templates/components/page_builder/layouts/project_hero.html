@@ -1,0 +1,51 @@
+{# Project detail hero #}
+{% from 'macros/media.html' import hero_bg_image_style, hero_media_class, smart_image %}
+{% set extra = block.extra if block and block.extra else {} %}
+{% set hero_src = (block.hero_image if block and block.hero_image else '') or (project.cover_image if project is defined and project else '') %}
+<section
+    id="{{ section.seo_anchor }}"
+    class="page-hero pb-section pb-layout--project-hero page-hero--project{% if hero_src %} page-hero--has-cover{% endif %}"
+    data-section-key="{{ section.section_key }}"
+    data-layout="{{ section.layout_type }}"
+    aria-labelledby="page-hero-title">
+    <div class="page-hero-bg page-hero-bg-cover{{ hero_media_class(hero_src) }}"
+         {% if hero_src %}style="{{ hero_bg_image_style(hero_src) }}"{% endif %}
+         aria-hidden="true"></div>
+    <div class="page-hero-overlay page-hero-overlay--project" aria-hidden="true"></div>
+    <div class="container page-hero-inner">
+        {% include "components/ui/breadcrumb.html" %}
+        {% if block and block.subtitle %}
+        <p class="page-hero-eyebrow">{{ block.subtitle }}</p>
+        {% endif %}
+        <h1 class="page-hero-title" id="page-hero-title">{{ block.title if block else section.section_title }}</h1>
+        {% if block and block.short_summary %}
+        <p class="page-hero-subtitle"><i class="bi bi-geo-alt me-1" aria-hidden="true"></i>{{ block.short_summary }}</p>
+        {% endif %}
+        <dl class="pb-project-hero-meta">
+            {% if extra.status %}
+            <div class="pb-project-hero-meta-item">
+                <dt>Status</dt>
+                <dd>{{ extra.status }}</dd>
+            </div>
+            {% endif %}
+            {% if extra.client %}
+            <div class="pb-project-hero-meta-item">
+                <dt>Client</dt>
+                <dd>{{ extra.client }}</dd>
+            </div>
+            {% endif %}
+            {% if extra.county %}
+            <div class="pb-project-hero-meta-item">
+                <dt>County</dt>
+                <dd>{{ extra.county }}</dd>
+            </div>
+            {% endif %}
+            {% if extra.completion_year %}
+            <div class="pb-project-hero-meta-item">
+                <dt>Completion</dt>
+                <dd>{{ extra.completion_year }}</dd>
+            </div>
+            {% endif %}
+        </dl>
+    </div>
+</section>

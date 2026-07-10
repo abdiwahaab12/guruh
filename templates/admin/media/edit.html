@@ -1,0 +1,35 @@
+{% extends 'admin/media/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field, form_actions %}
+
+{% block media_actions %}
+<a href="{{ url_for('admin.media_detail', asset_id=asset.id) }}" class="btn btn-outline-secondary">Cancel</a>
+{% endblock %}
+
+{% block media_content %}
+<form method="post" class="admin-panel" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="row g-3">
+        <div class="col-md-6">{{ render_field(form.title) }}</div>
+        <div class="col-md-6">{{ render_field(form.original_filename) }}</div>
+        <div class="col-md-6">{{ render_field(form.alt_text) }}</div>
+        <div class="col-md-6">{{ render_field(form.category) }}</div>
+        <div class="col-12">{{ render_field(form.caption) }}</div>
+        <div class="col-12">{{ render_field(form.description) }}</div>
+        <div class="col-12">{{ render_field(form.tags) }}</div>
+        <div class="col-md-6">{{ render_field(form.seo_title) }}</div>
+        <div class="col-md-6">{{ render_field(form.seo_description) }}</div>
+    </div>
+    {{ form_actions(form, url_for('admin.media_detail', asset_id=asset.id)) }}
+</form>
+
+{% if asset.usage %}
+<section class="admin-panel mt-3">
+    <h2 class="h5">Used In</h2>
+    <ul class="admin-media-usage list-unstyled mb-0">
+        {% for use in asset.usage %}
+        <li><strong>{{ use.location }}</strong> — {{ use.label }}</li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+{% endblock %}

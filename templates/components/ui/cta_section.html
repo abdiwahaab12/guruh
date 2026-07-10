@@ -1,0 +1,24 @@
+{# Shared CTA block — all pages; data from CTASectionDTO via provider #}
+{% if cta %}
+<section class="site-cta" id="cta" aria-labelledby="site-cta-heading">
+    <div class="site-cta-shapes" aria-hidden="true">
+        <span class="site-cta-shape"></span>
+        <span class="site-cta-shape site-cta-shape--2"></span>
+    </div>
+    <div class="site-cta-overlay" aria-hidden="true"></div>
+    <div class="container position-relative">
+        <div class="site-cta-content text-center">
+            <h2 class="site-cta-heading" id="site-cta-heading">{{ cta.heading }}</h2>
+            {% if cta.subheading %}
+            <p class="site-cta-subheading">{{ cta.subheading }}</p>
+            {% endif %}
+            <div class="site-cta-actions">
+                <a href="{{ cta.button_url | safe_href }}" class="btn btn-accent btn-lg">{{ cta.button_text }}</a>
+                {% if cta.secondary_button_text and cta.secondary_button_url %}
+                <a href="{{ cta.secondary_button_url | safe_href }}" class="btn btn-hero-outline btn-lg">{{ cta.secondary_button_text }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}

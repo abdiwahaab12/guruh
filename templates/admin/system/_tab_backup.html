@@ -1,0 +1,70 @@
+<div class="admin-system-panel mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h6 mb-0">Database Backups</h2>
+        <form method="post" action="{{ url_for('admin.system_backup_create') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-primary btn-sm">
+                <i class="bi bi-plus-circle me-1"></i> Create Backup
+            </button>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Filename</th>
+                    <th>Type</th>
+                    <th>Size</th>
+                    <th>Created</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if backups %}
+                {% for backup in backups %}
+                <tr>
+                    <td><code>{{ backup.filename }}</code></td>
+                    <td><span class="badge bg-secondary">{{ backup.backup_type }}</span></td>
+                    <td>{{ backup.size_label }}</td>
+                    <td class="small text-muted">{{ backup.created_at_label }}</td>
+                    <td class="text-end">
+                        <a href="{{ url_for('admin.system_backup_download', filename=backup.filename) }}" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-download"></i> Download
+                        </a>
+                        <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#restoreModal{{ loop.index }}">
+                            Restore
+                        </button>
+                        <div class="modal fade" id="restoreModal{{ loop.index }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form method="post" action="{{ url_for('admin.system_backup_restore') }}">
+                                        {{ restore_form.hidden_tag() }}
+                                        <input type="hidden" name="filename" value="{{ backup.filename }}">
+                                        <div class="modal-header">
+                                            <h3 class="modal-title fs-6">Restore Backup</h3>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="small">Restore <strong>{{ backup.filename }}</strong>? This may overwrite current data.</p>
+                                            <label class="form-label">Type <strong>RESTORE</strong> to confirm</label>
+                                            <input type="text" class="form-control" name="confirm" required autocomplete="off">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-danger btn-sm">Restore Backup</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr><td colspan="5" class="text-center text-muted py-4">No backups yet. Create your first backup above.</td></tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+{# Feature list — strengths, HSE policy #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading, pb_paragraphs %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="row g-5 align-items-start">
+        <div class="col-lg-4" data-animate>
+            {{ pb_heading(section, block, 'left') }}
+            {{ pb_paragraphs(block.full_content) }}
+        </div>
+        <div class="col-lg-8">
+            {% if block and block.items %}
+            <ul class="pb-feature-list list-unstyled mb-0">
+                {% for item in block.items %}
+                {% if item.is_active %}
+                <li class="pb-feature-list-item" data-animate>
+                    <div class="pb-feature-list-icon" aria-hidden="true">
+                        <i class="bi {{ item.icon or 'bi-check-circle-fill' }}"></i>
+                    </div>
+                    <div>
+                        <h3 class="h6 mb-1">{{ item.title }}</h3>
+                        {% if item.full_content and item.full_content != item.title %}
+                        <p class="pb-item-desc mb-0">{{ item.full_content }}</p>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{{ pb_close_section() }}

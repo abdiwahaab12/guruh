@@ -1,0 +1,37 @@
+{% extends 'admin/layouts/base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin-team.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-page-header">
+    <div>
+        <h1 class="admin-page-title">{% block team_title %}{{ page_title }}{% endblock %}</h1>
+        <p class="admin-page-subtitle">{% block team_subtitle %}Manage team members and leadership profiles.{% endblock %}</p>
+    </div>
+    <div class="admin-page-actions">
+        {% block team_actions %}
+        <a href="{{ url_for('admin.team_create') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1" aria-hidden="true"></i> New Member
+        </a>
+        {% endblock %}
+    </div>
+</div>
+
+<nav class="admin-team-tabs" aria-label="Team sections">
+    <a href="{{ url_for('admin.team_dashboard') }}" class="admin-team-tab{% if team_active_section == 'dashboard' %} active{% endif %}">Dashboard</a>
+    <a href="{{ url_for('admin.team_list') }}" class="admin-team-tab{% if team_active_section == 'list' %} active{% endif %}">All Members</a>
+    <a href="{{ url_for('admin.team_create') }}" class="admin-team-tab{% if team_active_section == 'form' %} active{% endif %}">Create</a>
+</nav>
+
+{% include 'admin/partials/_breadcrumb.html' %}
+{% include 'admin/partials/_flash_messages.html' %}
+
+{% block team_content %}{% endblock %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/admin-team.js') }}" defer></script>
+{% block team_extra_js %}{% endblock %}
+{% endblock %}

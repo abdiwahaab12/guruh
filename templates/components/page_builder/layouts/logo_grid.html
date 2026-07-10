@@ -1,0 +1,19 @@
+{# Partners logo grid #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading, pb_paragraphs %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+    </div>
+    {% if block and block.items %}
+    {% set partners = block.items | selectattr('is_active') | list %}
+    <div data-animate>
+        {% include "components/ui/partners_slider.html" %}
+    </div>
+    {% elif block %}
+    <div class="pb-partners-empty text-center mx-auto" data-animate role="status">
+        {{ pb_paragraphs(block.full_content or block.short_summary) }}
+    </div>
+    {% endif %}
+</div>
+{{ pb_close_section() }}

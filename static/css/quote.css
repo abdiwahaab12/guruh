@@ -1,0 +1,203 @@
+/**
+ * GURUH Construction — Request Quote Page
+ * Shared shell: sections-shared.css + page-builder.css
+ */
+
+.page-quote .pb-form-card {
+    border: none;
+    box-shadow: var(--section-shadow-soft);
+}
+
+.page-quote .pb-quote-form-card {
+    border-top: 4px solid var(--guruh-primary);
+}
+
+.page-quote .pb-quote-multistep-card {
+    overflow: hidden;
+}
+
+.page-quote .pb-form-label {
+    font-weight: 600;
+    color: var(--guruh-dark);
+}
+
+.page-quote .pb-form-control:focus,
+.page-quote .form-select:focus {
+    border-color: var(--guruh-primary);
+    box-shadow: 0 0 0 0.2rem rgba(51, 168, 255, 0.15);
+}
+
+.page-quote .pb-form-file:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+    background-color: #f8f9fa;
+}
+
+.page-quote .pb-form-help {
+    color: var(--pb-muted);
+}
+
+.page-quote .pb-form-actions .btn-primary,
+.page-quote .pb-form-actions .btn-accent {
+    min-width: 160px;
+}
+
+.page-quote .pb-form-note {
+    max-width: 36rem;
+}
+
+.page-quote .pb-dynamic-form .row {
+    --bs-gutter-x: 1.25rem;
+}
+
+/* Stepper */
+.page-quote .pb-quote-stepper-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+    .page-quote .pb-quote-stepper-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 992px) {
+    .page-quote .pb-quote-stepper-list {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+.page-quote .pb-quote-stepper-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.65rem;
+    border-radius: 0.65rem;
+    background: rgba(0, 0, 0, 0.03);
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.page-quote .pb-quote-stepper-item.is-active {
+    background: rgba(51, 168, 255, 0.12);
+    box-shadow: inset 0 0 0 2px var(--guruh-primary);
+}
+
+.page-quote .pb-quote-stepper-item.is-complete {
+    background: rgba(25, 135, 84, 0.08);
+}
+
+.page-quote .pb-quote-stepper-icon {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    color: var(--guruh-primary);
+    font-size: 1rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.page-quote .pb-quote-stepper-item.is-complete .pb-quote-stepper-icon {
+    color: #198754;
+}
+
+.page-quote .pb-quote-stepper-text {
+    min-width: 0;
+}
+
+.page-quote .pb-quote-stepper-title {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--guruh-dark);
+}
+
+.page-quote .pb-quote-stepper-sub {
+    display: block;
+    font-size: 0.68rem;
+    color: var(--pb-muted);
+}
+
+.page-quote .pb-quote-progress {
+    height: 0.35rem;
+    background: rgba(0, 0, 0, 0.08);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.page-quote .pb-quote-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--guruh-primary), var(--guruh-accent, #ffc107));
+    border-radius: 999px;
+    transition: width 0.35s ease;
+}
+
+.page-quote .pb-quote-step-header h3 {
+    color: var(--guruh-dark);
+    font-weight: 700;
+}
+
+.page-quote .pb-quote-review {
+    border: 1px dashed rgba(51, 168, 255, 0.35);
+    background: rgba(51, 168, 255, 0.04);
+}
+
+.page-quote .pb-quote-review-list dt {
+    font-weight: 700;
+    color: var(--guruh-dark);
+    margin-top: 0.75rem;
+}
+
+.page-quote .pb-quote-review-list dt:first-child {
+    margin-top: 0;
+}
+
+.page-quote .pb-quote-review-list dd {
+    margin-bottom: 0;
+    color: var(--pb-muted);
+}
+
+.page-quote .pb-quote-form-actions {
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    padding-top: 1.25rem;
+}
+
+.page-quote .pb-testimonial-card {
+    border: none;
+}
+
+.page-quote .pb-testimonial-quote {
+    font-style: italic;
+    color: var(--guruh-dark);
+}
+
+.page-quote .pb-testimonial-rating {
+    color: #ffc107;
+}
+
+@media (max-width: 575.98px) {
+    .page-quote .pb-form-actions .btn-primary,
+    .page-quote .pb-form-actions .btn-accent {
+        width: 100%;
+    }
+
+    .page-quote .pb-quote-form-actions .pb-form-note {
+        width: 100%;
+        margin-left: 0 !important;
+        margin-top: 0.5rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-quote .pb-form-control,
+    .page-quote .pb-quote-progress-bar,
+    .page-quote .pb-quote-stepper-item {
+        transition: none;
+    }
+}

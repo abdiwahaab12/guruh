@@ -1,0 +1,131 @@
+/* Website CMS admin — Step 23 */
+
+.admin-website-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--admin-border, #dee2e6);
+    padding-bottom: 0.5rem;
+}
+
+.admin-website-tab {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem 0.375rem 0 0;
+    text-decoration: none;
+    color: var(--admin-muted, #6c757d);
+    font-weight: 500;
+}
+
+.admin-website-tab.active,
+.admin-website-tab:hover {
+    color: var(--admin-primary, #0d6efd);
+    background: rgba(13, 110, 253, 0.08);
+}
+
+.admin-website-form-tabs {
+    margin-bottom: 0;
+}
+
+.admin-website-tab-content {
+    border-top-left-radius: 0;
+}
+
+.admin-website-media-preview {
+    max-width: 100%;
+    max-height: 160px;
+    object-fit: cover;
+    border-radius: 0.375rem;
+    border: 1px solid var(--admin-border, #dee2e6);
+}
+
+.admin-hero-banner-preview--empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 96px;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    border: 1px dashed var(--admin-border, #dee2e6);
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a5276 100%);
+    color: rgba(255, 255, 255, 0.85);
+    text-align: center;
+}
+
+.admin-website-preview-frame {
+    width: 100%;
+    min-height: 70vh;
+    border: 1px solid var(--admin-border, #dee2e6);
+    border-radius: 0.5rem;
+    background: #fff;
+}
+
+.admin-website-preview-draft {
+    max-height: 240px;
+    overflow: auto;
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.375rem;
+}
+
+.admin-media-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+    gap: 0.5rem;
+}
+
+.admin-media-picker-btn {
+    border: 1px solid var(--admin-border, #dee2e6);
+    border-radius: 0.375rem;
+    padding: 0;
+    background: #fff;
+    overflow: hidden;
+}
+
+.admin-media-picker-btn img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    display: block;
+}
+
+.admin-document-picker-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    min-height: 72px;
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+.admin-document-picker-btn .bi {
+    font-size: 1.5rem;
+    color: #dc3545;
+}
+
+.admin-document-picker-label {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-document-picker-btn.is-selected {
+    border-color: var(--admin-primary, #0d6efd);
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+}
+
+.admin-website-sections-table code,
+.admin-website-block-summary code {
+    font-size: 0.85em;
+}
+
+@media (max-width: 767.98px) {
+    .admin-website-sections-table .btn-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

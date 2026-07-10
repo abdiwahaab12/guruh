@@ -1,0 +1,399 @@
+/**
+ * GURUH Construction — Shared Page Builder shell styles
+ * Used by About, Services, and future CMS-composed pages.
+ */
+
+.page-about,
+.page-services,
+.page-projects,
+.page-equipment,
+.page-team,
+.page-contact,
+.page-quote,
+.page-careers,
+.page-gallery {
+    --pb-section-py: clamp(3.5rem, 6vw, 5.5rem);
+    --pb-content-max: 72rem;
+    --pb-prose-max: 42rem;
+    --pb-muted: #566070;
+}
+
+.page-about .pb-section,
+.page-services .pb-section ,
+.page-projects .pb-section ,
+.page-equipment .pb-section ,
+.page-team .pb-section ,
+.page-contact .pb-section ,
+.page-quote .pb-section,
+.page-careers .pb-section,
+.page-gallery .pb-section {
+    position: relative;
+}
+
+.page-about .pb-section:not(.pb-layout--hero-banner),
+.page-services .pb-section:not(.pb-layout--hero-banner) ,
+.page-projects .pb-section:not(.pb-layout--hero-banner) ,
+.page-equipment .pb-section:not(.pb-layout--hero-banner) ,
+.page-team .pb-section:not(.pb-layout--hero-banner) ,
+.page-contact .pb-section:not(.pb-layout--hero-banner) ,
+.page-quote .pb-section:not(.pb-layout--hero-banner) {
+    padding: var(--pb-section-py) 0;
+}
+
+.page-about .pb-section .container,
+.page-services .pb-section .container ,
+.page-projects .pb-section .container ,
+.page-equipment .pb-section .container ,
+.page-team .pb-section .container ,
+.page-contact .pb-section .container ,
+.page-quote .pb-section .container {
+    max-width: var(--pb-content-max);
+}
+
+.page-about .pb-space--compact,
+.page-services .pb-space--compact ,
+.page-projects .pb-space--compact ,
+.page-equipment .pb-space--compact ,
+.page-team .pb-space--compact ,
+.page-contact .pb-space--compact ,
+.page-quote .pb-space--compact {
+    padding-top: clamp(2rem, 4vw, 3rem);
+    padding-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.page-about .pb-space--relaxed,
+.page-services .pb-space--relaxed ,
+.page-projects .pb-space--relaxed ,
+.page-equipment .pb-space--relaxed ,
+.page-team .pb-space--relaxed ,
+.page-contact .pb-space--relaxed ,
+.page-quote .pb-space--relaxed {
+    padding-top: clamp(4.5rem, 8vw, 6.5rem);
+    padding-bottom: clamp(4.5rem, 8vw, 6.5rem);
+}
+
+.page-about .pb-space--none,
+.page-services .pb-space--none ,
+.page-projects .pb-space--none ,
+.page-equipment .pb-space--none ,
+.page-team .pb-space--none ,
+.page-contact .pb-space--none ,
+.page-quote .pb-space--none {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.page-about .pb-section:not(.pb-layout--hero-banner) + .pb-section:not(.pb-layout--hero-banner)::before,
+.page-services .pb-section:not(.pb-layout--hero-banner) + .pb-section:not(.pb-layout--hero-banner)::before ,
+.page-projects .pb-section:not(.pb-layout--hero-banner) + .pb-section:not(.pb-layout--hero-banner)::before ,
+.page-equipment .pb-section:not(.pb-layout--hero-banner) + .pb-section:not(.pb-layout--hero-banner)::before ,
+.page-team .pb-section:not(.pb-layout--hero-banner) + .pb-section:not(.pb-layout--hero-banner)::before ,
+.page-contact .pb-section:not(.pb-layout--hero-banner) + .pb-section:not(.pb-layout--hero-banner)::before ,
+.page-quote .pb-section:not(.pb-layout--hero-banner) + .pb-section:not(.pb-layout--hero-banner)::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(7rem, 18%);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(51, 168, 255, 0.22), transparent);
+    pointer-events: none;
+}
+
+.page-about .pb-bg--light,
+.page-services .pb-bg--light ,
+.page-projects .pb-bg--light ,
+.page-equipment .pb-bg--light ,
+.page-team .pb-bg--light ,
+.page-contact .pb-bg--light ,
+.page-quote .pb-bg--light { background-color: var(--guruh-light); }
+
+.page-about .pb-bg--muted,
+.page-services .pb-bg--muted ,
+.page-projects .pb-bg--muted ,
+.page-equipment .pb-bg--muted ,
+.page-team .pb-bg--muted ,
+.page-contact .pb-bg--muted ,
+.page-quote .pb-bg--muted { background-color: #f1f5f9; }
+
+.page-about .pb-bg--brand,
+.page-services .pb-bg--brand ,
+.page-projects .pb-bg--brand ,
+.page-equipment .pb-bg--brand ,
+.page-team .pb-bg--brand ,
+.page-contact .pb-bg--brand ,
+.page-quote .pb-bg--brand {
+    background: linear-gradient(135deg, rgba(51, 168, 255, 0.07) 0%, rgba(217, 245, 225, 0.32) 100%);
+}
+
+.page-about .pb-section-head,
+.page-services .pb-section-head ,
+.page-projects .pb-section-head ,
+.page-equipment .pb-section-head ,
+.page-team .pb-section-head ,
+.page-contact .pb-section-head ,
+.page-quote .pb-section-head {
+    max-width: var(--pb-prose-max);
+}
+
+.page-about .pb-section-head.text-center,
+.page-services .pb-section-head.text-center ,
+.page-projects .pb-section-head.text-center ,
+.page-equipment .pb-section-head.text-center ,
+.page-team .pb-section-head.text-center ,
+.page-contact .pb-section-head.text-center ,
+.page-quote .pb-section-head.text-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.page-about .pb-section-image,
+.page-services .pb-section-image ,
+.page-projects .pb-section-image ,
+.page-equipment .pb-section-image ,
+.page-team .pb-section-image ,
+.page-contact .pb-section-image ,
+.page-quote .pb-section-image {
+    box-shadow: var(--shadow-lg);
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+}
+
+.page-about .pb-prose,
+.page-services .pb-prose ,
+.page-projects .pb-prose ,
+.page-equipment .pb-prose ,
+.page-team .pb-prose ,
+.page-contact .pb-prose ,
+.page-quote .pb-prose {
+    max-width: var(--pb-prose-max);
+}
+
+.page-about .pb-prose p,
+.page-services .pb-prose p ,
+.page-projects .pb-prose p ,
+.page-equipment .pb-prose p ,
+.page-team .pb-prose p ,
+.page-contact .pb-prose p ,
+.page-quote .pb-prose p {
+    color: var(--guruh-gray);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    margin-bottom: 1rem;
+}
+
+.page-about .pb-prose p:last-child,
+.page-services .pb-prose p:last-child ,
+.page-projects .pb-prose p:last-child ,
+.page-equipment .pb-prose p:last-child ,
+.page-team .pb-prose p:last-child ,
+.page-contact .pb-prose p:last-child ,
+.page-quote .pb-prose p:last-child {
+    margin-bottom: 0;
+}
+
+.page-about .pb-item-desc,
+.page-services .pb-item-desc ,
+.page-projects .pb-item-desc ,
+.page-equipment .pb-item-desc ,
+.page-team .pb-item-desc ,
+.page-contact .pb-item-desc ,
+.page-quote .pb-item-desc {
+    color: var(--pb-muted);
+    font-size: 0.9375rem;
+    line-height: 1.65;
+}
+
+.page-about a:focus-visible,
+.page-about button:focus-visible,
+.page-services a:focus-visible,
+.page-services button:focus-visible {
+    outline: 3px solid var(--guruh-primary);
+    outline-offset: 3px;
+}
+
+.page-about .premium-card:focus-within,
+.page-services .premium-card:focus-within ,
+.page-projects .premium-card:focus-within ,
+.page-equipment .premium-card:focus-within ,
+.page-team .premium-card:focus-within ,
+.page-contact .premium-card:focus-within ,
+.page-quote .premium-card:focus-within {
+    outline: 2px solid rgba(51, 168, 255, 0.45);
+    outline-offset: 2px;
+}
+
+/* CTA banner (shared layout) */
+.page-about .pb-layout--cta-banner,
+.page-services .pb-layout--cta-banner ,
+.page-projects .pb-layout--cta-banner ,
+.page-equipment .pb-layout--cta-banner ,
+.page-team .pb-layout--cta-banner ,
+.page-contact .pb-layout--cta-banner ,
+.page-quote .pb-layout--cta-banner {
+    position: relative;
+    overflow: hidden;
+    color: var(--guruh-white);
+}
+
+.page-about .pb-cta-bg,
+.page-services .pb-cta-bg ,
+.page-projects .pb-cta-bg ,
+.page-equipment .pb-cta-bg ,
+.page-team .pb-cta-bg ,
+.page-contact .pb-cta-bg ,
+.page-quote .pb-cta-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+}
+
+.page-about .pb-cta-overlay,
+.page-services .pb-cta-overlay ,
+.page-projects .pb-cta-overlay ,
+.page-equipment .pb-cta-overlay ,
+.page-team .pb-cta-overlay ,
+.page-contact .pb-cta-overlay ,
+.page-quote .pb-cta-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.92) 0%, rgba(26, 74, 110, 0.88) 100%);
+}
+
+.page-about .pb-cta-shapes,
+.page-services .pb-cta-shapes ,
+.page-projects .pb-cta-shapes ,
+.page-equipment .pb-cta-shapes ,
+.page-team .pb-cta-shapes ,
+.page-contact .pb-cta-shapes ,
+.page-quote .pb-cta-shapes {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.page-about .pb-cta-shape,
+.page-services .pb-cta-shape ,
+.page-projects .pb-cta-shape ,
+.page-equipment .pb-cta-shape ,
+.page-team .pb-cta-shape ,
+.page-contact .pb-cta-shape ,
+.page-quote .pb-cta-shape {
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    border: 1px solid rgba(51, 168, 255, 0.12);
+    border-radius: 50%;
+    top: -70px;
+    right: -30px;
+}
+
+.page-about .pb-cta-shape--2,
+.page-services .pb-cta-shape--2 ,
+.page-projects .pb-cta-shape--2 ,
+.page-equipment .pb-cta-shape--2 ,
+.page-team .pb-cta-shape--2 ,
+.page-contact .pb-cta-shape--2 ,
+.page-quote .pb-cta-shape--2 {
+    width: 160px;
+    height: 160px;
+    bottom: -30px;
+    left: 8%;
+    top: auto;
+    right: auto;
+}
+
+.page-about .pb-cta-content,
+.page-services .pb-cta-content ,
+.page-projects .pb-cta-content ,
+.page-equipment .pb-cta-content ,
+.page-team .pb-cta-content ,
+.page-contact .pb-cta-content ,
+.page-quote .pb-cta-content {
+    position: relative;
+    z-index: 1;
+}
+
+.page-about .pb-cta-heading,
+.page-services .pb-cta-heading ,
+.page-projects .pb-cta-heading ,
+.page-equipment .pb-cta-heading ,
+.page-team .pb-cta-heading ,
+.page-contact .pb-cta-heading ,
+.page-quote .pb-cta-heading {
+    font-size: clamp(1.625rem, 3.5vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+}
+
+.page-about .pb-cta-subheading,
+.page-services .pb-cta-subheading ,
+.page-projects .pb-cta-subheading ,
+.page-equipment .pb-cta-subheading ,
+.page-team .pb-cta-subheading ,
+.page-contact .pb-cta-subheading ,
+.page-quote .pb-cta-subheading {
+    font-size: 1.0625rem;
+    opacity: 0.92;
+    max-width: 560px;
+    margin: 0 auto 1.75rem;
+    line-height: 1.7;
+}
+
+.page-about .pb-cta-actions,
+.page-services .pb-cta-actions ,
+.page-projects .pb-cta-actions ,
+.page-equipment .pb-cta-actions ,
+.page-team .pb-cta-actions ,
+.page-contact .pb-cta-actions ,
+.page-quote .pb-cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+
+@media (min-width: 1400px) {
+    .page-about,
+    .page-services {
+        --pb-section-py: clamp(4rem, 5vw, 6rem);
+        --pb-content-max: 80rem;
+    }
+}
+
+@media (min-width: 1920px) {
+    .page-about,
+    .page-services {
+        --pb-content-max: 88rem;
+        --pb-prose-max: 46rem;
+    }
+
+    .page-about .section-title,
+    .page-services .section-title {
+        font-size: clamp(2rem, 2.5vw, 2.875rem);
+    }
+}
+
+@media (max-width: 991.98px) {
+    .page-about .pb-cta-actions,
+    .page-services .pb-cta-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .page-about .pb-cta-actions .btn,
+    .page-services .pb-cta-actions .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-about .premium-card,
+    .page-services .premium-card {
+        transition: none;
+    }
+}

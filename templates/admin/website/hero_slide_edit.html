@@ -1,0 +1,51 @@
+{% extends 'admin/website/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field %}
+
+{% block website_actions %}
+<a href="{{ url_for('admin.website_page', slug='home') }}" class="btn btn-outline-secondary btn-sm">Back to Home Page</a>
+<a href="/" class="btn btn-outline-secondary btn-sm" target="_blank" rel="noopener">View Live</a>
+{% endblock %}
+
+{% block website_content %}
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="admin-panel">
+            <h2 class="h5 mb-3">{% if slide_id %}Edit Hero Slide{% else %}Add Hero Slide{% endif %}</h2>
+            <form method="post" novalidate>
+                {{ form.hidden_tag() }}
+                {{ render_field(form.title) }}
+                {{ render_field(form.subtitle) }}
+                {{ render_field(form.description) }}
+                {% with field_id='slide_image', field_name='image', label='Background Image', value=form.image.data, media_assets=media_assets %}
+                {% include 'admin/website/_hero_banner_picker.html' %}
+                {% endwith %}
+                <div class="row g-3">
+                    <div class="col-md-6">{{ render_field(form.cta_text) }}</div>
+                    <div class="col-md-6">{{ render_field(form.cta_url) }}</div>
+                    <div class="col-md-6">{{ render_field(form.secondary_cta_text) }}</div>
+                    <div class="col-md-6">{{ render_field(form.secondary_cta_url) }}</div>
+                    <div class="col-md-4">{{ render_field(form.overlay_opacity, '0 = transparent, 1 = solid dark overlay.') }}</div>
+                    <div class="col-md-4">{{ render_field(form.text_alignment) }}</div>
+                    <div class="col-md-4">{{ render_field(form.sort_order) }}</div>
+                    <div class="col-md-4">
+                        <div class="form-check form-switch mt-4">
+                            {{ form.is_active(class="form-check-input") }}
+                            {{ form.is_active.label(class="form-check-label") }}
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex gap-2 mt-4">
+                    {{ form.submit(class="btn btn-primary") }}
+                    <a href="{{ url_for('admin.website_page', slug='home') }}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="admin-panel">
+            <h3 class="h6">Media Library</h3>
+            <p class="text-muted small mb-0">Upload PNG, JPG, or WEBP in <a href="{{ url_for('admin.media_upload', folder='content') }}" target="_blank" rel="noopener">Media &rarr; Upload</a>, then click a thumbnail above to select the background image.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

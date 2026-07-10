@@ -1,0 +1,32 @@
+{# Statistics row with animated counters #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{{ pb_open_section(section, block) }}
+<div class="pb-stats-bg" aria-hidden="true"></div>
+<div class="container position-relative">
+    <div class="pb-section-head text-center mb-4 mb-lg-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+    </div>
+    {% if block and block.items %}
+    <div class="row g-4 g-lg-5">
+        {% for item in block.items %}
+        {% if item.is_active %}
+        <div class="col-6 col-lg-3" data-animate>
+            <div class="stat-card">
+                {% if item.icon %}
+                <div class="stat-card-icon"><i class="bi {{ item.icon }}" aria-hidden="true"></i></div>
+                {% endif %}
+                <div class="stat-card-value">
+                    {% set stat_value = item.extra.value if item.extra and item.extra.value else item.subtitle %}
+                    {% set stat_suffix = item.extra.suffix if item.extra and item.extra.suffix else '' %}
+                    <span class="visually-hidden">{{ item.title }}: {{ stat_value }}{{ stat_suffix }}</span>
+                    <span class="counter" data-target="{{ stat_value }}" aria-hidden="true">0</span><span class="stat-suffix" aria-hidden="true">{{ stat_suffix }}</span>
+                </div>
+                <div class="stat-card-label">{{ item.title }}</div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{{ pb_close_section() }}

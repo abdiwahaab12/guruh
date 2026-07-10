@@ -1,0 +1,40 @@
+{% extends 'admin/gallery/layout.html' %}
+
+{% block gallery_subtitle %}Gallery statistics and recent uploads.{% endblock %}
+
+{% block gallery_content %}
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-4 col-lg-2"><div class="admin-gallery-stat"><span class="label">Total Items</span><span class="value">{{ stats.total }}</span></div></div>
+    <div class="col-6 col-md-4 col-lg-2"><div class="admin-gallery-stat"><span class="label">Albums</span><span class="value">{{ stats.albums }}</span></div></div>
+    <div class="col-6 col-md-4 col-lg-2"><div class="admin-gallery-stat"><span class="label">Images</span><span class="value">{{ stats.images }}</span></div></div>
+    <div class="col-6 col-md-4 col-lg-2"><div class="admin-gallery-stat"><span class="label">Videos</span><span class="value">{{ stats.videos }}</span></div></div>
+    <div class="col-6 col-md-4 col-lg-2"><div class="admin-gallery-stat"><span class="label">Featured</span><span class="value">{{ stats.featured }}</span></div></div>
+    <div class="col-6 col-md-4 col-lg-2"><div class="admin-gallery-stat"><span class="label">Active</span><span class="value">{{ stats.active }}</span></div></div>
+</div>
+
+<section class="admin-panel">
+    <div class="admin-panel-header">
+        <h2 class="admin-panel-title">Recent Uploads</h2>
+        <a href="{{ url_for('admin.gallery_list') }}" class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    {% if stats.recent %}
+    <div class="admin-gallery-recent-grid">
+        {% for item in stats.recent %}
+        <a href="{{ url_for('admin.gallery_edit', gallery_item_id=item.id) }}" class="admin-gallery-recent-card{% if not item.is_active %} is-inactive{% endif %}">
+            {% if item.image %}
+            <img src="{{ url_for('static', filename=item.image) }}" alt="{{ item.title }}" loading="lazy">
+            {% else %}
+            <div class="admin-gallery-recent-placeholder"><i class="bi bi-image" aria-hidden="true"></i></div>
+            {% endif %}
+            <div class="admin-gallery-recent-meta">
+                <strong>{{ item.title }}</strong>
+                <span>{% if item.media_type == 'video' %}Video{% else %}Image{% endif %} · {{ item.category or 'Uncategorized' }}</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-muted mb-0">No gallery items yet. <a href="{{ url_for('admin.gallery_create') }}">Add the first item</a>.</p>
+    {% endif %}
+</section>
+{% endblock %}

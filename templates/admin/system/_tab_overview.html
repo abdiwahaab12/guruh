@@ -1,0 +1,68 @@
+<div class="row g-3 mb-4">
+    <div class="col-md-6 col-xl-3">
+        <div class="admin-system-card border-start border-4 border-{{ 'success' if overview.database_status == 'healthy' else 'danger' }}">
+            <div class="admin-system-card-label">Database Status</div>
+            <div class="admin-system-card-value text-capitalize">{{ overview.database_status }}</div>
+            <div class="text-muted small">{{ overview.database_message }}</div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="admin-system-card border-start border-4 border-info">
+            <div class="admin-system-card-label">Storage Usage</div>
+            <div class="admin-system-card-value">{{ overview.storage_used_label }}</div>
+            <div class="progress mt-2" style="height:6px">
+                <div class="progress-bar bg-info" style="width: {{ overview.storage_percent }}%"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="admin-system-card border-start border-4 border-{{ 'success' if overview.application_status == 'healthy' else 'warning' }}">
+            <div class="admin-system-card-label">Application Status</div>
+            <div class="admin-system-card-value text-capitalize">{{ overview.application_status }}</div>
+            <div class="text-muted small">{{ overview.application_message }}</div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="admin-system-card border-start border-4 border-secondary">
+            <div class="admin-system-card-label">Python Environment</div>
+            <div class="admin-system-card-value">{{ overview.python_version }}</div>
+            <div class="text-muted small">{{ python_env.platform }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="admin-system-panel">
+            <h2 class="h6 mb-3">System Health Summary</h2>
+            <div class="table-responsive">
+                <table class="table table-sm align-middle mb-0">
+                    <thead><tr><th>Check</th><th>Status</th><th>Message</th></tr></thead>
+                    <tbody>
+                        {% for check in overview.health_checks %}
+                        <tr>
+                            <td>{{ check.label }}</td>
+                            <td><span class="badge bg-{{ 'success' if check.status == 'healthy' else 'danger' if check.status == 'unhealthy' else 'secondary' }}">{{ check.status }}</span></td>
+                            <td class="small text-muted">{{ check.message }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="admin-system-panel">
+            <h2 class="h6 mb-3">Recent Errors</h2>
+            {% if overview.recent_errors %}
+            <ul class="list-unstyled mb-0 admin-system-log-list">
+                {% for line in overview.recent_errors %}
+                <li class="admin-system-log-line text-{{ line.level }}"><span class="text-muted me-2">#{{ line.line_number }}</span>{{ line.content }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="text-muted small mb-0">No recent errors recorded.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>

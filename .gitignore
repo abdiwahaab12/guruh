@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+
+# Flask / environment (never commit secrets)
+.env
+.env.local
+.env.development
+instance/
+.webassets-cache
+
+# Test / tooling caches
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# IDE
+.vscode/
+.idea/
+.cursor/
+*.swp
+*.swo
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs & temp files
+*.log
+*.tmp
+
+# Database (local SQLite — production uses MySQL on server)
+*.db
+*.sqlite3
+test_admin.db
+
+# User-uploaded media (keep folder placeholder)
+static/uploads/**
+!static/uploads/.gitkeep
+# Development PDF extraction output
+data/pdf_extract/

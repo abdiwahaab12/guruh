@@ -1,0 +1,227 @@
+/**
+ * GURUH Construction — Team & Leadership Page
+ * Shared shell: sections-shared.css + page-builder.css
+ */
+
+/* Leadership cards */
+.page-team .pb-leadership-card {
+    border: none;
+}
+
+.page-team .pb-leadership-card--director {
+    border-top: 4px solid var(--guruh-primary);
+}
+
+.page-team .pb-leadership-avatar,
+.page-team .pb-staff-avatar {
+    width: 120px;
+    height: 120px;
+}
+
+.page-team .pb-leadership-photo,
+.page-team .pb-staff-photo {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+}
+
+.page-team .pb-leadership-avatar-fallback,
+.page-team .pb-staff-avatar-fallback {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(51, 168, 255, 0.15), rgba(51, 168, 255, 0.05));
+    color: var(--guruh-primary);
+    font-size: 2.5rem;
+}
+
+.page-team .pb-staff-avatar-fallback {
+    font-size: 3rem;
+}
+
+.page-team .pb-leadership-role {
+    color: var(--guruh-primary-dark);
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+}
+
+.page-team .pb-leadership-dept {
+    font-size: 0.8125rem;
+    color: var(--pb-muted);
+    margin-bottom: 1rem;
+}
+
+.page-team .pb-leadership-meta-block {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.page-team .pb-leadership-meta-label {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--guruh-dark);
+    margin-bottom: 0.35rem;
+}
+
+.page-team .pb-leadership-years {
+    font-size: 0.875rem;
+    color: var(--pb-muted);
+    margin-top: 0.75rem;
+}
+
+.page-team .pb-leadership-social {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.page-team .pb-leadership-social-link {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(51, 168, 255, 0.1);
+    color: var(--guruh-primary-dark);
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.page-team .pb-leadership-social-link:hover,
+.page-team .pb-leadership-social-link:focus-visible {
+    background: var(--guruh-primary);
+    color: var(--guruh-white);
+}
+
+.page-team .pb-leadership-email a {
+    color: var(--guruh-primary-dark);
+    font-size: 0.875rem;
+    text-decoration: none;
+}
+
+.page-team .pb-leadership-email a:hover,
+.page-team .pb-leadership-email a:focus-visible {
+    text-decoration: underline;
+}
+
+/* Org chart */
+.page-team .pb-org-chart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 52rem;
+    margin: 0 auto;
+}
+
+.page-team .pb-org-node {
+    width: 100%;
+    max-width: 320px;
+}
+
+.page-team .pb-org-node--level-0 { max-width: 360px; }
+.page-team .pb-org-node--level-1 { max-width: 340px; margin-left: 0; }
+.page-team .pb-org-node--level-2 { max-width: 300px; }
+
+@media (min-width: 768px) {
+    .page-team .pb-org-chart {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+        max-width: 56rem;
+    }
+
+    .page-team .pb-org-node--level-0 {
+        grid-column: 1 / -1;
+        justify-self: center;
+    }
+}
+
+.page-team .pb-org-node-card {
+    background: var(--guruh-white);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+    padding: 1.1rem 1.25rem;
+    text-align: center;
+    box-shadow: var(--section-shadow-soft);
+    border-left: 3px solid var(--guruh-primary);
+}
+
+.page-team .pb-org-node-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    color: var(--guruh-dark);
+}
+
+.page-team .pb-org-node-subtitle {
+    font-size: 0.8125rem;
+    color: var(--pb-muted);
+    margin: 0;
+}
+
+.page-team .pb-org-chart-note {
+    font-size: 0.875rem;
+}
+
+/* Staff grid */
+.page-team .pb-staff-card {
+    border: none;
+}
+
+.page-team .pb-staff-position {
+    color: var(--guruh-primary-dark);
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+}
+
+.page-team .pb-staff-dept {
+    font-size: 0.8125rem;
+    margin-bottom: 0.5rem;
+}
+
+.page-team .pb-staff-exp {
+    font-size: 0.8125rem;
+    color: var(--pb-muted);
+}
+
+/* Join team */
+.page-team .pb-join-team-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.page-team .pb-layout--join-team .pb-prose p {
+    text-align: center;
+}
+
+/* Culture section on brand background */
+.page-team .pb-bg--brand .premium-card {
+    background: rgba(255, 255, 255, 0.92);
+}
+
+@media (max-width: 575.98px) {
+    .page-team .premium-card-body {
+        padding: 1.25rem;
+    }
+
+    .page-team .pb-join-team-actions .btn {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-team .pb-leadership-social-link {
+        transition: none;
+    }
+}

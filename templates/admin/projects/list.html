@@ -1,0 +1,160 @@
+{% extends 'admin/projects/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field %}
+
+{% block projects_subtitle %}Search, filter, and manage all portfolio projects.{% endblock %}
+
+{% block projects_content %}
+<form class="admin-panel admin-projects-filters" method="get" action="{{ url_for('admin.projects_list') }}">
+    <div class="row g-2">
+        <div class="col-lg-3">
+            <label class="form-label" for="q">Search</label>
+            <input type="search" class="form-control" id="q" name="q" value="{{ list_page.query }}" placeholder="Title, client, location…">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="country">Country</label>
+            <select class="form-select" id="country" name="country">
+                <option value="">All</option>
+                {% for c in filter_countries %}<option value="{{ c }}"{% if list_page.filters.country == c %} selected{% endif %}>{{ c }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="county">County</label>
+            <select class="form-select" id="county" name="county">
+                <option value="">All</option>
+                {% for c in filter_counties %}<option value="{{ c }}"{% if list_page.filters.county == c %} selected{% endif %}>{{ c }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="status">Status</label>
+            <select class="form-select" id="status" name="status">
+                <option value="">All</option>
+                {% for s in filter_statuses %}<option value="{{ s }}"{% if list_page.filters.status == s %} selected{% endif %}>{{ s }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="category">Category</label>
+            <select class="form-select" id="category" name="category">
+                <option value="">All</option>
+                {% for c in filter_categories %}<option value="{{ c }}"{% if list_page.filters.category == c %} selected{% endif %}>{{ c }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="service">Service</label>
+            <select class="form-select" id="service" name="service">
+                <option value="">All</option>
+                {% for s in filter_services %}<option value="{{ s.slug }}"{% if list_page.filters.service == s.slug %} selected{% endif %}>{{ s.title }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="client">Client</label>
+            <select class="form-select" id="client" name="client">
+                <option value="">All</option>
+                {% for c in filter_clients %}<option value="{{ c }}"{% if list_page.filters.client == c %} selected{% endif %}>{{ c }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="year">Year</label>
+            <select class="form-select" id="year" name="year">
+                <option value="">All</option>
+                {% for y in filter_years %}<option value="{{ y }}"{% if list_page.filters.year == y %} selected{% endif %}>{{ y }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="sort">Sort</label>
+            <select class="form-select" id="sort" name="sort">
+                {% for key, label in sort_options.items() %}
+                <option value="{{ key }}"{% if list_page.sort == key %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="deleted" name="deleted" value="1"{% if list_page.include_deleted %} checked{% endif %}>
+                <label class="form-check-label" for="deleted">Show deleted</label>
+            </div>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+            <a href="{{ url_for('admin.projects_list') }}" class="btn btn-outline-secondary">Reset</a>
+        </div>
+    </div>
+</form>
+
+<form method="post" action="{{ url_for('admin.projects_bulk') }}" class="admin-panel mt-3">
+    {{ bulk_form.hidden_tag() }}
+    <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+        <label class="me-2">Bulk:</label>
+        {{ bulk_form.action(class="form-select form-select-sm w-auto d-inline-block") }}
+        {{ bulk_form.submit(class="btn btn-sm btn-outline-primary") }}
+    </div>
+
+    <div class="table-responsive">
+        <table class="table admin-projects-table align-middle">
+            <thead>
+                <tr>
+                    <th scope="col"><input type="checkbox" id="selectAllProjects" aria-label="Select all"></th>
+                    <th scope="col">Project</th>
+                    <th scope="col">Country</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Client</th>
+                    <th scope="col">Year</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in list_page.items %}
+                <tr class="{% if not p.is_active %}text-muted{% endif %}">
+                    <td><input type="checkbox" name="project_ids" value="{{ p.id }}" class="project-row-check"></td>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            {% if p.cover_image %}
+                            <img src="{{ url_for('static', filename=p.cover_image) }}" alt="" class="admin-projects-thumb" loading="lazy">
+                            {% endif %}
+                            <div>
+                                <strong>{{ p.title }}</strong>
+                                {% if p.is_featured %}<span class="badge bg-primary ms-1">Featured</span>{% endif %}
+                                {% if not p.is_active %}<span class="badge bg-secondary ms-1">Deleted</span>{% endif %}
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ p.country }}</td>
+                    <td>{{ p.status }}</td>
+                    <td>{{ p.category }}</td>
+                    <td>{{ p.client }}</td>
+                    <td>{{ p.completion_year }}</td>
+                    <td class="text-end">
+                        {% if p.is_active %}
+                        <a href="{{ url_for('admin.projects_edit', project_id=p.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                        {% else %}
+                        <form method="post" action="{{ url_for('admin.projects_restore', project_id=p.id) }}" class="d-inline">
+                            <input type="hidden" name="csrf_token" value="{{ bulk_form.csrf_token.current_token }}">
+                            <button type="submit" class="btn btn-sm btn-outline-success">Restore</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="8" class="text-center text-muted py-4">No projects found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</form>
+
+{% if list_page.total_pages > 1 %}
+<nav class="mt-3" aria-label="Projects pagination">
+    <ul class="pagination justify-content-center">
+        {% for p in range(1, list_page.total_pages + 1) %}
+        {% if p == list_page.page or p <= 2 or p >= list_page.total_pages - 1 or (p >= list_page.page - 1 and p <= list_page.page + 1) %}
+        <li class="page-item{% if p == list_page.page %} active{% endif %}">
+            <a class="page-link" href="{{ url_for('admin.projects_list', page=p, q=list_page.query, country=list_page.filters.country, county=list_page.filters.county, status=list_page.filters.status, category=list_page.filters.category, service=list_page.filters.service, client=list_page.filters.client, year=list_page.filters.year, sort=list_page.sort, deleted=1 if list_page.include_deleted else none) }}">{{ p }}</a>
+        </li>
+        {% elif p == 3 or p == list_page.total_pages - 2 %}
+        <li class="page-item disabled"><span class="page-link">…</span></li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

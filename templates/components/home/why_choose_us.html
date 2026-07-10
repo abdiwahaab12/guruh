@@ -1,0 +1,44 @@
+{# Why Choose Us #}
+{% if section %}
+<section class="home-section why-choose-us" id="whyChooseUs" aria-labelledby="why-choose-heading">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-5" data-animate>
+                {% if section.subheading %}
+                <p class="section-subheading">{{ section.subheading }}</p>
+                {% endif %}
+                <h2 class="section-title" id="why-choose-heading">{{ section.heading }}</h2>
+                <div class="section-divider section-divider--left"></div>
+                {% if section.intro %}
+                <p class="why-choose-intro">{{ section.intro }}</p>
+                {% endif %}
+
+                <div class="why-choose-accent-box">
+                    <div class="why-choose-accent-icon"><i class="bi bi-award"></i></div>
+                    <div>
+                        <strong>{{ company.short_name }}</strong>
+                        <span>{{ company.tagline }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7" data-animate>
+                <div class="row g-4">
+                    {% for item in section.items %}
+                    <div class="col-sm-6">
+                        <div class="premium-card feature-card h-100">
+                            <div class="feature-card-icon">
+                                <i class="bi {{ item.icon }}" aria-hidden="true"></i>
+                            </div>
+                            <h3 class="feature-card-title">{{ item.title }}</h3>
+                            <p class="feature-card-text">{{ item.description }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% include "components/ui/section_divider.html" %}
+{% endif %}

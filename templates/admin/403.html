@@ -1,0 +1,20 @@
+{% extends "admin/auth_base.html" %}
+
+{% block title %}403 Forbidden | GURUH CMS{% endblock %}
+{% block auth_heading %}Access Denied{% endblock %}
+{% block auth_subheading %}You do not have permission to view this resource{% endblock %}
+
+{% block auth_content %}
+<div class="text-center py-2">
+    <div class="admin-error-icon" aria-hidden="true"><i class="bi bi-shield-lock"></i></div>
+    <div class="admin-error-code" aria-hidden="true">403</div>
+    <p class="mb-4">
+        Your account is signed in, but your role does not include the required permissions.
+        Contact an administrator if you believe this is an error.
+    </p>
+    <div class="d-grid gap-2">
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-guruh-primary">Go to Dashboard</a>
+        <a href="{{ url_for('admin.logout') }}" class="btn btn-outline-secondary">Sign Out</a>
+    </div>
+</div>
+{% endblock %}

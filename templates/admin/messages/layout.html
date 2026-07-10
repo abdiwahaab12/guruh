@@ -1,0 +1,36 @@
+{% extends 'admin/layouts/base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin-messages.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-page-header">
+    <div>
+        <h1 class="admin-page-title">{% block messages_title %}{{ page_title }}{% endblock %}</h1>
+        <p class="admin-page-subtitle">{% block messages_subtitle %}Unified inbox for contact messages, quote requests, and job applications.{% endblock %}</p>
+    </div>
+    <div class="admin-page-actions">
+        {% block messages_actions %}{% endblock %}
+    </div>
+</div>
+
+<nav class="admin-messages-tabs" aria-label="Message types">
+    {% for tab in inbox_tabs %}
+    <a href="{{ url_for('admin.messages_inbox', tab=tab.slug) }}"
+       class="admin-messages-tab{% if active_tab == tab.slug %} active{% endif %}">
+        <i class="bi {{ tab.icon }} me-1" aria-hidden="true"></i>{{ tab.label }}
+    </a>
+    {% endfor %}
+</nav>
+
+{% include 'admin/partials/_breadcrumb.html' %}
+{% include 'admin/partials/_flash_messages.html' %}
+
+{% block messages_content %}{% endblock %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/admin-messages.js') }}" defer></script>
+{% block messages_extra_js %}{% endblock %}
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% from 'macros/page_layout.html' import render_page_seo %}
+{% from 'macros/page_builder.html' import render_page_sections %}
+{% from 'macros/seo.html' import organization_postal_address %}
+
+{% block title %}{{ page.meta_title if page else job.title }} | {{ company.name }}{% endblock %}
+{% block meta_description %}{{ page.meta_description if page else job.short_description }}{% endblock %}
+{% block body_class %}page-careers page-career-detail{% endblock %}
+
+{% block seo_meta %}
+{% set detail_og = url_for('static', filename=job.image, _external=True) if job.image else og_image_url %}
+{{ render_page_seo(page, company, canonical_url, og_image_url, breadcrumbs, image=detail_og, breadcrumb_ld=False) }}
+{% endblock %}
+
+{% block extra_head %}
+{% set site_root = url_for('main.index', _external=True) %}
+{% if job.image %}
+{% if job.image %}
+<link rel="preload" as="image" href="{{ url_for('static', filename=job.image) }}">
+{% endif %}
+{% endif %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": {{ (canonical_url ~ '#webpage') | tojson }},
+      "url": {{ canonical_url | tojson }},
+      "name": {{ (page.meta_title if page else job.title) | tojson }},
+      "description": {{ (page.meta_description if page else job.short_description) | tojson }},
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": {{ (site_root ~ '#website') | tojson }},
+        "name": {{ company.name | tojson }},
+        "url": {{ site_root | tojson }}
+      }
+    },
+    {
+      "@type": "JobPosting",
+      "@id": {{ (canonical_url ~ '#jobposting') | tojson }},
+      "title": {{ job.title | tojson }},
+      "description": {{ job.description | tojson }},
+      "url": {{ canonical_url | tojson }},
+      "datePosted": {{ job.deadline | tojson }},
+      "validThrough": {{ job.deadline | tojson }},
+      "employmentType": {{ job.employment_type | tojson }},
+      "qualifications": {{ job.requirements | tojson }},
+      "skills": {{ job.skills | join(', ') | tojson }},
+      "hiringOrganization": {
+        "@type": "Organization",
+        "@id": {{ (site_root ~ '#organization') | tojson }},
+        "name": {{ company.name | tojson }},
+        "url": {{ site_root | tojson }},
+        "email": {{ company.email | tojson }},
+        "telephone": {{ company.phone_primary | tojson }},
+        "address": {{ organization_postal_address(company) }}
+      },
+      "jobLocation": {
+        "@type": "Place",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": {{ job.location | tojson }},
+          "addressCountry": {{ company.address_country_code | tojson }}
+        }
+      }
+    }{% if breadcrumbs %},
+    {
+      "@type": "BreadcrumbList",
+      "@id": {{ (canonical_url ~ '#breadcrumb') | tojson }},
+      "itemListElement": [
+        {% for crumb in breadcrumbs %}
+        {
+          "@type": "ListItem",
+          "position": {{ loop.index }},
+          "name": {{ crumb.label | tojson }},
+          "item": {{ crumb.url | tojson }}
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }{% endif %}
+  ]
+}
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sections-shared.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page-builder.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/careers.css') }}">
+{% endblock %}
+
+{% block content %}
+{% if page_composition and page_composition.sections %}
+{{ render_page_sections(
+    page_composition.sections,
+    page,
+    jobs=jobs,
+    job=job,
+    job_application_fields=job_application_fields,
+    job_application_options=job_application_options,
+    company=company
+) }}
+{% endif %}
+{% endblock %}

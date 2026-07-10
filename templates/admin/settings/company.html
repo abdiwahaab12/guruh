@@ -1,0 +1,30 @@
+{% extends 'admin/settings/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field, form_actions %}
+
+{% block settings_subtitle %}Legal name, branding, geography, and company description.{% endblock %}
+
+{% block settings_content %}
+<form method="post" class="admin-settings-form" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="admin-panel">
+        <div class="row g-3">
+            <div class="col-md-8">
+                {{ render_field(form.name) }}
+                {{ render_field(form.short_name) }}
+                {{ render_field(form.tagline) }}
+                {{ render_field(form.description) }}
+            </div>
+            <div class="col-md-4">
+                {{ render_field(form.logo_path, 'Path relative to static/ folder.') }}
+                {{ render_field(form.headquarters) }}
+                <hr>
+                {{ render_field(form.founded_country) }}
+                {{ render_field(form.founded_country_code, 'ISO 3166-1 alpha-2, e.g. KE') }}
+                {{ render_field(form.operating_country) }}
+                {{ render_field(form.operating_country_code, 'ISO 3166-1 alpha-2, e.g. SO') }}
+            </div>
+        </div>
+        {{ form_actions(form) }}
+    </div>
+</form>
+{% endblock %}

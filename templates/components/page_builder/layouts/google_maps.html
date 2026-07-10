@@ -1,0 +1,66 @@
+{# Google Maps — dynamic coordinates, CMS-ready embed #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading, pb_paragraphs %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="row g-5 align-items-start">
+        <div class="col-lg-4" data-animate>
+            {{ pb_heading(section, block, 'left') }}
+            {{ pb_paragraphs(block.full_content if block else '') }}
+            {% set map = map_location if map_location else none %}
+            {% set extra = block.extra if block and block.extra else {} %}
+            {% if map or extra %}
+            <dl class="pb-map-coords mt-4 mb-0">
+                <div class="pb-map-coord-row">
+                    <dt>Latitude</dt>
+                    <dd>{{ extra.latitude if extra.latitude is defined else (map.latitude if map else '') }}</dd>
+                </div>
+                <div class="pb-map-coord-row">
+                    <dt>Longitude</dt>
+                    <dd>{{ extra.longitude if extra.longitude is defined else (map.longitude if map else '') }}</dd>
+                </div>
+            </dl>
+            {% endif %}
+        </div>
+        <div class="col-lg-8" data-animate>
+            {% set extra = block.extra if block and block.extra else {} %}
+            {% set map = map_location if map_location else none %}
+            {% set lat = extra.latitude if extra.latitude is defined else (map.latitude if map else none) %}
+            {% set lng = extra.longitude if extra.longitude is defined else (map.longitude if map else none) %}
+            {% set zoom = extra.zoom if extra.zoom is defined else (map.zoom if map else 16) %}
+            {% set embed = extra.embed_url or (map.embed_url if map else '') %}
+            {% set ready = extra.map_ready if extra.map_ready is defined else (map.map_ready if map else false) %}
+            <div class="pb-google-map-shell"
+                 role="region"
+                 aria-label="Office location map"
+                 data-map-ready="{{ 'true' if ready else 'false' }}"
+                 data-map-provider="{{ extra.map_provider if extra.map_provider else (map.map_provider if map else 'google-maps') }}"
+                 data-latitude="{{ lat }}"
+                 data-longitude="{{ lng }}"
+                 data-zoom="{{ zoom }}">
+                {% if embed %}
+                <iframe class="pb-google-map-embed"
+                        src="{{ embed }}"
+                        title="GURUH Construction office location"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        allowfullscreen></iframe>
+                {% else %}
+                <div class="pb-google-map-placeholder" aria-hidden="true">
+                    <div class="pb-google-map-pin">
+                        <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+                    </div>
+                    <p class="pb-google-map-label">{{ block.short_summary if block else 'Office Location' }}</p>
+                    <p class="pb-google-map-note">Google Maps embed — CMS coordinates ready</p>
+                    <a class="btn btn-outline-primary btn-sm mt-2"
+                       href="https://www.google.com/maps/search/?api=1&query={{ lat }},{{ lng }}"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        <i class="bi bi-box-arrow-up-right me-1" aria-hidden="true"></i>Open in Google Maps
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{{ pb_close_section() }}

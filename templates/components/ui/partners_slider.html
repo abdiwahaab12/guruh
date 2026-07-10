@@ -1,0 +1,36 @@
+{% from 'macros/media.html' import smart_image %}
+{# Partners logo marquee — pass `partners` list (PartnerDTO or block items) #}
+{% set slider_id = slider_id|default('partnersSlider') %}
+{% set show_names = show_names|default(false) %}
+
+<div class="partners-slider"
+     id="{{ slider_id }}"
+     role="region"
+     aria-label="Partner logos"
+     data-partners-slider
+     data-partner-count="{{ partners|length }}">
+    <div class="partners-slider-viewport">
+        <div class="partners-slider-track" id="{{ slider_id }}-track">
+            {% for copy in [1, 2] %}
+            {% for partner in partners %}
+            {% set partner_name = partner.name if partner.name is defined else partner.title %}
+            {% set partner_logo = partner.logo if partner.logo is defined else partner.image %}
+            {% set partner_url = partner.url if partner.url is defined else (partner.extra.url if partner.extra and partner.extra.url else '') %}
+            <div class="partner-card partners-slider-slide"{% if copy == 2 %} aria-hidden="true"{% endif %}>
+                {% if partner_url %}
+                <a href="{{ partner_url | safe_href }}" target="_blank" rel="noopener noreferrer" aria-label="{{ partner_name }}"{% if copy == 2 %} tabindex="-1"{% endif %}>
+                    {{ smart_image(partner_logo, partner_name, 'partner', 'partner-logo') }}
+                    {% if show_names %}<span class="partner-name">{{ partner_name }}</span>{% endif %}
+                </a>
+                {% else %}
+                <div class="partner-card-inner">
+                    {{ smart_image(partner_logo, partner_name, 'partner', 'partner-logo') }}
+                    {% if show_names %}<span class="partner-name">{{ partner_name }}</span>{% endif %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+</div>

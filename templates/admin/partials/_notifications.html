@@ -1,0 +1,49 @@
+<div class="dropdown admin-notifications">
+    <button class="btn admin-icon-btn admin-notifications-toggle dropdown-toggle"
+            type="button"
+            id="adminNotificationsDropdown"
+            data-bs-toggle="dropdown"
+            data-bs-auto-close="outside"
+            aria-expanded="false"
+            aria-label="Notifications{% if unread_notification_count %} ({{ unread_notification_count }} unread){% endif %}">
+        <i class="bi bi-bell" aria-hidden="true"></i>
+        {% if unread_notification_count %}
+        <span class="admin-notifications-badge">{{ unread_notification_count }}</span>
+        {% endif %}
+    </button>
+
+    <div class="dropdown-menu dropdown-menu-end admin-notifications-panel"
+         aria-labelledby="adminNotificationsDropdown"
+         role="dialog"
+         aria-label="Notification center">
+        <div class="admin-notifications-header">
+            <h2 class="h6 mb-0" data-i18n="notifications.title">Notifications</h2>
+            <button type="button" class="btn btn-link btn-sm p-0" disabled data-i18n="notifications.mark_all">Mark all read</button>
+        </div>
+        <div class="admin-notifications-body">
+            {% if notifications %}
+            <ul class="admin-notifications-list list-unstyled mb-0">
+                {% for note in notifications %}
+                <li class="admin-notification-item{% if not note.is_read %} is-unread{% endif %}">
+                    <a href="{{ note.href }}" class="admin-notification-link">
+                        <span class="admin-notification-icon bg-{{ note.color }}">
+                            <i class="bi {{ note.icon }}" aria-hidden="true"></i>
+                        </span>
+                        <span class="admin-notification-content">
+                            <span class="admin-notification-title">{{ note.title }}</span>
+                            <span class="admin-notification-message">{{ note.message }}</span>
+                            <span class="admin-notification-time">{{ note.time_label }}</span>
+                        </span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="text-muted small mb-0 px-3 py-4 text-center">No notifications</p>
+            {% endif %}
+        </div>
+        <div class="admin-notifications-footer">
+            <a href="{{ url_for('admin.module', module_slug='forms') }}" class="small" data-i18n="notifications.view_all">View all activity</a>
+        </div>
+    </div>
+</div>

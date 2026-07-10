@@ -1,0 +1,8 @@
+{# SEO OG image picker — included in seo tab #}
+<div class="admin-media-picker-field mb-3">
+    <label class="form-label" for="og_image">OG Image (Media Path)</label>
+    <div class="input-group mb-2">
+        {{ form.og_image(class="form-control", id="og_image") }}
+        <a href="{{ url_for('admin.media_library', folder='projects') }}" class="btn btn-outline-secondary" target="_blank" rel="noopener">Browse Library</a>
+    </div>
+</div>

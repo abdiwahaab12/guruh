@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% from 'macros/page_layout.html' import render_page_seo %}
+{% from 'macros/page_builder.html' import render_page_sections %}
+{% from 'macros/seo.html' import organization_postal_address %}
+
+{% block title %}{{ page.meta_title if page else 'Careers' }} | {{ company.name }}{% endblock %}
+{% block meta_description %}{{ page.meta_description if page else company.tagline }}{% endblock %}
+{% block body_class %}page-careers{% endblock %}
+
+{% block seo_meta %}
+{% set careers_og = url_for('static', filename=page.banner_image, _external=True) if page and page.banner_image else og_image_url %}
+{{ render_page_seo(page, company, canonical_url, og_image_url, breadcrumbs, image=careers_og, breadcrumb_ld=False) }}
+{% endblock %}
+
+{% block extra_head %}
+{% set site_root = url_for('main.index', _external=True) %}
+{% set schema_ns = namespace(faq_items=[]) %}
+{% if page_composition and page_composition.sections %}
+{% for sec in page_composition.sections %}
+{% if sec.section_key == 'faq' and sec.block and sec.block.items %}
+{% set schema_ns.faq_items = sec.block.items %}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if page and page.banner_image %}
+<link rel="preload" as="image" href="{{ url_for('static', filename=page.banner_image) }}">
+{% endif %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": {{ (canonical_url ~ '#webpage') | tojson }},
+      "url": {{ canonical_url | tojson }},
+      "name": {{ (page.meta_title if page else 'Careers') | tojson }},
+      "description": {{ (page.meta_description if page else company.tagline) | tojson }},
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": {{ (site_root ~ '#website') | tojson }},
+        "name": {{ company.name | tojson }},
+        "url": {{ site_root | tojson }}
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": {{ (site_root ~ '#organization') | tojson }},
+      "name": {{ company.name | tojson }},
+      "url": {{ site_root | tojson }},
+      "email": {{ company.email | tojson }},
+      "telephone": {{ company.phone_primary | tojson }},
+      "address": {{ organization_postal_address(company) }}
+    },
+    {
+      "@type": "ItemList",
+      "@id": {{ (canonical_url ~ '#job-openings') | tojson }},
+      "name": "Current Job Openings",
+      "itemListElement": [
+        {% for job in jobs if job.is_active %}
+        {
+          "@type": "ListItem",
+          "position": {{ loop.index }},
+          "item": {
+            "@type": "JobPosting",
+            "title": {{ job.title | tojson }},
+            "description": {{ job.short_description | tojson }},
+            "url": {{ url_for('main.career_detail', slug=job.slug, _external=True) | tojson }},
+            "datePosted": {{ job.deadline | tojson }},
+            "employmentType": {{ job.employment_type | tojson }},
+            "hiringOrganization": {
+              "@type": "Organization",
+              "name": {{ company.name | tojson }},
+              "sameAs": {{ site_root | tojson }}
+            },
+            "jobLocation": {
+              "@type": "Place",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": {{ job.location | tojson }},
+                "addressCountry": {{ company.address_country_code | tojson }}
+              }
+            }
+          }
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }{% if breadcrumbs %},
+    {
+      "@type": "BreadcrumbList",
+      "@id": {{ (canonical_url ~ '#breadcrumb') | tojson }},
+      "itemListElement": [
+        {% for crumb in breadcrumbs %}
+        {
+          "@type": "ListItem",
+          "position": {{ loop.index }},
+          "name": {{ crumb.label | tojson }},
+          "item": {{ crumb.url | tojson }}
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }{% endif %}{% if schema_ns.faq_items %},
+    {
+      "@type": "FAQPage",
+      "@id": {{ (canonical_url ~ '#faq') | tojson }},
+      "mainEntity": [
+        {% set faq_comma = namespace(first=true) %}
+        {% for item in schema_ns.faq_items %}
+        {% if item.is_active %}
+        {% if not faq_comma.first %},{% endif %}
+        {
+          "@type": "Question",
+          "name": {{ item.title | tojson }},
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": {{ (item.full_content or item.short_summary) | tojson }}
+          }
+        }
+        {% set faq_comma.first = false %}
+        {% endif %}
+        {% endfor %}
+      ]
+    }{% endif %}
+  ]
+}
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sections-shared.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page-builder.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/careers.css') }}">
+{% endblock %}
+
+{% block content %}
+{% if page_composition and page_composition.sections %}
+{{ render_page_sections(
+    page_composition.sections,
+    page,
+    jobs=jobs,
+    job_application_fields=job_application_fields,
+    job_application_options=job_application_options,
+    company=company
+) }}
+{% endif %}
+{% endblock %}

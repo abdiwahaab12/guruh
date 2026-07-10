@@ -1,0 +1,64 @@
+{% extends 'admin/team/layout.html' %}
+
+{% block team_subtitle %}Team statistics and recent profile updates.{% endblock %}
+
+{% block team_content %}
+<div class="row g-3 mb-4">
+    <div class="col-md-4 col-lg-2"><div class="admin-team-stat"><span class="label">Total Members</span><span class="value">{{ stats.total }}</span></div></div>
+    <div class="col-md-4 col-lg-2"><div class="admin-team-stat"><span class="label">Directors</span><span class="value">{{ stats.directors }}</span></div></div>
+    <div class="col-md-4 col-lg-2"><div class="admin-team-stat"><span class="label">Management</span><span class="value">{{ stats.management }}</span></div></div>
+    <div class="col-md-4 col-lg-2"><div class="admin-team-stat"><span class="label">Staff</span><span class="value">{{ stats.staff }}</span></div></div>
+    <div class="col-md-4 col-lg-2"><div class="admin-team-stat"><span class="label">Active</span><span class="value">{{ stats.active }}</span></div></div>
+    <div class="col-md-4 col-lg-2"><div class="admin-team-stat"><span class="label">Inactive</span><span class="value">{{ stats.inactive }}</span></div></div>
+</div>
+
+<section class="admin-panel">
+    <div class="admin-panel-header">
+        <h2 class="admin-panel-title">Recent Updates</h2>
+        <a href="{{ url_for('admin.team_list') }}" class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    {% if stats.recent %}
+    <div class="table-responsive">
+        <table class="table admin-team-table align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">Member</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Department</th>
+                    <th scope="col">Updated</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in stats.recent %}
+                <tr class="{% if not m.is_active %}text-muted{% endif %}">
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            {% if m.photo %}
+                            <img src="{{ url_for('static', filename=m.photo) }}" alt="" class="admin-team-avatar" loading="lazy">
+                            {% else %}
+                            <span class="admin-team-avatar admin-team-avatar--placeholder"><i class="bi bi-person" aria-hidden="true"></i></span>
+                            {% endif %}
+                            <div>
+                                <strong>{{ m.name }}</strong>
+                                {% if m.is_featured %}<span class="badge bg-primary ms-1">Featured</span>{% endif %}
+                                {% if not m.is_active %}<span class="badge bg-secondary ms-1">Deleted</span>{% endif %}
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ member_type_labels.get(m.member_type, m.member_type) }}</td>
+                    <td>{{ m.department }}</td>
+                    <td>{{ m.updated_at_label }}</td>
+                    <td class="text-end">
+                        <a href="{{ url_for('admin.team_edit', team_member_id=m.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted mb-0">No team members yet. <a href="{{ url_for('admin.team_create') }}">Add the first member</a>.</p>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'admin/projects/layout.html' %}
+
+{% block projects_subtitle %}Project statistics, distribution charts, and recent portfolio updates.{% endblock %}
+
+{% block projects_content %}
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="admin-projects-stat"><span class="label">Total</span><span class="value">{{ stats.total }}</span></div></div>
+    <div class="col-md-3"><div class="admin-projects-stat"><span class="label">Active</span><span class="value">{{ stats.active }}</span></div></div>
+    <div class="col-md-3"><div class="admin-projects-stat"><span class="label">Featured</span><span class="value">{{ stats.featured }}</span></div></div>
+    <div class="col-md-3"><div class="admin-projects-stat"><span class="label">Countries</span><span class="value">{{ stats.by_country|length }}</span></div></div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <section class="admin-panel">
+            <h2 class="admin-panel-title">Country Distribution</h2>
+            <div class="admin-chart-wrap admin-chart-wrap--compact">
+                <canvas id="projectsCountryChart" aria-label="Projects by country"></canvas>
+            </div>
+        </section>
+    </div>
+    <div class="col-lg-6">
+        <section class="admin-panel">
+            <h2 class="admin-panel-title">Status Distribution</h2>
+            <div class="admin-chart-wrap admin-chart-wrap--compact">
+                <canvas id="projectsStatusChart" aria-label="Projects by status"></canvas>
+            </div>
+        </section>
+    </div>
+</div>
+
+<section class="admin-panel mt-4">
+    <div class="admin-panel-header">
+        <h2 class="admin-panel-title">Recent Projects</h2>
+        <a href="{{ url_for('admin.projects_list') }}" class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    {% if stats.recent %}
+    <div class="table-responsive">
+        <table class="table admin-projects-table align-middle">
+            <thead><tr><th>Project</th><th>Country</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+                {% for p in stats.recent %}
+                <tr>
+                    <td><strong>{{ p.title }}</strong></td>
+                    <td>{{ p.country }}</td>
+                    <td>{{ p.status }}</td>
+                    <td class="text-end"><a href="{{ url_for('admin.projects_edit', project_id=p.id) }}" class="btn btn-sm btn-outline-primary">Edit</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted mb-0">No projects yet. <a href="{{ url_for('admin.projects_create') }}">Create the first project</a>.</p>
+    {% endif %}
+</section>
+
+<script type="application/json" id="projectsChartData">{{ {'country': stats.by_country, 'status': stats.by_status} | tojson }}</script>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'admin/media/layout.html' %}
+
+{% block media_subtitle %}Browse, search, and manage all media assets.{% endblock %}
+
+{% block media_content %}
+{% include 'admin/media/_filters.html' %}
+
+{% if library.items %}
+{% if library.view == 'list' %}
+<div class="admin-panel">
+    <div class="table-responsive">
+        <table class="table admin-media-table align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">Preview</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Folder</th>
+                    <th scope="col">Size</th>
+                    <th scope="col">Uploaded</th>
+                    <th scope="col" class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for asset in library.items %}
+                <tr>
+                    <td>
+                        <div class="admin-media-list-thumb">
+                            {% if asset.is_image %}
+                            <img src="{{ url_for('static', filename=asset.storage_path) }}"
+                                 alt=""
+                                 loading="lazy">
+                            {% else %}
+                            <i class="bi bi-file-earmark" aria-hidden="true"></i>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td><strong>{{ asset.title }}</strong></td>
+                    <td>{{ asset.media_type_label }}</td>
+                    <td>{{ asset.folder_label }}</td>
+                    <td>{{ asset.file_size_label }}</td>
+                    <td>{{ asset.created_at_label }}</td>
+                    <td class="text-end">
+                        <a href="{{ url_for('admin.media_detail', asset_id=asset.id) }}" class="btn btn-sm btn-outline-primary">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="admin-media-grid" role="list">
+    {% for asset in library.items %}
+    {% include 'admin/media/_asset_card.html' %}
+    {% endfor %}
+</div>
+{% endif %}
+
+{% include 'admin/media/_pagination.html' %}
+{% else %}
+<div class="admin-panel admin-media-empty">
+    <p class="text-muted">No media found{% if library.query %} for “{{ library.query }}”{% endif %}.</p>
+    <a href="{{ url_for('admin.media_upload') }}" class="btn btn-primary">Upload Media</a>
+</div>
+{% endif %}
+{% endblock %}

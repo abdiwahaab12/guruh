@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% from 'macros/page_layout.html' import render_page_seo %}
+{% from 'macros/page_builder.html' import render_page_sections %}
+{% block title %}{{ page.meta_title if page else 'Projects' }} | {{ company.name }}{% endblock %}
+{% block meta_description %}{{ page.meta_description if page else company.tagline }}{% endblock %}
+{% block body_class %}page-projects{% endblock %}
+
+{% block seo_meta %}
+{% set projects_og = url_for('static', filename=page.banner_image, _external=True) if page and page.banner_image else og_image_url %}
+{{ render_page_seo(page, company, canonical_url, og_image_url, breadcrumbs, image=projects_og) }}
+{% endblock %}
+
+{% block extra_head %}
+{% set site_root = url_for('main.index', _external=True) %}
+{% if page and page.banner_image %}
+<link rel="preload" as="image" href="{{ url_for('static', filename=page.banner_image) }}">
+{% endif %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": {{ (canonical_url ~ '#webpage') | tojson }},
+      "url": {{ canonical_url | tojson }},
+      "name": {{ (page.meta_title if page else 'Our Projects') | tojson }},
+      "description": {{ (page.meta_description if page else company.tagline) | tojson }},
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": {{ (site_root ~ '#website') | tojson }},
+        "name": {{ company.name | tojson }},
+        "url": {{ site_root | tojson }}
+      }
+    },
+    {
+      "@type": "ItemList",
+      "@id": {{ (canonical_url ~ '#projects-list') | tojson }},
+      "name": "Construction Projects Portfolio",
+      "itemListElement": [
+        {% for project in projects %}
+        {
+          "@type": "ListItem",
+          "position": {{ loop.index }},
+          "item": {
+            "@type": "CreativeWork",
+            "name": {{ project.title | tojson }},
+            "description": {{ project.description | tojson }},
+            "url": {{ url_for('main.project_detail', slug=project.slug, _external=True) | tojson }},
+            "locationCreated": {
+              "@type": "Place",
+              "name": {{ project.location | tojson }}
+            },
+            "creator": {
+              "@type": "GeneralContractor",
+              "name": {{ company.name | tojson }},
+              "url": {{ site_root | tojson }}
+            }
+          }
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sections-shared.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page-builder.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/projects.css') }}">
+{% endblock %}
+
+{% block content %}
+{% if page_composition and page_composition.sections %}
+{{ render_page_sections(page_composition.sections, page, projects, services) }}
+{% endif %}
+{% endblock %}

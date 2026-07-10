@@ -1,0 +1,147 @@
+/**
+ * GURUH Construction — Careers Page
+ * Shared shell: sections-shared.css + page-builder.css
+ */
+
+.page-careers .pb-job-card {
+    border: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.page-careers .pb-job-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.page-careers .pb-job-badge {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: rgba(51, 168, 255, 0.12);
+    color: var(--guruh-primary-dark);
+    margin-right: 0.35rem;
+    margin-bottom: 0.35rem;
+}
+
+.page-careers .pb-job-badge--muted {
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--pb-muted);
+}
+
+.page-careers .pb-job-meta li {
+    margin-bottom: 0.35rem;
+}
+
+.page-careers .pb-job-meta i {
+    color: var(--guruh-primary);
+}
+
+.page-careers .pb-job-detail-heading {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--guruh-dark);
+}
+
+.page-careers .pb-job-detail-list {
+    padding-left: 1.25rem;
+    color: var(--guruh-gray);
+    line-height: 1.75;
+}
+
+.page-careers .pb-job-detail-list li {
+    margin-bottom: 0.5rem;
+}
+
+.page-careers .pb-job-skill-list {
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.page-careers .pb-job-skill-tag {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(51, 168, 255, 0.1);
+    color: var(--guruh-primary-dark);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.page-careers .pb-job-sidebar {
+    border: none;
+    border-top: 4px solid var(--guruh-primary);
+    box-shadow: var(--section-shadow-soft);
+}
+
+.page-careers .pb-job-summary-list {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.page-careers .pb-job-summary-row dt {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--pb-muted);
+    margin-bottom: 0.15rem;
+}
+
+.page-careers .pb-job-summary-row dd {
+    margin: 0;
+    font-weight: 600;
+    color: var(--guruh-dark);
+}
+
+.page-careers .pb-job-sidebar-subtitle {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.page-careers .pb-job-benefits-list {
+    padding-left: 1.1rem;
+}
+
+.page-careers .pb-job-apply-card {
+    border: none;
+    border-top: 4px solid var(--guruh-primary);
+    box-shadow: var(--section-shadow-soft);
+}
+
+.page-careers .pb-form-card {
+    border: none;
+}
+
+.page-careers .pb-form-label {
+    font-weight: 600;
+}
+
+.page-careers .pb-form-control:focus {
+    border-color: var(--guruh-primary);
+    box-shadow: 0 0 0 0.2rem rgba(51, 168, 255, 0.15);
+}
+
+.page-career-detail .pb-layout--hero-banner {
+    min-height: 42vh;
+}
+
+@media (max-width: 767.98px) {
+    .page-careers .pb-job-card .btn {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-careers .pb-job-card {
+        transition: none;
+    }
+}

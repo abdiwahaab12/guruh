@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" role="img" aria-label="Partner">
+  <rect width="200" height="80" fill="#F8FAFC" rx="8"/>
+  <rect x="10" y="20" width="40" height="40" fill="#33A8FF" opacity="0.15" rx="6"/>
+  <rect x="60" y="30" width="120" height="8" fill="#3D3D3D" opacity="0.15" rx="4"/>
+  <rect x="60" y="46" width="80" height="6" fill="#3D3D3D" opacity="0.08" rx="3"/>
+</svg>

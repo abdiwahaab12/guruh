@@ -1,0 +1,96 @@
+{% from 'admin/settings/_macros.html' import render_field %}
+
+{% macro render_dynamic_field(field, media_assets=[], document_assets=[], media_folder='general') %}
+<div class="mb-3 admin-dynamic-field" data-field-type="{{ field.field_type }}">
+    <label class="form-label" for="field-{{ field.name }}">{{ field.label }}</label>
+    {% if field.field_type == 'textarea' %}
+    <textarea class="form-control" id="field-{{ field.name }}" name="{{ field.name }}" rows="5">{{ field.value or '' }}</textarea>
+    {% elif field.field_type == 'checkbox' %}
+    <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="field-{{ field.name }}" name="{{ field.name }}" value="1"{% if field.value %} checked{% endif %}>
+        <label class="form-check-label" for="field-{{ field.name }}">{{ field.label }}</label>
+    </div>
+    {% elif field.field_type == 'media' %}
+    {% set upload_folder = media_folder|default('general') %}
+    <div class="input-group mb-2 flex-wrap">
+        <input class="form-control admin-media-target" type="text" id="field-{{ field.name }}" name="{{ field.name }}" value="{{ field.value or '' }}">
+        <button type="button"
+                class="btn btn-primary admin-media-upload-btn"
+                data-target="field-{{ field.name }}"
+                data-folder="{{ upload_folder }}">
+            <i class="bi bi-upload" aria-hidden="true"></i> Upload from PC
+        </button>
+        <a href="{{ url_for('admin.media_library', folder=upload_folder) }}" class="btn btn-outline-secondary" target="_blank" rel="noopener">Browse Library</a>
+    </div>
+    <input type="file"
+           class="visually-hidden admin-media-upload-input"
+           accept="image/*,.svg,.webp,.png,.jpg,.jpeg,.gif"
+           data-target="field-{{ field.name }}"
+           data-folder="{{ upload_folder }}">
+    {% if field.value %}
+    <img src="{{ url_for('static', filename=field.value) }}" alt="" class="admin-website-media-preview" loading="lazy">
+    {% endif %}
+    {% if media_assets %}
+    <div class="admin-media-picker-grid mt-2">
+        {% for asset in media_assets[:24] %}
+        <button type="button"
+                class="admin-media-picker-btn{% if field.value == asset.storage_path %} is-selected{% endif %}"
+                data-target="field-{{ field.name }}"
+                data-path="{{ asset.storage_path }}"
+                title="{{ asset.title }}">
+            <img src="{{ url_for('static', filename=asset.storage_path) }}" alt="{{ asset.title }}" loading="lazy">
+        </button>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% elif field.field_type == 'document' %}
+    {% set upload_folder = media_folder|default('downloads') %}
+    <div class="input-group mb-2 flex-wrap">
+        <input class="form-control admin-media-target" type="text" id="field-{{ field.name }}" name="{{ field.name }}" value="{{ field.value or '' }}" placeholder="uploads/downloads/your-file.pdf">
+        <button type="button"
+                class="btn btn-primary admin-media-upload-btn"
+                data-target="field-{{ field.name }}"
+                data-folder="{{ upload_folder }}">
+            <i class="bi bi-upload" aria-hidden="true"></i> Upload PDF
+        </button>
+        <a href="{{ url_for('admin.media_library', folder=upload_folder) }}" class="btn btn-outline-secondary" target="_blank" rel="noopener">Browse Library</a>
+    </div>
+    <input type="file"
+           class="visually-hidden admin-media-upload-input"
+           accept=".pdf,application/pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv"
+           data-target="field-{{ field.name }}"
+           data-folder="{{ upload_folder }}">
+    {% if field.value %}
+    <p class="small mb-2 admin-document-preview">
+        <i class="bi bi-file-earmark-pdf text-danger" aria-hidden="true"></i>
+        Current file:
+        <a href="{{ url_for('static', filename=field.value) }}" target="_blank" rel="noopener">{{ field.value.split('/')[-1] }}</a>
+    </p>
+    {% endif %}
+    {% if document_assets %}
+    <div class="admin-media-picker-grid mt-2">
+        {% for asset in document_assets[:24] %}
+        <button type="button"
+                class="admin-media-picker-btn admin-document-picker-btn{% if field.value == asset.storage_path %} is-selected{% endif %}"
+                data-target="field-{{ field.name }}"
+                data-path="{{ asset.storage_path }}"
+                title="{{ asset.title }}">
+            <i class="bi bi-file-earmark-pdf" aria-hidden="true"></i>
+            <span class="admin-document-picker-label">{{ asset.title }}</span>
+        </button>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% elif field.field_type == 'gallery' or field.field_type == 'lines' %}
+    <textarea class="form-control" id="field-{{ field.name }}" name="{{ field.name }}" rows="4" placeholder="One path per line">{% if field.value is iterable and field.value is not string %}{{ field.value | join('\n') }}{% else %}{{ field.value or '' }}{% endif %}</textarea>
+    <div class="form-text">Enter one media path per line.</div>
+    {% elif field.field_type == 'json' %}
+    <textarea class="form-control font-monospace" id="field-{{ field.name }}" name="{{ field.name }}" rows="6">{{ field.value | tojson(indent=2) if field.value else '{}' }}</textarea>
+    {% else %}
+    <input class="form-control" type="text" id="field-{{ field.name }}" name="{{ field.name }}" value="{{ field.value or '' }}">
+    {% endif %}
+    {% if field.help_text %}
+    <div class="form-text">{{ field.help_text }}</div>
+    {% endif %}
+</div>
+{% endmacro %}

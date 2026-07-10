@@ -1,0 +1,22 @@
+{% extends 'admin/website/layout.html' %}
+
+{% block website_actions %}
+<a href="{{ url_for('admin.website_page', slug=page_editor.slug) }}" class="btn btn-outline-secondary btn-sm">Back to Editor</a>
+<a href="{{ page_editor.preview_url }}" class="btn btn-primary btn-sm" target="_blank" rel="noopener">Open Live Page</a>
+{% endblock %}
+
+{% block website_content %}
+<div class="admin-panel">
+    <h2 class="h5">Preview — {{ page_editor.title }}</h2>
+    {% if preview_draft %}
+    <div class="alert alert-info">
+        <strong>Session preview draft</strong> stored for <code>{{ preview_draft_type }}</code>.
+        Save changes in the editor to publish them to the database. Live site shows saved content only.
+    </div>
+    <pre class="admin-website-preview-draft small">{{ preview_draft | tojson(indent=2) }}</pre>
+    {% else %}
+    <p class="text-muted">Open the live page to preview current saved content.</p>
+    {% endif %}
+    <iframe src="{{ page_editor.preview_url }}" title="Page preview" class="admin-website-preview-frame"></iframe>
+</div>
+{% endblock %}

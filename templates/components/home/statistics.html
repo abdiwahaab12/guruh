@@ -1,0 +1,25 @@
+{# Company statistics — animated counters #}
+{% if statistics %}
+<section class="home-section home-statistics" id="statistics" aria-labelledby="statistics-heading">
+    <h2 id="statistics-heading" class="visually-hidden">Company statistics</h2>
+    <div class="home-statistics-bg" aria-hidden="true"></div>
+    <div class="container position-relative">
+        <div class="row g-4 g-lg-5">
+            {% for stat in statistics %}
+            <div class="col-6 col-lg-3" data-animate>
+                <div class="stat-card">
+                    {% if stat.icon %}
+                    <div class="stat-card-icon"><i class="bi {{ stat.icon }}" aria-hidden="true"></i></div>
+                    {% endif %}
+                    <div class="stat-card-value" aria-label="{{ stat.label }}">
+                        <span class="counter" data-target="{{ stat.value }}" aria-hidden="true">0</span><span class="stat-suffix" aria-hidden="true">{{ stat.suffix }}</span>
+                    </div>
+                    <div class="stat-card-label">{{ stat.label }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% include "components/ui/section_divider.html" %}
+{% endif %}

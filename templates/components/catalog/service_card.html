@@ -1,0 +1,12 @@
+{# Service card — expects `service` variable #}
+{% from 'macros/media.html' import smart_image %}
+<div class="card service-card h-100 border-0 shadow-sm">
+    {{ smart_image(service.image, service.title, 'service', 'card-img-top', true) }}
+    <div class="card-body">
+        {% if service.icon %}
+        <i class="bi {{ service.icon }} service-icon text-primary" aria-hidden="true"></i>
+        {% endif %}
+        <h3 class="card-title h5">{{ service.title }}</h3>
+        <p class="card-text text-muted">{{ service.short_description }}</p>
+    </div>
+</div>

@@ -1,0 +1,83 @@
+<form class="admin-panel admin-users-filters" method="get" action="{{ url_for('admin.users_dashboard') }}">
+    <input type="hidden" name="tab" value="users">
+    <div class="row g-2">
+        <div class="col-lg-4">
+            <label class="form-label" for="q">Search</label>
+            <input type="search" class="form-control" id="q" name="q" value="{{ list_page.query }}" placeholder="Name or email…">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="role_slug">Role</label>
+            <select class="form-select" id="role_slug" name="role_slug">
+                <option value="">All roles</option>
+                {% for role in filter_roles %}
+                <option value="{{ role.slug }}"{% if list_page.filters.role_slug == role.slug %} selected{% endif %}>{{ role.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="status">Status</label>
+            <select class="form-select" id="status" name="status">
+                {% for key, label in user_status_options.items() %}
+                <option value="{{ key }}"{% if list_page.filters.status == key %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="sort">Sort</label>
+            <select class="form-select" id="sort" name="sort">
+                {% for key, label in user_sort_options.items() %}
+                <option value="{{ key }}"{% if list_page.sort == key %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+            <a href="{{ url_for('admin.users_dashboard', tab='users') }}" class="btn btn-outline-secondary">Reset</a>
+        </div>
+    </div>
+</form>
+
+<form method="post" action="{{ url_for('admin.users_bulk') }}" class="admin-panel mt-3">
+    {{ bulk_form.hidden_tag() }}
+    <input type="hidden" name="tab" value="users">
+    <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+        <label>Bulk:</label>
+        {{ bulk_form.action(class="form-select form-select-sm w-auto") }}
+        {{ bulk_form.submit(class="btn btn-sm btn-outline-primary") }}
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAllUsers" aria-label="Select all"></th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Last Login</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in list_page.items %}
+                <tr>
+                    <td><input type="checkbox" name="item_ids" value="{{ item.id }}"></td>
+                    <td>{{ item.full_name }}{% if item.is_super_admin %} <span class="badge bg-dark">Super Admin</span>{% endif %}</td>
+                    <td>{{ item.email }}</td>
+                    <td>{{ item.role_name }}</td>
+                    <td>
+                        {% if not item.is_active %}<span class="badge bg-secondary">Inactive</span>
+                        {% elif item.is_locked %}<span class="badge bg-warning text-dark">Locked</span>
+                        {% else %}<span class="badge bg-success">Active</span>{% endif %}
+                    </td>
+                    <td>{{ item.last_login_at_label }}</td>
+                    <td class="text-end"><a href="{{ url_for('admin.users_edit', user_id=item.id) }}" class="btn btn-sm btn-outline-primary">Edit</a></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="7" class="text-center text-muted py-4">No users found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include 'admin/users/_pagination.html' %}
+</form>

@@ -1,0 +1,52 @@
+{# Equipment detail hero — prefers admin-managed equipment_item over seeded block #}
+{% from 'macros/media.html' import page_hero_bg_style, hero_media_class %}
+{% set item = equipment_item if equipment_item else none %}
+{% set extra = block.extra if block and block.extra else {} %}
+{% set hero_image = item.image if item and item.image else (block.hero_image if block else '') %}
+{% set hero_title = item.name if item else (block.title if block else section.section_title) %}
+{% set hero_subtitle = item.short_description if item else (block.short_summary if block else '') %}
+{% set hero_eyebrow = item.category if item else (block.subtitle if block else '') %}
+{% set hero_capacity = item.capacity if item else extra.capacity %}
+{% set hero_condition = item.condition if item else extra.condition %}
+{% set hero_maintenance = item.maintenance_status if item else extra.maintenance_status %}
+<section
+    id="{{ section.seo_anchor }}"
+    class="page-hero pb-section pb-layout--equipment-hero page-hero--equipment"
+    data-section-key="{{ section.section_key }}"
+    data-layout="{{ section.layout_type }}"
+    aria-labelledby="page-hero-title">
+    <div class="page-hero-bg{{ hero_media_class(hero_image) }}"
+         {% if hero_image %}style="{{ page_hero_bg_style(hero_image) }}"{% endif %}
+         aria-hidden="true"></div>
+    <div class="page-hero-overlay" aria-hidden="true"></div>
+    <div class="container page-hero-inner">
+        {% include "components/ui/breadcrumb.html" %}
+        {% if hero_eyebrow %}
+        <p class="page-hero-eyebrow">{{ hero_eyebrow }}</p>
+        {% endif %}
+        <h1 class="page-hero-title" id="page-hero-title">{{ hero_title }}</h1>
+        {% if hero_subtitle %}
+        <p class="page-hero-subtitle">{{ hero_subtitle }}</p>
+        {% endif %}
+        <dl class="pb-equipment-hero-meta">
+            {% if hero_capacity %}
+            <div class="pb-equipment-hero-meta-item">
+                <dt>Capacity</dt>
+                <dd>{{ hero_capacity }}</dd>
+            </div>
+            {% endif %}
+            {% if hero_condition %}
+            <div class="pb-equipment-hero-meta-item">
+                <dt>Condition</dt>
+                <dd>{{ hero_condition }}</dd>
+            </div>
+            {% endif %}
+            {% if hero_maintenance %}
+            <div class="pb-equipment-hero-meta-item">
+                <dt>Maintenance</dt>
+                <dd>{{ hero_maintenance }}</dd>
+            </div>
+            {% endif %}
+        </dl>
+    </div>
+</section>

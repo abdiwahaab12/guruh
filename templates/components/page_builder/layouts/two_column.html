@@ -1,0 +1,42 @@
+{# Two column — message + supporting cards (Directors' Message) #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading, pb_paragraphs %}
+{% from 'macros/media.html' import smart_image %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="row g-5 align-items-start">
+        <div class="col-lg-7" data-animate>
+            {{ pb_heading(section, block, 'left') }}
+            <div class="pb-quote-mark" aria-hidden="true"><i class="bi bi-quote"></i></div>
+            {{ pb_paragraphs(block.full_content) }}
+        </div>
+        <div class="col-lg-5">
+            {% if block and block.hero_image %}
+            <div class="mb-4" data-animate>
+                {{ smart_image(block.hero_image, section.section_title, 'about', 'img-fluid rounded pb-section-image', lazy=not eager_image, eager=eager_image|default(false)) }}
+            </div>
+            {% endif %}
+            {% if block and block.items %}
+            <div class="pb-director-cards">
+                {% for item in block.items %}
+                {% if item.is_active %}
+                <div class="premium-card pb-director-card mb-3" data-animate>
+                    <div class="premium-card-body d-flex align-items-center gap-3">
+                        <div class="pb-director-icon" aria-hidden="true">
+                            <i class="bi {{ item.icon or 'bi-person-badge' }}"></i>
+                        </div>
+                        <div>
+                            <h3 class="h5 mb-1">{{ item.title }}</h3>
+                            {% if item.subtitle %}
+                            <p class="text-primary mb-0 small">{{ item.subtitle }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{{ pb_close_section() }}

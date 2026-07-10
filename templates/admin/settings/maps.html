@@ -1,0 +1,21 @@
+{% extends 'admin/settings/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field, form_actions %}
+
+{% block settings_subtitle %}Google Maps API key and default map center for contact pages.{% endblock %}
+
+{% block settings_content %}
+<form method="post" class="admin-settings-form" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="admin-panel">
+        {{ render_field(form.api_key, 'Restricted API key recommended for production.') }}
+        <div class="row">
+            <div class="col-md-4">{{ render_field(form.default_latitude) }}</div>
+            <div class="col-md-4">{{ render_field(form.default_longitude) }}</div>
+            <div class="col-md-4">{{ render_field(form.default_zoom) }}</div>
+        </div>
+        {{ render_field(form.embed_url, 'Optional iframe embed URL override.') }}
+        {{ render_field(form.provider) }}
+        {{ form_actions(form) }}
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'admin/settings/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field, form_actions %}
+
+{% block settings_subtitle %}Default locale, timezone, and formatting for multi-language readiness.{% endblock %}
+
+{% block settings_content %}
+<form method="post" class="admin-settings-form" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="admin-panel">
+        <div class="row g-3">
+            <div class="col-md-6">{{ render_field(form.default_locale) }}</div>
+            <div class="col-md-6">{{ render_field(form.available_locales) }}</div>
+            <div class="col-md-6">{{ render_field(form.timezone) }}</div>
+            <div class="col-md-6">{{ render_field(form.date_format) }}</div>
+            <div class="col-md-6">{{ render_field(form.currency) }}</div>
+        </div>
+        {{ form_actions(form) }}
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,67 @@
+{# Testimonials carousel #}
+{% if testimonials %}
+<section class="home-section home-testimonials" id="testimonials"{% if section_id %} aria-labelledby="{{ section_id }}-heading"{% endif %}>
+    <div class="container">
+        {% include "components/ui/section_heading.html" %}
+
+        <div id="testimonialCarousel"
+             class="carousel slide"
+             role="region"
+             aria-roledescription="carousel"
+             aria-label="Client testimonials"
+             data-bs-ride="carousel"
+             data-bs-interval="8000"
+             data-bs-pause="hover">
+            {% if testimonials|length > 1 %}
+            <div class="carousel-indicators testimonial-indicators">
+                {% for t in testimonials %}
+                <button type="button"
+                        data-bs-target="#testimonialCarousel"
+                        data-bs-slide-to="{{ loop.index0 }}"
+                        {% if loop.first %}class="active" aria-current="true"{% endif %}
+                        aria-label="Testimonial {{ loop.index }}"></button>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="carousel-inner">
+                {% for testimonial in testimonials %}
+                <div class="carousel-item{% if loop.first %} active{% endif %}">
+                    <div class="testimonial-slide" data-animate>
+                        <div class="testimonial-quote-icon" aria-hidden="true"><i class="bi bi-quote"></i></div>
+                        {% if testimonial.rating %}
+                        <div class="testimonial-stars" aria-label="{{ testimonial.rating }} out of 5 stars">
+                            {% for i in range(testimonial.rating) %}<i class="bi bi-star-fill" aria-hidden="true"></i>{% endfor %}
+                        </div>
+                        {% endif %}
+                        <blockquote class="testimonial-quote">
+                            <p>{{ testimonial.content }}</p>
+                            <footer class="testimonial-footer">
+                                <cite>{{ testimonial.client_name }}</cite>
+                                {% if testimonial.client_title or testimonial.company %}
+                                <span>{{ testimonial.client_title }}{% if testimonial.company %}, {{ testimonial.company }}{% endif %}</span>
+                                {% endif %}
+                            </footer>
+                        </blockquote>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if testimonials|length > 1 %}
+            <button class="carousel-control-prev testimonial-control" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                <span class="visually-hidden">Previous</span><i class="bi bi-chevron-left" aria-hidden="true"></i>
+            </button>
+            <button class="carousel-control-next testimonial-control" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                <span class="visually-hidden">Next</span><i class="bi bi-chevron-right" aria-hidden="true"></i>
+            </button>
+            {% endif %}
+        </div>
+
+        <div class="text-center mt-4" data-animate>
+            <a href="{{ url_for('main.testimonials') }}" class="premium-card-link">Read All Testimonials <i class="bi bi-arrow-right"></i></a>
+        </div>
+    </div>
+</section>
+{% include "components/ui/section_divider.html" %}
+{% endif %}

@@ -1,0 +1,32 @@
+{% macro render_field(field, help_text=None) %}
+<div class="mb-3">
+    {{ field.label(class="form-label") }}
+    {% if field.type == 'BooleanField' %}
+    <div class="form-check form-switch">
+        {{ field(class="form-check-input") }}
+        {{ field.label(class="form-check-label") }}
+    </div>
+    {% elif field.type == 'TextAreaField' %}
+    {{ field(class="form-control" + (" is-invalid" if field.errors else ""), rows=field.render_kw.rows if field.render_kw and field.render_kw.rows else 4) }}
+    {% else %}
+    {{ field(class="form-control" + (" is-invalid" if field.errors else "")) }}
+    {% endif %}
+    {% if help_text %}
+    <div class="form-text">{{ help_text }}</div>
+    {% elif field.description %}
+    <div class="form-text">{{ field.description }}</div>
+    {% endif %}
+    {% if field.errors %}
+    <div class="invalid-feedback d-block">{{ field.errors[0] }}</div>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{% macro form_actions(form, cancel_url=None) %}
+<div class="admin-settings-form-actions">
+    {{ form.submit(class="btn btn-primary") }}
+    {% if cancel_url %}
+    <a href="{{ cancel_url }}" class="btn btn-outline-secondary">Cancel</a>
+    {% endif %}
+</div>
+{% endmacro %}

@@ -1,0 +1,16 @@
+{# Visual breadcrumb navigation — expects `breadcrumbs` list from PageService #}
+{% if breadcrumbs and breadcrumbs|length > 1 %}
+<nav class="page-breadcrumb" aria-label="Breadcrumb">
+    <ol class="page-breadcrumb-list">
+        {% for crumb in breadcrumbs %}
+        <li class="page-breadcrumb-item{% if crumb.is_current %} is-current{% endif %}">
+            {% if crumb.is_current %}
+            <span aria-current="page">{{ crumb.label }}</span>
+            {% else %}
+            <a href="{{ crumb.url | safe_href }}">{{ crumb.label }}</a>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ol>
+</nav>
+{% endif %}

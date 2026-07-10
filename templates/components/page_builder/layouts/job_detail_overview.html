@@ -1,0 +1,92 @@
+{# Job detail — description, responsibilities, qualifications, skills, benefits, location #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading, pb_paragraphs %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    {% set extra = block.extra if block and block.extra else {} %}
+    {% set current_job = job if job else none %}
+    <div class="row g-5">
+        <div class="col-lg-8" data-animate>
+            {{ pb_heading(section, block, 'left') }}
+            {{ pb_paragraphs(block.full_content if block else '') }}
+
+            {% set responsibilities = extra.responsibilities if extra.responsibilities else (current_job.responsibilities if current_job else []) %}
+            {% if responsibilities %}
+            <div class="pb-job-detail-block mt-4">
+                <h3 class="pb-job-detail-heading"><i class="bi bi-list-check me-2" aria-hidden="true"></i>Responsibilities</h3>
+                <ul class="pb-job-detail-list">
+                    {% for item in responsibilities %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% set qualifications = extra.qualifications if extra.qualifications else (current_job.qualifications if current_job else []) %}
+            {% if qualifications %}
+            <div class="pb-job-detail-block mt-4">
+                <h3 class="pb-job-detail-heading"><i class="bi bi-mortarboard me-2" aria-hidden="true"></i>Qualifications</h3>
+                <ul class="pb-job-detail-list">
+                    {% for item in qualifications %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% set skills = extra.skills if extra.skills else (current_job.skills if current_job else []) %}
+            {% if skills %}
+            <div class="pb-job-detail-block mt-4">
+                <h3 class="pb-job-detail-heading"><i class="bi bi-tools me-2" aria-hidden="true"></i>Skills Required</h3>
+                <ul class="pb-job-detail-list pb-job-skill-list">
+                    {% for item in skills %}
+                    <li><span class="pb-job-skill-tag">{{ item }}</span></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-4" data-animate>
+            <div class="premium-card pb-job-sidebar h-100">
+                <div class="premium-card-body">
+                    <h3 class="premium-card-title">Job Summary</h3>
+                    <dl class="pb-job-summary-list mb-4">
+                        <div class="pb-job-summary-row">
+                            <dt>Department</dt>
+                            <dd>{{ extra.department or (current_job.department if current_job else '') }}</dd>
+                        </div>
+                        <div class="pb-job-summary-row">
+                            <dt>Location</dt>
+                            <dd>{{ extra.location or (current_job.location if current_job else '') }}</dd>
+                        </div>
+                        <div class="pb-job-summary-row">
+                            <dt>Employment Type</dt>
+                            <dd>{{ extra.employment_type or (current_job.employment_type if current_job else '') }}</dd>
+                        </div>
+                        <div class="pb-job-summary-row">
+                            <dt>Experience</dt>
+                            <dd>{{ extra.experience_required or (current_job.experience_required if current_job else '') }}</dd>
+                        </div>
+                        {% if extra.deadline or (current_job and current_job.deadline) %}
+                        <div class="pb-job-summary-row">
+                            <dt>Application Deadline</dt>
+                            <dd>{{ extra.deadline or current_job.deadline }}</dd>
+                        </div>
+                        {% endif %}
+                    </dl>
+
+                    {% set benefits = extra.benefits if extra.benefits else (current_job.benefits if current_job else []) %}
+                    {% if benefits %}
+                    <h4 class="pb-job-sidebar-subtitle">Benefits</h4>
+                    <ul class="pb-job-detail-list pb-job-benefits-list mb-0">
+                        {% for item in benefits %}
+                        <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{ pb_close_section() }}

@@ -1,0 +1,170 @@
+{% extends 'admin/gallery/layout.html' %}
+
+{% block gallery_subtitle %}Search, filter, and manage all gallery media.{% endblock %}
+
+{% block gallery_content %}
+<form class="admin-panel admin-gallery-filters" method="get" action="{{ url_for('admin.gallery_list') }}">
+    <div class="row g-2">
+        <div class="col-lg-3">
+            <label class="form-label" for="q">Search</label>
+            <input type="search" class="form-control" id="q" name="q" value="{{ list_page.query }}" placeholder="Title, caption, location…">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="album">Album</label>
+            <select class="form-select" id="album" name="album">
+                <option value="">All</option>
+                {% for slug, label in filter_albums %}
+                <option value="{{ slug }}"{% if list_page.filters.album == slug %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="category">Category</label>
+            <select class="form-select" id="category" name="category">
+                <option value="">All</option>
+                {% for c in filter_categories %}
+                <option value="{{ c }}"{% if list_page.filters.category == c %} selected{% endif %}>{{ c }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="project_id">Project</label>
+            <select class="form-select" id="project_id" name="project_id">
+                <option value="">All</option>
+                {% for p in filter_projects %}
+                <option value="{{ p.id }}"{% if list_page.filters.project_id == p.id|string %} selected{% endif %}>{{ p.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="service">Service</label>
+            <select class="form-select" id="service" name="service">
+                <option value="">All</option>
+                {% for s in filter_services %}
+                <option value="{{ s.slug }}"{% if list_page.filters.service == s.slug %} selected{% endif %}>{{ s.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="country">Country</label>
+            <select class="form-select" id="country" name="country">
+                <option value="">All</option>
+                {% for c in filter_countries %}
+                <option value="{{ c }}"{% if list_page.filters.country == c %} selected{% endif %}>{{ c }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="featured">Featured</label>
+            <select class="form-select" id="featured" name="featured">
+                {% for key, label in featured_filter_options.items() %}
+                <option value="{{ key }}"{% if list_page.filters.featured == key %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="status">Status</label>
+            <select class="form-select" id="status" name="status">
+                {% for key, label in status_filter_options.items() %}
+                <option value="{{ key }}"{% if list_page.filters.status == key %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="sort">Sort</label>
+            <select class="form-select" id="sort" name="sort">
+                {% for key, label in sort_options.items() %}
+                <option value="{{ key }}"{% if list_page.sort == key %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="deleted" name="deleted" value="1"{% if list_page.include_deleted %} checked{% endif %}>
+                <label class="form-check-label" for="deleted">Show deleted only</label>
+            </div>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+            <a href="{{ url_for('admin.gallery_list') }}" class="btn btn-outline-secondary">Reset</a>
+        </div>
+    </div>
+</form>
+
+<form method="post" action="{{ url_for('admin.gallery_bulk') }}" class="admin-panel mt-3">
+    {{ bulk_form.hidden_tag() }}
+    <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+        <label class="me-2">Bulk:</label>
+        {{ bulk_form.action(class="form-select form-select-sm w-auto d-inline-block") }}
+        {{ bulk_form.submit(class="btn btn-sm btn-outline-primary") }}
+    </div>
+
+    <div class="table-responsive">
+        <table class="table admin-gallery-table align-middle">
+            <thead>
+                <tr>
+                    <th scope="col"><input type="checkbox" id="selectAllGallery" aria-label="Select all"></th>
+                    <th scope="col">Media</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Album</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Country</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in list_page.items %}
+                <tr class="{% if not item.is_active %}text-muted{% endif %}">
+                    <td><input type="checkbox" name="gallery_item_ids" value="{{ item.id }}" class="gallery-row-check"></td>
+                    <td>
+                        {% if item.image %}
+                        <img src="{{ url_for('static', filename=item.image) }}" alt="" class="admin-gallery-thumb" loading="lazy">
+                        {% else %}
+                        <span class="admin-gallery-thumb admin-gallery-thumb--placeholder"><i class="bi bi-image" aria-hidden="true"></i></span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <strong>{{ item.title }}</strong>
+                        {% if item.is_featured %}<span class="badge bg-primary ms-1">Featured</span>{% endif %}
+                        {% if not item.is_active %}<span class="badge bg-secondary ms-1">Deleted</span>{% endif %}
+                    </td>
+                    <td>{{ item.album }}</td>
+                    <td>{{ item.category }}</td>
+                    <td>{{ item.media_type|capitalize }}</td>
+                    <td>{{ item.country }}</td>
+                    <td class="text-end">
+                        {% if item.is_active %}
+                        <a href="{{ url_for('admin.gallery_edit', gallery_item_id=item.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                        {% else %}
+                        <form method="post" action="{{ url_for('admin.gallery_restore', gallery_item_id=item.id) }}" class="d-inline">
+                            <input type="hidden" name="csrf_token" value="{{ bulk_form.csrf_token.current_token }}">
+                            <button type="submit" class="btn btn-sm btn-outline-success">Restore</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="8" class="text-center text-muted py-4">No gallery items found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</form>
+
+{% if list_page.total_pages > 1 %}
+<nav class="mt-3" aria-label="Gallery pagination">
+    <ul class="pagination justify-content-center">
+        {% for p in range(1, list_page.total_pages + 1) %}
+        {% if p == list_page.page or p <= 2 or p >= list_page.total_pages - 1 or (p >= list_page.page - 1 and p <= list_page.page + 1) %}
+        <li class="page-item{% if p == list_page.page %} active{% endif %}">
+            <a class="page-link" href="{{ url_for('admin.gallery_list', page=p, q=list_page.query, album=list_page.filters.album, category=list_page.filters.category, project_id=list_page.filters.project_id or none, service=list_page.filters.service, country=list_page.filters.country, featured=list_page.filters.featured, status=list_page.filters.status, sort=list_page.sort, deleted=1 if list_page.include_deleted else none) }}">{{ p }}</a>
+        </li>
+        {% elif p == 3 or p == list_page.total_pages - 2 %}
+        <li class="page-item disabled"><span class="page-link">…</span></li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

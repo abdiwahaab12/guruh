@@ -1,0 +1,120 @@
+{# Equipment fleet grid — prefers admin-managed equipment DTOs over seeded block items #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{% from 'macros/media.html' import smart_image %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-4 mb-lg-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+        {% if block and block.full_content %}
+        <p class="section-intro mx-auto text-center">{{ block.full_content }}</p>
+        {% endif %}
+    </div>
+
+    {% set dynamic_items = equipment if equipment else [] %}
+    {% set block_items = block.items if block and block.items else [] %}
+    {% set use_dynamic = dynamic_items | length > 0 %}
+    {% set use_seed = (not use_dynamic) and block_items %}
+
+    {% if use_dynamic or use_seed %}
+    {% set cat_ns = namespace(keys=[]) %}
+    {% if block and block.extra and block.extra.categories %}
+        {% set filter_categories = block.extra.categories %}
+    {% else %}
+        {% for item in dynamic_items if use_dynamic %}
+            {% if item.category_key and item.category_key not in cat_ns.keys %}
+                {% set cat_ns.keys = cat_ns.keys + [item.category_key] %}
+            {% endif %}
+        {% endfor %}
+        {% set filter_categories = cat_ns.keys %}
+    {% endif %}
+
+    <div class="pb-equipment-filters mb-4" role="toolbar" aria-label="Filter equipment by category" data-animate>
+        <button type="button" class="pb-equipment-filter is-active" data-equipment-filter="all" aria-pressed="true">All Equipment</button>
+        {% for cat_key in filter_categories %}
+        <button type="button" class="pb-equipment-filter" data-equipment-filter="{{ cat_key }}" aria-pressed="false">
+            {{ cat_key | replace('-', ' ') | title }}
+        </button>
+        {% endfor %}
+    </div>
+    <p class="pb-filter-status" id="equipmentFilterStatus" aria-live="polite" aria-atomic="true"></p>
+
+    <div class="row g-4 pb-equipment-grid" id="equipmentGrid">
+        {% if use_dynamic %}
+        {% for item in dynamic_items if item.is_active %}
+        <div class="col-md-6 col-xl-4 pb-equipment-item"
+             data-category="{{ item.category_key if item.category_key else 'all' }}"
+             data-animate>
+            <article class="premium-card pb-equipment-card h-100">
+                <a href="{{ url_for('main.equipment_detail', slug=item.slug) }}"
+                   class="pb-equipment-card-media" tabindex="-1" aria-hidden="true">
+                    {{ smart_image(item.image, item.name, 'project', 'pb-equipment-card-image', lazy=true) }}
+                    {% if item.condition %}
+                    <span class="pb-equipment-condition">{{ item.condition }}</span>
+                    {% endif %}
+                </a>
+                <div class="premium-card-body">
+                    {% if item.category %}
+                    <span class="pb-equipment-badge">{{ item.category }}</span>
+                    {% endif %}
+                    <h3 class="premium-card-title">
+                        <a href="{{ url_for('main.equipment_detail', slug=item.slug) }}">{{ item.name }}</a>
+                    </h3>
+                    <p class="premium-card-text">{{ item.short_description }}</p>
+                    {% if item.capacity %}
+                    <p class="pb-equipment-capacity mb-2">
+                        <i class="bi bi-speedometer2 me-1" aria-hidden="true"></i>{{ item.capacity }}
+                    </p>
+                    {% endif %}
+                    <a href="{{ url_for('main.equipment_detail', slug=item.slug) }}"
+                       class="premium-card-link"
+                       aria-label="Learn more about {{ item.name }}">
+                        Learn More <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </article>
+        </div>
+        {% endfor %}
+        {% elif use_seed %}
+        {% for item in block_items if item.is_active %}
+        {% set extra = item.extra if item.extra else {} %}
+        <div class="col-md-6 col-xl-4 pb-equipment-item"
+             data-category="{{ extra.category_key if extra.category_key else 'all' }}"
+             data-animate>
+            <article class="premium-card pb-equipment-card h-100">
+                <a href="{{ url_for('main.equipment_detail', slug=extra.equipment_slug) if extra.equipment_slug else '#' }}"
+                   class="pb-equipment-card-media" tabindex="-1" aria-hidden="true">
+                    {{ smart_image(item.image, item.title, 'project', 'pb-equipment-card-image', lazy=true) }}
+                    {% if extra.condition %}
+                    <span class="pb-equipment-condition">{{ extra.condition }}</span>
+                    {% endif %}
+                </a>
+                <div class="premium-card-body">
+                    {% if item.subtitle %}
+                    <span class="pb-equipment-badge">{{ item.subtitle }}</span>
+                    {% endif %}
+                    <h3 class="premium-card-title">
+                        <a href="{{ url_for('main.equipment_detail', slug=extra.equipment_slug) }}">{{ item.title }}</a>
+                    </h3>
+                    <p class="premium-card-text">{{ item.short_summary or item.full_content }}</p>
+                    {% if extra.capacity %}
+                    <p class="pb-equipment-capacity mb-2">
+                        <i class="bi bi-speedometer2 me-1" aria-hidden="true"></i>{{ extra.capacity }}
+                    </p>
+                    {% endif %}
+                    <a href="{{ url_for('main.equipment_detail', slug=extra.equipment_slug) }}"
+                       class="premium-card-link"
+                       aria-label="Learn more about {{ item.title }}">
+                        Learn More <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </article>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+    <p class="pb-equipment-empty text-center pb-item-desc mt-4 d-none" role="status" id="equipmentGridEmpty">
+        No equipment matches this category.
+    </p>
+    {% endif %}
+</div>
+{{ pb_close_section() }}

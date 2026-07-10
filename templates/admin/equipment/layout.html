@@ -1,0 +1,37 @@
+{% extends 'admin/layouts/base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin-equipment.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-page-header">
+    <div>
+        <h1 class="admin-page-title">{% block equipment_title %}{{ page_title }}{% endblock %}</h1>
+        <p class="admin-page-subtitle">{% block equipment_subtitle %}Manage construction equipment and fleet records.{% endblock %}</p>
+    </div>
+    <div class="admin-page-actions">
+        {% block equipment_actions %}
+        <a href="{{ url_for('admin.equipment_create') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1" aria-hidden="true"></i> New Equipment
+        </a>
+        {% endblock %}
+    </div>
+</div>
+
+<nav class="admin-equipment-tabs" aria-label="Equipment sections">
+    <a href="{{ url_for('admin.equipment_dashboard') }}" class="admin-equipment-tab{% if equipment_active_section == 'dashboard' %} active{% endif %}">Dashboard</a>
+    <a href="{{ url_for('admin.equipment_list') }}" class="admin-equipment-tab{% if equipment_active_section == 'list' %} active{% endif %}">All Equipment</a>
+    <a href="{{ url_for('admin.equipment_create') }}" class="admin-equipment-tab{% if equipment_active_section == 'form' %} active{% endif %}">Create</a>
+</nav>
+
+{% include 'admin/partials/_breadcrumb.html' %}
+{% include 'admin/partials/_flash_messages.html' %}
+
+{% block equipment_content %}{% endblock %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/admin-equipment.js') }}" defer></script>
+{% block equipment_extra_js %}{% endblock %}
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'admin/services/layout.html' %}
+
+{% block services_subtitle %}Service statistics and recent updates.{% endblock %}
+
+{% block services_content %}
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="admin-services-stat"><span class="label">Total Services</span><span class="value">{{ stats.total }}</span></div></div>
+    <div class="col-md-3"><div class="admin-services-stat"><span class="label">Featured</span><span class="value">{{ stats.featured }}</span></div></div>
+    <div class="col-md-3"><div class="admin-services-stat"><span class="label">Active</span><span class="value">{{ stats.active }}</span></div></div>
+    <div class="col-md-3"><div class="admin-services-stat"><span class="label">Inactive</span><span class="value">{{ stats.inactive }}</span></div></div>
+</div>
+
+<section class="admin-panel">
+    <div class="admin-panel-header">
+        <h2 class="admin-panel-title">Recent Updates</h2>
+        <a href="{{ url_for('admin.services_list') }}" class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    {% if stats.recent %}
+    <div class="table-responsive">
+        <table class="table admin-services-table align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">Service</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Updated</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in stats.recent %}
+                <tr class="{% if not s.is_active %}text-muted{% endif %}">
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            {% if s.icon %}<i class="bi {{ s.icon }}" aria-hidden="true"></i>{% endif %}
+                            <div>
+                                <strong>{{ s.title }}</strong>
+                                {% if s.is_featured %}<span class="badge bg-primary ms-1">Featured</span>{% endif %}
+                                {% if not s.is_active %}<span class="badge bg-secondary ms-1">Deleted</span>{% endif %}
+                            </div>
+                        </div>
+                    </td>
+                    <td>{% if s.is_active %}Active{% else %}Inactive{% endif %}</td>
+                    <td>{{ s.updated_at_label }}</td>
+                    <td class="text-end">
+                        <a href="{{ url_for('admin.services_edit', service_id=s.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted mb-0">No services yet. <a href="{{ url_for('admin.services_create') }}">Create the first service</a>.</p>
+    {% endif %}
+</section>
+{% endblock %}

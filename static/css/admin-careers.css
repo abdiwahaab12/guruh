@@ -1,0 +1,85 @@
+.admin-careers-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-bottom: 1rem;
+}
+
+.admin-careers-tab {
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid var(--admin-border);
+    background: var(--admin-surface);
+    text-decoration: none;
+    color: var(--admin-text);
+    font-size: 0.88rem;
+}
+
+.admin-careers-tab.active,
+.admin-careers-tab:hover {
+    background: var(--admin-primary-soft);
+    border-color: var(--admin-primary);
+    color: var(--admin-primary-dark);
+}
+
+.admin-careers-stat {
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+    padding: 1rem;
+    box-shadow: var(--admin-shadow);
+}
+
+.admin-careers-stat .label {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--admin-text-muted);
+}
+
+.admin-careers-stat .value {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.admin-careers-table th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--admin-text-muted);
+}
+
+.admin-careers-form-tabs {
+    margin-bottom: 0;
+    border-bottom: 0;
+}
+
+.admin-careers-tab-content {
+    border-top-left-radius: 0;
+    margin-top: 0;
+}
+
+.admin-careers-filters {
+    margin-bottom: 0;
+}
+
+.admin-careers-status--draft {
+    background: var(--bs-secondary);
+}
+
+.admin-careers-status--active {
+    background: var(--bs-success);
+}
+
+.admin-careers-status--closed {
+    background: var(--bs-warning);
+    color: #000;
+}
+
+[data-admin-theme="dark"] .admin-careers-table {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--admin-text);
+}
+
+[data-admin-theme="dark"] .admin-careers-status--closed {
+    color: #fff;
+}

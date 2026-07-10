@@ -1,0 +1,50 @@
+<form class="admin-media-filters admin-panel" method="get" action="{{ url_for('admin.media_library') }}" role="search">
+    <div class="row g-2 align-items-end">
+        <div class="col-lg-4">
+            <label for="mediaSearch" class="form-label">Search</label>
+            <input type="search"
+                   class="form-control"
+                   id="mediaSearch"
+                   name="q"
+                   value="{{ library.query }}"
+                   placeholder="Search title, tags, filename…">
+        </div>
+        <div class="col-md-2">
+            <label for="mediaFolder" class="form-label">Folder</label>
+            <select class="form-select" id="mediaFolder" name="folder">
+                <option value="">All folders</option>
+                {% for folder in media_folders %}
+                <option value="{{ folder.slug }}"{% if library.folder == folder.slug %} selected{% endif %}>{{ folder.label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="mediaType" class="form-label">Type</label>
+            <select class="form-select" id="mediaType" name="type">
+                <option value="">All types</option>
+                {% for media_type in media_types %}
+                <option value="{{ media_type.slug }}"{% if library.media_type == media_type.slug %} selected{% endif %}>{{ media_type.label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="mediaSort" class="form-label">Sort</label>
+            <select class="form-select" id="mediaSort" name="sort">
+                {% for key, label in sort_options.items() %}
+                <option value="{{ key }}"{% if library.sort == key %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="mediaView" class="form-label">View</label>
+            <select class="form-select" id="mediaView" name="view">
+                <option value="grid"{% if library.view == 'grid' %} selected{% endif %}>Grid</option>
+                <option value="list"{% if library.view == 'list' %} selected{% endif %}>List</option>
+            </select>
+        </div>
+        <div class="col-12 col-lg-auto">
+            <button type="submit" class="btn btn-primary">Apply</button>
+            <a href="{{ url_for('admin.media_library') }}" class="btn btn-outline-secondary">Reset</a>
+        </div>
+    </div>
+</form>

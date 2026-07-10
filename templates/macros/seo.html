@@ -1,0 +1,56 @@
+{#
+  SEO & social meta tags — reusable across all pages.
+  Usage: {{ render_seo(title, description, canonical_url, og_image_url, company_name) }}
+#}
+{% macro render_seo(title, description, canonical_url, og_image_url, company_name, image='', type='website', robots='index, follow') %}
+<link rel="canonical" href="{{ canonical_url }}">
+<meta name="robots" content="{{ robots }}">
+
+<meta property="og:type" content="{{ type }}">
+<meta property="og:site_name" content="{{ company_name }}">
+<meta property="og:title" content="{{ title }}">
+<meta property="og:description" content="{{ description }}">
+<meta property="og:url" content="{{ canonical_url }}">
+{% set og_img = image or og_image_url %}
+{% if og_img %}
+<meta property="og:image" content="{{ og_img }}">
+<meta property="og:image:alt" content="{{ company_name }}">
+{% endif %}
+<meta property="og:locale" content="en_US">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ title }}">
+<meta name="twitter:description" content="{{ description }}">
+{% if og_img %}
+<meta name="twitter:image" content="{{ og_img }}">
+{% endif %}
+{% endmacro %}
+
+{% macro breadcrumb_json_ld(items) %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {% for item in items %}
+    {
+      "@type": "ListItem",
+      "position": {{ loop.index }},
+      "name": {{ item.name | tojson }},
+      "item": {{ item.url | tojson }}
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
+}
+</script>
+{% endmacro %}
+
+{% macro organization_postal_address(company, office=none) %}
+{
+  "@type": "PostalAddress",
+  "streetAddress": {{ (office.address if office else company.address) | tojson }}{% if office and office.address_locality or company.address_locality %},
+  "addressLocality": {{ (office.address_locality if office and office.address_locality else company.address_locality) | tojson }}{% endif %}{% if office and office.address_district or company.address_district %},
+  "addressRegion": {{ (office.address_district if office and office.address_district else company.address_district) | tojson }}{% endif %},
+  "addressCountry": {{ (office.address_country_code if office and office.address_country_code else company.address_country_code) | tojson }}
+}
+{% endmacro %}

@@ -1,0 +1,26 @@
+{% extends 'admin/users/layout.html' %}
+
+{% block users_content %}
+{% if stats is defined %}
+<div class="row g-3 mb-4 admin-users-stats">
+    <div class="col-md-3"><div class="admin-stat-card"><div class="admin-stat-label">Total Users</div><div class="admin-stat-value">{{ stats.total_users }}</div></div></div>
+    <div class="col-md-3"><div class="admin-stat-card"><div class="admin-stat-label">Active</div><div class="admin-stat-value text-success">{{ stats.active_users }}</div></div></div>
+    <div class="col-md-3"><div class="admin-stat-card"><div class="admin-stat-label">Locked</div><div class="admin-stat-value text-warning">{{ stats.locked_users }}</div></div></div>
+    <div class="col-md-3"><div class="admin-stat-card"><div class="admin-stat-label">Active Sessions</div><div class="admin-stat-value">{{ stats.active_sessions }}</div></div></div>
+</div>
+{% endif %}
+
+{% if active_tab == 'users' %}
+{% include 'admin/users/_tab_users.html' %}
+{% elif active_tab == 'roles' %}
+{% include 'admin/users/_tab_roles.html' %}
+{% elif active_tab == 'permissions' %}
+{% include 'admin/users/_tab_permissions.html' %}
+{% elif active_tab == 'sessions' %}
+{% include 'admin/users/_tab_sessions.html' %}
+{% elif active_tab == 'login-history' %}
+{% include 'admin/users/_tab_login_history.html' %}
+{% elif active_tab == 'audit-logs' %}
+{% include 'admin/users/_tab_audit_logs.html' %}
+{% endif %}
+{% endblock %}

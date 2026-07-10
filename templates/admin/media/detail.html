@@ -1,0 +1,99 @@
+{% extends 'admin/media/layout.html' %}
+
+{% block media_actions %}
+<a href="{{ url_for('admin.media_edit', asset_id=asset.id) }}" class="btn btn-outline-primary">
+    <i class="bi bi-pencil me-1" aria-hidden="true"></i> Edit Metadata
+</a>
+<a href="{{ url_for('admin.media_library', folder=asset.folder) }}" class="btn btn-outline-secondary">Back to Library</a>
+{% endblock %}
+
+{% block media_content %}
+<div class="row g-4">
+    <div class="col-lg-7">
+        <section class="admin-panel admin-media-preview-panel" aria-label="Media preview">
+            {% if asset.is_image %}
+            <img src="{{ url_for('static', filename=asset.storage_path) }}"
+                 alt="{{ asset.alt_text or asset.title }}"
+                 class="admin-media-preview-img">
+            {% elif asset.is_video %}
+            <video controls class="admin-media-preview-video" preload="metadata">
+                <source src="{{ url_for('static', filename=asset.storage_path) }}" type="{{ asset.mime_type }}">
+            </video>
+            {% elif asset.is_pdf %}
+            <iframe src="{{ url_for('static', filename=asset.storage_path) }}"
+                    class="admin-media-preview-pdf"
+                    title="PDF preview"></iframe>
+            {% else %}
+            <div class="admin-media-preview-file">
+                <i class="bi bi-file-earmark-text display-4" aria-hidden="true"></i>
+                <p>{{ asset.original_filename }}</p>
+                <a href="{{ url_for('static', filename=asset.storage_path) }}" class="btn btn-primary" download>Download</a>
+            </div>
+            {% endif %}
+        </section>
+    </div>
+    <div class="col-lg-5">
+        <section class="admin-panel">
+            <h2 class="h5">File Details</h2>
+            <dl class="admin-media-details">
+                <dt>Title</dt><dd>{{ asset.title }}</dd>
+                <dt>Filename</dt><dd>{{ asset.original_filename }}</dd>
+                <dt>Path</dt><dd><code>{{ asset.storage_path }}</code></dd>
+                <dt>Type</dt><dd>{{ asset.media_type_label }} ({{ asset.mime_type }})</dd>
+                <dt>Folder</dt><dd>{{ asset.folder_label }}</dd>
+                <dt>Size</dt><dd>{{ asset.file_size_label }}</dd>
+                {% if asset.width and asset.height %}
+                <dt>Dimensions</dt><dd>{{ asset.width }} × {{ asset.height }}</dd>
+                {% endif %}
+                <dt>Uploaded</dt><dd>{{ asset.created_at_label }}{% if asset.uploaded_by_name %} by {{ asset.uploaded_by_name }}{% endif %}</dd>
+            </dl>
+        </section>
+
+        <section class="admin-panel mt-3" aria-labelledby="usageHeading">
+            <h2 class="h5" id="usageHeading">Used In</h2>
+            {% if asset.usage %}
+            <ul class="admin-media-usage list-unstyled mb-0">
+                {% for use in asset.usage %}
+                <li><i class="bi bi-link-45deg me-1" aria-hidden="true"></i><strong>{{ use.location }}</strong> — {{ use.label }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="text-muted small mb-0">Not referenced in any CMS content yet.</p>
+            {% endif %}
+        </section>
+
+        <section class="admin-panel mt-3" aria-labelledby="actionsHeading">
+            <h2 class="h5" id="actionsHeading">Actions</h2>
+
+            <form method="post" action="{{ url_for('admin.media_rename', asset_id=asset.id) }}" class="mb-3">
+                {{ rename_form.hidden_tag() }}
+                <div class="mb-2">{{ rename_form.title.label(class="form-label") }}{{ rename_form.title(class="form-control") }}</div>
+                <div class="mb-2">{{ rename_form.original_filename.label(class="form-label") }}{{ rename_form.original_filename(class="form-control") }}</div>
+                {{ rename_form.submit(class="btn btn-sm btn-outline-primary") }}
+            </form>
+
+            <form method="post" action="{{ url_for('admin.media_move', asset_id=asset.id) }}" class="mb-3">
+                {{ move_form.hidden_tag() }}
+                <div class="mb-2">{{ move_form.folder.label(class="form-label") }}{{ move_form.folder(class="form-select") }}</div>
+                {{ move_form.submit(class="btn btn-sm btn-outline-primary") }}
+            </form>
+
+            <form method="post" action="{{ url_for('admin.media_replace', asset_id=asset.id) }}" enctype="multipart/form-data" class="mb-3">
+                {{ replace_form.hidden_tag() }}
+                <div class="mb-2">{{ replace_form.file.label(class="form-label") }}{{ replace_form.file(class="form-control") }}</div>
+                {{ replace_form.submit(class="btn btn-sm btn-outline-warning") }}
+            </form>
+
+            <form method="post" action="{{ url_for('admin.media_copy', asset_id=asset.id) }}" class="mb-3">
+                {{ copy_form.hidden_tag() }}
+                {{ copy_form.submit(class="btn btn-sm btn-outline-secondary") }}
+            </form>
+
+            <form method="post" action="{{ url_for('admin.media_delete', asset_id=asset.id) }}" onsubmit="return confirm('Move this file to trash?');">
+                {{ delete_form.hidden_tag() }}
+                {{ delete_form.submit(class="btn btn-sm btn-outline-danger") }}
+            </form>
+        </section>
+    </div>
+</div>
+{% endblock %}

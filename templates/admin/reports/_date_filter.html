@@ -1,0 +1,36 @@
+<form class="admin-reports-date-filter row g-2 align-items-end mb-4" method="get" action="{{ url_for('admin.reports_dashboard') }}">
+    <input type="hidden" name="tab" value="{{ active_tab }}">
+    {% if active_tab == 'audit' %}
+    <input type="hidden" name="audit_tab" value="{{ audit_tab }}">
+    {% endif %}
+
+    <div class="col-auto">
+        <label class="form-label small mb-1" for="reportsPreset">Date range</label>
+        <select class="form-select form-select-sm" id="reportsPreset" name="preset">
+            {% for key, label in date_presets.items() %}
+            <option value="{{ key }}"{% if date_range.preset == key %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-auto admin-reports-custom-dates{% if date_range.preset != 'custom' %} d-none{% endif %}">
+        <label class="form-label small mb-1" for="reportsDateFrom">From</label>
+        <input type="date" class="form-control form-control-sm" id="reportsDateFrom" name="date_from" value="{{ date_range.start }}">
+    </div>
+    <div class="col-auto admin-reports-custom-dates{% if date_range.preset != 'custom' %} d-none{% endif %}">
+        <label class="form-label small mb-1" for="reportsDateTo">To</label>
+        <input type="date" class="form-control form-control-sm" id="reportsDateTo" name="date_to" value="{{ date_range.end }}">
+    </div>
+
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary btn-sm">
+            <i class="bi bi-funnel me-1" aria-hidden="true"></i> Apply
+        </button>
+    </div>
+
+    <div class="col-auto ms-md-auto">
+        <span class="badge bg-light text-dark border admin-reports-range-badge">
+            <i class="bi bi-calendar3 me-1" aria-hidden="true"></i>{{ date_range.label }}
+        </span>
+    </div>
+</form>

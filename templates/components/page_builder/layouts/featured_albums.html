@@ -1,0 +1,65 @@
+{# Featured albums — curated collections with filter jump links #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{% from 'macros/media.html' import smart_image %}
+{% set albums = gallery_albums if gallery_albums else [] %}
+{% set block_items = block.items if block and block.items else [] %}
+{% set media_items = gallery_images if gallery_images else [] %}
+{% set use_dynamic = albums | length > 0 %}
+{% set use_seed = (not use_dynamic) and (media_items | length == 0) and block_items %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+    </div>
+    <div class="row g-4">
+        {% if use_dynamic %}
+        {% for album in albums if album.is_active %}
+        <div class="col-md-6 col-xl-4" data-animate>
+            <article class="premium-card pb-album-card h-100">
+                <button type="button"
+                        class="pb-album-card-link"
+                        data-album-filter="{{ album.filter_album }}"
+                        aria-label="Browse {{ album.title }} album">
+                    <div class="pb-album-card-image">
+                        {{ smart_image(album.image, album.title, 'gallery', 'pb-album-image', lazy=true) }}
+                        <span class="pb-album-card-icon" aria-hidden="true">
+                            <i class="bi {{ album.icon }}"></i>
+                        </span>
+                    </div>
+                    <div class="premium-card-body">
+                        <h3 class="premium-card-title">{{ album.title }}</h3>
+                        <p class="premium-card-text">{{ album.description }}</p>
+                        <span class="pb-album-card-action">Browse album <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i></span>
+                    </div>
+                </button>
+            </article>
+        </div>
+        {% endfor %}
+        {% elif use_seed %}
+        {% for item in block_items if item.is_active %}
+        {% set ex = item.extra if item.extra else {} %}
+        <div class="col-md-6 col-xl-4" data-animate>
+            <article class="premium-card pb-album-card h-100">
+                <button type="button"
+                        class="pb-album-card-link"
+                        data-album-filter="{{ ex.filter_album | default('', true) }}"
+                        aria-label="Browse {{ item.title }} album">
+                    <div class="pb-album-card-image">
+                        {{ smart_image(item.image, item.title, 'gallery', 'pb-album-image', lazy=true) }}
+                        <span class="pb-album-card-icon" aria-hidden="true">
+                            <i class="bi {{ item.icon or 'bi-images' }}"></i>
+                        </span>
+                    </div>
+                    <div class="premium-card-body">
+                        <h3 class="premium-card-title">{{ item.title }}</h3>
+                        <p class="premium-card-text">{{ item.short_summary }}</p>
+                        <span class="pb-album-card-action">Browse album <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i></span>
+                    </div>
+                </button>
+            </article>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{{ pb_close_section() }}

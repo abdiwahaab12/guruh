@@ -1,0 +1,69 @@
+<header class="admin-header">
+    <div class="admin-header-start">
+        <button type="button"
+                class="btn admin-icon-btn d-lg-none"
+                id="adminSidebarToggle"
+                aria-controls="adminSidebar"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <i class="bi bi-list" aria-hidden="true"></i>
+        </button>
+        <button type="button"
+                class="btn admin-icon-btn d-none d-lg-inline-flex"
+                id="adminSidebarCollapse"
+                aria-controls="adminSidebar"
+                aria-expanded="true"
+                aria-label="Collapse sidebar">
+            <i class="bi bi-layout-sidebar-inset" aria-hidden="true"></i>
+        </button>
+
+        <form class="admin-search-form" role="search" action="#" method="get" aria-label="Global search">
+            <label for="adminGlobalSearch" class="visually-hidden">Search admin</label>
+            <div class="input-group">
+                <span class="input-group-text" aria-hidden="true"><i class="bi bi-search"></i></span>
+                <input type="search"
+                       class="form-control"
+                       id="adminGlobalSearch"
+                       name="q"
+                       placeholder="Search pages, projects, users…"
+                       data-i18n-placeholder="search.placeholder"
+                       autocomplete="off"
+                       disabled
+                       aria-describedby="adminSearchHint">
+            </div>
+            <span id="adminSearchHint" class="visually-hidden">Search will be enabled in a future release</span>
+        </form>
+    </div>
+
+    <div class="admin-header-end">
+        <div class="dropdown admin-lang-dropdown">
+            <button class="btn admin-icon-btn dropdown-toggle"
+                    type="button"
+                    id="adminLangDropdown"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    aria-label="Language">
+                <i class="bi bi-translate" aria-hidden="true"></i>
+                <span class="d-none d-md-inline ms-1">EN</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminLangDropdown">
+                <li><span class="dropdown-item-text text-muted small" data-i18n="lang.ready">Multi-language ready</span></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><button class="dropdown-item active" type="button" disabled>English</button></li>
+                <li><button class="dropdown-item" type="button" disabled>Somali (Soon)</button></li>
+            </ul>
+        </div>
+
+        <button type="button"
+                class="btn admin-icon-btn"
+                id="adminThemeToggle"
+                aria-label="Toggle dark mode"
+                aria-pressed="false">
+            <i class="bi bi-moon-stars theme-icon-dark" aria-hidden="true"></i>
+            <i class="bi bi-sun theme-icon-light d-none" aria-hidden="true"></i>
+        </button>
+
+        {% include 'admin/partials/_notifications.html' %}
+        {% include 'admin/partials/_user_menu.html' %}
+    </div>
+</header>

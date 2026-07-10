@@ -1,0 +1,40 @@
+{% from 'macros/media.html' import smart_image %}
+{# Featured projects grid #}
+{% if projects %}
+<section class="home-section home-projects home-section--muted" id="projects"{% if section_id %} aria-labelledby="{{ section_id }}-heading"{% endif %}>
+    <div class="container">
+        {% include "components/ui/section_heading.html" %}
+
+        <div class="row g-4 g-lg-5">
+            {% for project in projects %}
+            <div class="col-md-6 col-lg-4" data-animate>
+                <article class="premium-card home-project-card h-100">
+                    <div class="home-project-card-media">
+                        {{ smart_image(project.cover_image, project.title, 'project', 'home-project-image') }}
+                        <div class="home-project-overlay">
+                            <a href="{{ url_for('main.project_detail', slug=project.slug) }}" class="home-project-view" aria-label="View {{ project.title }}">
+                                <i class="bi bi-arrow-up-right"></i>
+                            </a>
+                        </div>
+                        {% if project.category %}
+                        <span class="home-project-tag">{{ project.category }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="premium-card-body">
+                        <h3 class="premium-card-title">{{ project.title }}</h3>
+                        {% if project.location %}
+                        <p class="home-project-meta"><i class="bi bi-geo-alt"></i> {{ project.location }}</p>
+                        {% endif %}
+                    </div>
+                </article>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-5 pt-2" data-animate>
+            <a href="{{ url_for('main.projects') }}" class="btn btn-primary btn-lg">Explore All Projects</a>
+        </div>
+    </div>
+</section>
+{% include "components/ui/section_divider.html" %}
+{% endif %}

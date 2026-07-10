@@ -1,0 +1,77 @@
+{% extends 'admin/media/layout.html' %}
+
+{% block media_subtitle %}Overview of storage, media types, and recent uploads.{% endblock %}
+
+{% block media_content %}
+<div class="row g-4">
+    <div class="col-md-3">
+        <div class="admin-media-stat-card">
+            <span class="admin-media-stat-label">Total Files</span>
+            <span class="admin-media-stat-value">{{ stats.total_files }}</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-media-stat-card">
+            <span class="admin-media-stat-label">Storage Used</span>
+            <span class="admin-media-stat-value">{{ stats.total_storage_label }}</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-media-stat-card">
+            <span class="admin-media-stat-label">Images</span>
+            <span class="admin-media-stat-value">{{ stats.by_type.get('image', 0) + stats.by_type.get('icon', 0) }}</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-media-stat-card">
+            <span class="admin-media-stat-label">Documents</span>
+            <span class="admin-media-stat-value">{{ stats.by_type.get('pdf', 0) + stats.by_type.get('document', 0) }}</span>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-1">
+    <div class="col-lg-6">
+        <section class="admin-panel" aria-labelledby="mediaTypesHeading">
+            <h2 class="admin-panel-title" id="mediaTypesHeading">Media Types</h2>
+            <ul class="admin-media-type-list list-unstyled mb-0">
+                {% for media_type in media_types %}
+                <li class="admin-media-type-item">
+                    <span><i class="bi {{ media_type.icon }} me-2" aria-hidden="true"></i>{{ media_type.label }}</span>
+                    <span class="badge text-bg-light">{{ stats.by_type.get(media_type.slug, 0) }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
+    <div class="col-lg-6">
+        <section class="admin-panel" aria-labelledby="folderUsageHeading">
+            <h2 class="admin-panel-title" id="folderUsageHeading">Storage by Folder</h2>
+            <ul class="admin-media-type-list list-unstyled mb-0">
+                {% for folder in media_folders %}
+                <li class="admin-media-type-item">
+                    <span><i class="bi {{ folder.icon }} me-2" aria-hidden="true"></i>{{ folder.label }}</span>
+                    <span class="badge text-bg-light">{{ stats.by_folder.get(folder.slug, 0) }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
+</div>
+
+<section class="admin-panel mt-4" aria-labelledby="recentUploadsHeading">
+    <div class="admin-panel-header">
+        <h2 class="admin-panel-title" id="recentUploadsHeading">Recent Uploads</h2>
+        <a href="{{ url_for('admin.media_library') }}" class="btn btn-sm btn-outline-primary">View Library</a>
+    </div>
+    {% if stats.recent_uploads %}
+    <div class="admin-media-recent-grid">
+        {% for asset in stats.recent_uploads %}
+        {% include 'admin/media/_asset_card.html' %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-muted mb-0">No uploads yet. <a href="{{ url_for('admin.media_upload') }}">Upload your first file</a>.</p>
+    {% endif %}
+</section>
+{% endblock %}

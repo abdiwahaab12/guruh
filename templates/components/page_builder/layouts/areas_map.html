@@ -1,0 +1,45 @@
+{# Areas of operation — future-ready map architecture (CMS map provider) #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading, pb_paragraphs %}
+{% set map_country = block.extra.operating_country if block and block.extra and block.extra.operating_country else (company.operating_country if company and company.operating_country else (company.address_country if company and company.address_country else 'Operational regions')) %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="row g-5 align-items-start">
+        <div class="col-lg-5" data-animate>
+            {{ pb_heading(section, block, 'left') }}
+            {{ pb_paragraphs(block.full_content if block else '') }}
+        </div>
+        <div class="col-lg-7" data-animate>
+            <div class="pb-areas-map-shell"
+                 role="region"
+                 aria-label="{{ map_country }} areas of operation map"
+                 data-map-ready="{{ 'true' if block and block.extra and block.extra.map_ready else 'false' }}"
+                 data-map-provider="{{ block.extra.map_provider if block and block.extra and block.extra.map_provider else 'future-map' }}">
+                <div class="pb-areas-map-placeholder" aria-hidden="true">
+                    <div class="pb-areas-map-outline">
+                        <span class="pb-areas-map-label">{{ map_country }}</span>
+                        <span class="pb-areas-map-note">Interactive map — CMS integration ready</span>
+                    </div>
+                </div>
+                {% if block and block.items %}
+                <div class="pb-areas-counties mt-4" role="list" aria-label="Counties served">
+                    {% for item in block.items if item.is_active %}
+                    <button type="button"
+                            class="pb-areas-county-btn"
+                            role="listitem"
+                            data-county="{{ item.title }}"
+                            data-county-key="{{ item.extra.county_key if item.extra and item.extra.county_key else item.title | lower }}"
+                            aria-pressed="false">
+                        <i class="bi {{ item.icon or 'bi-geo-alt-fill' }}" aria-hidden="true"></i>
+                        <span>{{ item.title }}</span>
+                        {% if item.extra and item.extra.project_count %}
+                        <span class="pb-areas-count">{{ item.extra.project_count }}</span>
+                        {% endif %}
+                    </button>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{{ pb_close_section() }}

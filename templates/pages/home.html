@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.meta_title if page else 'Home' }} | {{ company.name }}{% endblock %}
+{% block meta_description %}{{ page.meta_description if page else company.tagline }}{% endblock %}
+{% block body_class %}page-home{% endblock %}
+
+{% block seo_meta %}
+{% from 'macros/seo.html' import render_seo, breadcrumb_json_ld %}
+{% set seo_title = (page.meta_title if page else 'Home') ~ ' | ' ~ company.name %}
+{% set seo_desc = page.meta_description if page else company.tagline %}
+{{ render_seo(seo_title, seo_desc, canonical_url, og_image_url, company.name) }}
+{{ breadcrumb_json_ld([{'name': 'Home', 'url': canonical_url}]) }}
+{% endblock %}
+
+{% block extra_head %}
+{% from 'macros/seo.html' import organization_postal_address %}
+{% if home.hero_slides and page.banner_image %}
+<link rel="preload" as="image" href="{{ url_for('static', filename=page.banner_image) }}">
+{% elif home.hero_slides and home.hero_slides[0].image %}
+<link rel="preload" as="image" href="{{ url_for('static', filename=home.hero_slides[0].image) }}">
+{% endif %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "GeneralContractor",
+  "name": {{ company.name | tojson }},
+  "description": {{ company.description | tojson }},
+  "url": {{ request.url_root | tojson }},
+  "telephone": {{ company.phone_primary | tojson }},
+  "email": {{ company.email | tojson }},
+  "address": {{ organization_postal_address(company) }}
+}
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+
+{% block content %}
+{% with slides=home.hero_slides, trust_badges=home.hero_trust_badges, floating_stats=home.hero_floating_stats, page_banner_image=page.banner_image if page else '' %}
+{% include "components/home/hero_slider.html" %}
+{% endwith %}
+
+{% with about=home.about, stats=home.statistics %}
+{% include "components/home/about_preview.html" %}
+{% endwith %}
+
+{% with services=home.featured_services, section_heading=home.services_heading, section_id='services' %}
+{% include "components/home/services_grid.html" %}
+{% endwith %}
+
+{% with projects=home.featured_projects, section_heading=home.projects_heading, section_id='projects' %}
+{% include "components/home/projects_grid.html" %}
+{% endwith %}
+
+{% with section=home.why_choose_us %}
+{% include "components/home/why_choose_us.html" %}
+{% endwith %}
+
+{% with statistics=home.statistics %}
+{% include "components/home/statistics.html" %}
+{% endwith %}
+
+{% with section=home.working_process %}
+{% include "components/home/working_process.html" %}
+{% endwith %}
+
+{% with testimonials=home.testimonials, section_heading=home.testimonials_heading, section_id='testimonials' %}
+{% include "components/home/testimonials.html" %}
+{% endwith %}
+
+{% with partners=home.partners, section_heading=home.partners_heading, section_id='partners' %}
+{% include "components/home/partners.html" %}
+{% endwith %}
+
+{% with cta=home.cta %}
+{% include "components/home/cta_section.html" %}
+{% endwith %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/home.js') }}" defer></script>
+{% endblock %}

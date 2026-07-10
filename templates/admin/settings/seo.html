@@ -1,0 +1,21 @@
+{% extends 'admin/settings/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field, form_actions %}
+
+{% block settings_subtitle %}Default meta tags and Open Graph settings for the public site.{% endblock %}
+
+{% block settings_content %}
+<form method="post" class="admin-settings-form" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="admin-panel">
+        {{ render_field(form.site_title) }}
+        {{ render_field(form.meta_description) }}
+        {{ render_field(form.meta_keywords) }}
+        <div class="row">
+            <div class="col-md-6">{{ render_field(form.og_image) }}</div>
+            <div class="col-md-6">{{ render_field(form.robots) }}</div>
+        </div>
+        {{ render_field(form.canonical_base_url, 'Optional — include https:// and no trailing slash.') }}
+        {{ form_actions(form) }}
+    </div>
+</form>
+{% endblock %}

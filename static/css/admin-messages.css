@@ -1,0 +1,52 @@
+/* Messages / Inbox admin — Step 24 */
+
+.admin-messages-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--admin-border, #dee2e6);
+    padding-bottom: 0.5rem;
+}
+
+.admin-messages-tab {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem 0.375rem 0 0;
+    text-decoration: none;
+    color: var(--admin-muted, #6c757d);
+    font-weight: 500;
+}
+
+.admin-messages-tab.active,
+.admin-messages-tab:hover {
+    color: var(--admin-primary, #0d6efd);
+    background: rgba(13, 110, 253, 0.08);
+}
+
+.admin-messages-stats .admin-stat-card {
+    background: var(--admin-panel-bg, #fff);
+    border: 1px solid var(--admin-border, #dee2e6);
+    border-radius: 0.5rem;
+    padding: 1rem 1.25rem;
+}
+
+.admin-messages-stats .admin-stat-label {
+    font-size: 0.875rem;
+    color: var(--admin-muted, #6c757d);
+}
+
+.admin-messages-stats .admin-stat-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.admin-message-body {
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+@media (max-width: 767.98px) {
+    .admin-messages-table .btn-group {
+        flex-direction: column;
+    }
+}

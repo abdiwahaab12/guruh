@@ -1,0 +1,51 @@
+{% extends 'admin/website/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field %}
+{% from 'admin/website/_dynamic_fields.html' import render_dynamic_field %}
+
+{% block website_actions %}
+<a href="{{ url_for('admin.website_block_edit', block_key=block_key, tab='items') }}" class="btn btn-outline-secondary btn-sm">Back to Block</a>
+{% endblock %}
+
+{% block website_content %}
+<form method="post" class="admin-website-item-form" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="admin-panel">
+        <p class="text-muted small">Editing item for block <strong>{{ item_editor.block_title }}</strong> (<code>{{ block_key }}</code>).</p>
+        {% if block_key == 'partners' %}
+        <div class="alert alert-info py-2 small mb-3" role="status">
+            For each partner: enter the <strong>Title</strong> (partner name), scroll to <strong>Image</strong>, then click
+            <strong>Upload from PC</strong> to pick a logo from your computer — or click a thumbnail below the Image field.
+            You only need Title + Image; other fields are optional.
+        </div>
+        {% elif block_key == 'gallery_downloads' %}
+        <div class="alert alert-info py-2 small mb-3" role="status">
+            For each download: set <strong>Title</strong> and <strong>Subtitle</strong> (e.g. PDF), then use
+            <strong>PDF / Document File</strong> → <strong>Upload PDF</strong> to attach the file from your computer
+            or pick one from the Downloads library. Turn on <strong>Enable Download Button</strong> and keep
+            <strong>Active</strong> checked so the public Gallery page shows a Download link.
+        </div>
+        {% endif %}
+        {{ render_field(form.item_key, 'Stable identifier for this repeater item.') }}
+        {% for field in item_editor.fields %}
+        {{ render_dynamic_field(field, media_assets, document_assets=document_assets|default([]), media_folder=media_folder|default('general')) }}
+        {% endfor %}
+        <div class="form-check form-switch mb-3">
+            {{ form.is_active(class="form-check-input") }}
+            {{ form.is_active.label(class="form-check-label") }}
+        </div>
+    </div>
+    <div class="admin-settings-form-actions mt-3">
+        {{ form.submit(class="btn btn-primary btn-lg") }}
+        {{ form.preview(class="btn btn-outline-secondary") }}
+    </div>
+</form>
+{% endblock %}
+
+{% block website_extra_js %}
+<script>
+    window.GURUH_MEDIA_UPLOAD = {
+        apiUrl: {{ url_for('admin.media_api_upload') | tojson }},
+        csrfToken: {{ csrf_token() | tojson }}
+    };
+</script>
+{% endblock %}

@@ -1,0 +1,67 @@
+{# Project overview with key facts #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading, pb_paragraphs %}
+{% from 'macros/media.html' import smart_image %}
+{% set extra = block.extra if block and block.extra else {} %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="row g-5 align-items-start">
+        <div class="col-lg-7 order-lg-2" data-animate>
+            {{ pb_heading(section, block, 'left') }}
+            {{ pb_paragraphs(block.full_content if block else '') }}
+        </div>
+        <div class="col-lg-5 order-lg-1" data-animate>
+            {{ smart_image(block.hero_image if block else '', section.section_title, 'project', 'img-fluid rounded pb-section-image mb-4', lazy=true) }}
+            <dl class="pb-project-facts">
+                {% if extra.client %}
+                <div class="pb-project-fact">
+                    <dt><i class="bi bi-building" aria-hidden="true"></i> Client</dt>
+                    <dd>{{ extra.client }}</dd>
+                </div>
+                {% endif %}
+                {% if extra.consultant %}
+                <div class="pb-project-fact">
+                    <dt><i class="bi bi-person-badge" aria-hidden="true"></i> Consultant</dt>
+                    <dd>{{ extra.consultant }}</dd>
+                </div>
+                {% endif %}
+                {% if extra.location %}
+                <div class="pb-project-fact">
+                    <dt><i class="bi bi-geo-alt" aria-hidden="true"></i> Location</dt>
+                    <dd>{{ extra.location }}</dd>
+                </div>
+                {% endif %}
+                {% if extra.county %}
+                <div class="pb-project-fact">
+                    <dt><i class="bi bi-map" aria-hidden="true"></i> County</dt>
+                    <dd>{{ extra.county }}</dd>
+                </div>
+                {% endif %}
+                {% if extra.duration %}
+                <div class="pb-project-fact">
+                    <dt><i class="bi bi-clock-history" aria-hidden="true"></i> Duration</dt>
+                    <dd>{{ extra.duration }}</dd>
+                </div>
+                {% endif %}
+                {% if extra.completion_date %}
+                <div class="pb-project-fact">
+                    <dt><i class="bi bi-calendar-check" aria-hidden="true"></i> Completion</dt>
+                    <dd>{{ extra.completion_date }}</dd>
+                </div>
+                {% endif %}
+                {% if extra.status %}
+                <div class="pb-project-fact">
+                    <dt><i class="bi bi-flag" aria-hidden="true"></i> Status</dt>
+                    <dd>{{ extra.status }}</dd>
+                </div>
+                {% endif %}
+                {% if extra.category %}
+                <div class="pb-project-fact">
+                    <dt><i class="bi bi-tag" aria-hidden="true"></i> Category</dt>
+                    <dd>{{ extra.category }}</dd>
+                </div>
+                {% endif %}
+            </dl>
+        </div>
+    </div>
+</div>
+{{ pb_close_section() }}

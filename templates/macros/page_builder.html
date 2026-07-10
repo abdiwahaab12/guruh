@@ -1,0 +1,117 @@
+{#
+  Page Builder — dynamic section renderer.
+  Page → Sections → Content Blocks → Items
+#}
+
+{% macro pb_section_classes(section) -%}
+pb-section pb-layout--{{ section.layout_type | replace('_', '-') }} pb-bg--{{ section.background_style }} pb-space--{{ section.spacing }}
+{%- endmacro %}
+
+{% macro pb_open_section(section, block=none, labelled=true) %}
+<section
+    id="{{ section.seo_anchor }}"
+    class="{{ pb_section_classes(section) }}"
+    data-section-key="{{ section.section_key }}"
+    data-layout="{{ section.layout_type }}"
+    {% if labelled and section.layout_type != 'hero-banner' %}
+    aria-labelledby="{{ section.seo_anchor }}-heading"
+    {% elif section.layout_type == 'hero-banner' %}
+    aria-labelledby="page-hero-title"
+    {% endif %}>
+{% endmacro %}
+
+{% macro pb_close_section() %}
+</section>
+{% endmacro %}
+
+{% macro pb_heading(section, block, align='center') %}
+{% if block and block.subtitle %}
+<p class="section-subheading">{{ block.subtitle }}</p>
+{% endif %}
+<h2 class="section-title{% if align == 'center' %} mx-auto text-center{% endif %}"
+    id="{{ section.seo_anchor }}-heading">{{ section.section_title }}</h2>
+<div class="section-divider{% if align == 'center' %} mx-auto{% endif %}" aria-hidden="true"></div>
+{% if block and block.short_summary %}
+<p class="section-intro{% if align == 'center' %} mx-auto text-center{% endif %}">{{ block.short_summary }}</p>
+{% endif %}
+{% endmacro %}
+
+{% macro pb_paragraphs(text) %}
+{% if text %}
+<div class="pb-prose">
+    {% for paragraph in text.split('\n\n') %}
+    {% if paragraph.strip() %}
+    <p>{{ paragraph.strip() }}</p>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+{% endmacro %}
+
+{% macro render_page_sections(sections, page=none, projects=none, services=none, project=none, equipment=none, equipment_item=none, team=none, office=none, offices=none, departments=none, emergency=none, map_location=none, contact_form_fields=none, quote_form_fields=none, quote_form_steps=none, quote_form_options=none, social_links=none, company=none, jobs=none, job=none, job_application_fields=none, job_application_options=none, gallery_images=none, gallery_albums=none, gallery_videos=none, gallery_downloads=none, before_after_items=none, progress_items=none, awards_items=none, gallery_filter_options=none) %}
+{% set layout_map = {
+    'hero-banner': 'hero_banner',
+    'default': 'default',
+    'split-columns': 'split_columns',
+    'timeline': 'timeline',
+    'card-grid': 'card_grid',
+    'stats-row': 'stats_row',
+    'logo-grid': 'logo_grid',
+    'team-grid': 'team_grid',
+    'cta-banner': 'cta_banner',
+    'rich-text': 'rich_text',
+    'feature-list': 'feature_list',
+    'two-column': 'two_column',
+    'services-grid': 'services_grid',
+    'service-detail': 'service_detail',
+    'process-steps': 'process_steps',
+    'projects-showcase': 'projects_showcase',
+    'faq-accordion': 'faq_accordion',
+    'projects-portfolio': 'projects_portfolio',
+    'areas-map': 'areas_map',
+    'testimonials-grid': 'testimonials_grid',
+    'project-hero': 'project_hero',
+    'project-gallery': 'project_gallery',
+    'project-detail-overview': 'project_detail_overview',
+    'project-challenges': 'project_challenges',
+    'project-related': 'project_related',
+    'equipment-categories': 'equipment_categories',
+    'equipment-grid': 'equipment_grid',
+    'equipment-hero': 'equipment_hero',
+    'equipment-detail-overview': 'equipment_detail_overview',
+    'equipment-related': 'equipment_related',
+    'team-leadership': 'team_leadership',
+    'org-chart': 'org_chart',
+    'team-staff-grid': 'team_staff_grid',
+    'join-team': 'join_team',
+    'contact-office-info': 'contact_office_info',
+    'google-maps': 'google_maps',
+    'contact-form': 'contact_form',
+    'department-contacts': 'department_contacts',
+    'emergency-contact': 'emergency_contact',
+    'social-media': 'social_media',
+    'quote-form': 'quote_form',
+    'quote-multistep-form': 'quote_multistep_form',
+    'job-openings': 'job_openings',
+    'job-detail-overview': 'job_detail_overview',
+    'job-apply-form': 'job_apply_form',
+    'gallery-filters': 'gallery_filters',
+    'gallery-media-grid': 'gallery_media_grid',
+    'featured-albums': 'featured_albums',
+    'video-gallery': 'video_gallery',
+    'before-after': 'before_after',
+    'progress-gallery': 'progress_gallery',
+    'awards-gallery': 'awards_gallery',
+    'download-center': 'download_center'
+} %}
+{% set img_ns = namespace(eager_pending=true) %}
+{% for section in sections %}
+{% if section.is_active and section.is_visible %}
+{% set layout_slug = layout_map.get(section.layout_type, 'default') %}
+{% set block = section.block %}
+{% set eager_image = img_ns.eager_pending and block and block.hero_image %}
+{% if eager_image %}{% set img_ns.eager_pending = false %}{% endif %}
+{% include 'components/page_builder/layouts/' ~ layout_slug ~ '.html' with context %}
+{% endif %}
+{% endfor %}
+{% endmacro %}

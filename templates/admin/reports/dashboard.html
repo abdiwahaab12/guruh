@@ -1,0 +1,11 @@
+{% extends 'admin/reports/layout.html' %}
+
+{% block reports_content %}
+{% if active_tab == 'overview' %}
+{% include 'admin/reports/_tab_overview.html' %}
+{% else %}
+{% include 'admin/reports/_tab_audit.html' %}
+{% endif %}
+
+<script type="application/json" id="reportsChartData">{{ chart_data | tojson }}</script>
+{% endblock %}

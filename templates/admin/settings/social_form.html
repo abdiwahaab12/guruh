@@ -1,0 +1,26 @@
+{% extends 'admin/settings/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field, form_actions %}
+
+{% block settings_subtitle %}{% if is_edit %}Update social profile link.{% else %}Add a new social media profile.{% endblock %}
+
+{% block settings_content %}
+<form method="post" class="admin-settings-form" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="admin-panel">
+        <div class="row g-3">
+            <div class="col-md-6">{{ render_field(form.platform, 'e.g. facebook, linkedin, instagram') }}</div>
+            <div class="col-md-6">{{ render_field(form.label) }}</div>
+            <div class="col-md-6">{{ render_field(form.icon, 'Bootstrap Icons class, e.g. bi-facebook') }}</div>
+            <div class="col-md-6">{{ render_field(form.url) }}</div>
+            <div class="col-md-4">{{ render_field(form.sort_order) }}</div>
+            <div class="col-md-4">
+                <div class="form-check form-switch mt-4">
+                    {{ form.is_active(class="form-check-input") }}
+                    {{ form.is_active.label(class="form-check-label") }}
+                </div>
+            </div>
+        </div>
+        {{ form_actions(form, url_for('admin.settings_social')) }}
+    </div>
+</form>
+{% endblock %}

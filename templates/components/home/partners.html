@@ -1,0 +1,12 @@
+{# Partners logo slider #}
+{% if partners %}
+<section class="home-section home-partners home-section--muted" id="partners"{% if section_id %} aria-labelledby="{{ section_id }}-heading"{% endif %}>
+    <div class="container">
+        {% include "components/ui/section_heading.html" %}
+
+        <div data-animate>
+            {% include "components/ui/partners_slider.html" %}
+        </div>
+    </div>
+</section>
+{% endif %}

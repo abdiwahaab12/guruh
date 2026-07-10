@@ -1,0 +1,42 @@
+{# Project-related testimonials grid #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+    </div>
+    {% if block and block.items %}
+    <div class="row g-4">
+        {% for item in block.items if item.is_active %}
+        <div class="col-md-6 col-lg-3" data-animate>
+            <blockquote class="premium-card pb-testimonial-card h-100">
+                <div class="premium-card-body">
+                    <div class="pb-testimonial-rating mb-2" aria-label="Rating: {{ item.extra.rating if item.extra and item.extra.rating else 5 }} out of 5">
+                        {% set rating = item.extra.rating if item.extra and item.extra.rating else 5 %}
+                        {% for i in range(rating) %}
+                        <i class="bi bi-star-fill" aria-hidden="true"></i>
+                        {% endfor %}
+                    </div>
+                    <p class="pb-testimonial-quote">&ldquo;{{ item.full_content or item.short_summary }}&rdquo;</p>
+                    <footer class="pb-testimonial-author mt-3">
+                        <cite class="premium-card-title d-block mb-0">{{ item.title }}</cite>
+                        {% if item.subtitle %}
+                        <span class="pb-item-desc">{{ item.subtitle }}</span>
+                        {% endif %}
+                        {% if item.short_summary %}
+                        <span class="pb-item-desc d-block">{{ item.short_summary }}</span>
+                        {% endif %}
+                        {% if item.extra and item.extra.project_slug %}
+                        <a href="{{ url_for('main.project_detail', slug=item.extra.project_slug) }}" class="pb-testimonial-project-link small">
+                            View related project
+                        </a>
+                        {% endif %}
+                    </footer>
+                </div>
+            </blockquote>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{{ pb_close_section() }}

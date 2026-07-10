@@ -1,0 +1,120 @@
+{% extends 'admin/layouts/base.html' %}
+
+{% block title %}Dashboard | GURUH CMS{% endblock %}
+
+{% block content %}
+<div class="admin-page-header">
+    <div>
+        <h1 class="admin-page-title" data-i18n="dashboard.title">Dashboard</h1>
+        <p class="admin-page-subtitle">Welcome back, {{ user.first_name }}. Here is your enterprise CMS overview.</p>
+    </div>
+    <div class="admin-page-actions">
+        <span class="badge admin-badge-live"><i class="bi bi-circle-fill" aria-hidden="true"></i> Placeholder Data</span>
+    </div>
+</div>
+
+<section class="admin-stats-grid" aria-label="Summary statistics">
+    {% for stat in stats %}
+    <article class="admin-stat-card admin-stat-{{ stat.color }}">
+        <div class="admin-stat-icon">
+            <i class="bi {{ stat.icon }}" aria-hidden="true"></i>
+        </div>
+        <div class="admin-stat-body">
+            <p class="admin-stat-label" data-i18n="{{ stat.i18n_key }}">{{ stat.label }}</p>
+            <p class="admin-stat-value">{{ stat.value }}</p>
+            {% if stat.trend %}
+            <p class="admin-stat-trend trend-{{ stat.trend_direction }}">{{ stat.trend }}</p>
+            {% endif %}
+        </div>
+        {% if stat.module_slug %}
+        <a href="{{ url_for('admin.module', module_slug=stat.module_slug) }}"
+           class="admin-stat-link stretched-link"
+           aria-label="Open {{ stat.label }} module"></a>
+        {% endif %}
+    </article>
+    {% endfor %}
+</section>
+
+<section class="admin-section" aria-labelledby="quickActionsHeading">
+    <h2 class="admin-section-title" id="quickActionsHeading" data-i18n="dashboard.quick_actions">Quick Actions</h2>
+    <div class="admin-quick-actions">
+        {% for action in quick_actions %}
+        <a href="{{ url_for(action.endpoint) if action.endpoint else url_for('admin.module', module_slug=action.module_slug) }}"
+           class="admin-quick-action-card admin-quick-{{ action.color }}">
+            <span class="admin-quick-icon"><i class="bi {{ action.icon }}" aria-hidden="true"></i></span>
+            <span class="admin-quick-label" data-i18n="{{ action.i18n_key }}">{{ action.label }}</span>
+            <span class="admin-quick-desc">{{ action.description }}</span>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+<div class="row g-4">
+    <div class="col-xl-8">
+        <section class="admin-panel" aria-labelledby="chartsHeading">
+            <div class="admin-panel-header">
+                <h2 class="admin-panel-title" id="chartsHeading" data-i18n="dashboard.analytics">Analytics Overview</h2>
+                <span class="badge text-bg-light">Chart.js · Placeholder</span>
+            </div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <div class="admin-chart-card">
+                        <h3 class="admin-chart-title">{{ charts[0].title if charts else 'Traffic' }}</h3>
+                        <div class="admin-chart-wrap">
+                            <canvas id="{{ charts[0].chart_id if charts else 'chartTrafficOverview' }}" aria-label="Traffic chart" role="img"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="admin-chart-card">
+                        <h3 class="admin-chart-title">{{ charts[1].title if charts|length > 1 else 'Content Mix' }}</h3>
+                        <div class="admin-chart-wrap admin-chart-wrap--compact">
+                            <canvas id="{{ charts[1].chart_id if charts|length > 1 else 'chartContentMix' }}" aria-label="Content distribution chart" role="img"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="admin-chart-card">
+                        <h3 class="admin-chart-title">{{ charts[2].title if charts|length > 2 else 'Form Submissions' }}</h3>
+                        <div class="admin-chart-wrap admin-chart-wrap--compact">
+                            <canvas id="{{ charts[2].chart_id if charts|length > 2 else 'chartFormSubmissions' }}" aria-label="Form submissions chart" role="img"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="col-xl-4">
+        <section class="admin-panel admin-panel--timeline" aria-labelledby="activityHeading">
+            <div class="admin-panel-header">
+                <h2 class="admin-panel-title" id="activityHeading" data-i18n="dashboard.recent_activity">Recent Activity</h2>
+            </div>
+            <ol class="admin-activity-timeline list-unstyled mb-0">
+                {% for item in activities %}
+                <li class="admin-activity-item">
+                    <span class="admin-activity-marker bg-{{ item.color }}">
+                        <i class="bi {{ item.icon }}" aria-hidden="true"></i>
+                    </span>
+                    <div class="admin-activity-content">
+                        <p class="admin-activity-title">{{ item.title }}</p>
+                        <p class="admin-activity-desc">{{ item.description }}</p>
+                        <p class="admin-activity-meta">
+                            <span>{{ item.actor }}</span>
+                            <span aria-hidden="true">·</span>
+                            <time>{{ item.timestamp_label }}</time>
+                        </p>
+                    </div>
+                </li>
+                {% endfor %}
+            </ol>
+        </section>
+    </div>
+</div>
+
+<script type="application/json" id="adminChartsData">{{ charts_json | safe }}</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/admin-charts.js') }}" defer></script>
+{% endblock %}

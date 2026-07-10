@@ -1,0 +1,33 @@
+{% extends 'admin/layouts/base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin-system.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-page-header">
+    <div>
+        <h1 class="admin-page-title">{% block system_title %}{{ page_title }}{% endblock %}</h1>
+        <p class="admin-page-subtitle">{% block system_subtitle %}Infrastructure health, maintenance, backups, logs, storage, and cache management.{% endblock %}</p>
+    </div>
+    <div class="admin-page-actions">
+        {% block system_actions %}{% endblock %}
+    </div>
+</div>
+
+<nav class="admin-system-tabs" aria-label="System administration sections">
+    {% for tab in system_tabs %}
+    <a href="{{ url_for('admin.system_dashboard', tab=tab.slug, log_tab=log_tab) }}"
+       class="admin-system-tab{% if active_tab == tab.slug %} active{% endif %}">
+        <i class="bi {{ tab.icon }} me-1" aria-hidden="true"></i>{{ tab.label }}
+    </a>
+    {% endfor %}
+</nav>
+
+{% block system_content %}{% endblock %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/admin-system.js') }}" defer></script>
+{% block system_extra_js %}{% endblock %}
+{% endblock %}

@@ -1,0 +1,10 @@
+{# Fallback layout #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading, pb_paragraphs %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    {% if block %}
+    {{ pb_heading(section, block, 'left') }}
+    {{ pb_paragraphs(block.full_content) }}
+    {% endif %}
+</div>
+{{ pb_close_section() }}

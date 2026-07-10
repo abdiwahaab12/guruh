@@ -1,0 +1,22 @@
+<article class="admin-media-card">
+    <a href="{{ url_for('admin.media_detail', asset_id=asset.id) }}" class="admin-media-card-link">
+        <div class="admin-media-thumb">
+            {% if asset.is_image %}
+            <img src="{{ url_for('static', filename=asset.storage_path) }}"
+                 alt="{{ asset.alt_text or asset.title }}"
+                 loading="lazy"
+                 class="admin-media-thumb-img">
+            {% elif asset.is_video %}
+            <span class="admin-media-thumb-icon"><i class="bi bi-camera-video-fill" aria-hidden="true"></i></span>
+            {% elif asset.is_pdf %}
+            <span class="admin-media-thumb-icon"><i class="bi bi-file-earmark-pdf-fill" aria-hidden="true"></i></span>
+            {% else %}
+            <span class="admin-media-thumb-icon"><i class="bi bi-file-earmark-fill" aria-hidden="true"></i></span>
+            {% endif %}
+        </div>
+        <div class="admin-media-card-body">
+            <h3 class="admin-media-card-title">{{ asset.title }}</h3>
+            <p class="admin-media-card-meta">{{ asset.file_size_label }} · {{ asset.media_type_label }}</p>
+        </div>
+    </a>
+</article>

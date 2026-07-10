@@ -1,0 +1,58 @@
+{% extends 'admin/media/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field, form_actions %}
+
+{% block media_subtitle %}Upload single or multiple files with drag and drop.{% endblock %}
+
+{% block media_content %}
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="admin-panel admin-media-dropzone-wrap">
+            <div class="admin-media-dropzone"
+                 id="mediaDropzone"
+                 tabindex="0"
+                 role="button"
+                 aria-label="Drop files here or click to browse">
+                <i class="bi bi-cloud-arrow-up admin-media-dropzone-icon" aria-hidden="true"></i>
+                <p class="mb-1"><strong>Drag & drop files here</strong></p>
+                <p class="text-muted small mb-3">or click to browse · Images, videos, PDFs, documents</p>
+                <input type="file"
+                       id="mediaDropInput"
+                       class="visually-hidden"
+                       multiple
+                       accept=".jpg,.jpeg,.png,.gif,.webp,.svg,.pdf,.mp4,.webm,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv">
+            </div>
+            <div class="admin-media-upload-progress" id="mediaUploadProgress" hidden>
+                <div class="progress" role="progressbar" aria-label="Upload progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" id="mediaUploadProgressBar" style="width: 0%"></div>
+                </div>
+                <p class="small text-muted mt-2 mb-0" id="mediaUploadStatus">Uploading…</p>
+            </div>
+            <ul class="admin-media-upload-preview list-unstyled mb-0" id="mediaUploadPreview" aria-live="polite"></ul>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <form method="post"
+              enctype="multipart/form-data"
+              class="admin-panel admin-media-upload-form"
+              id="mediaUploadForm"
+              novalidate>
+            {{ form.hidden_tag() }}
+            {{ render_field(form.folder) }}
+            {{ render_field(form.files) }}
+            {{ render_field(form.title, 'Optional default title for single uploads.') }}
+            {{ render_field(form.alt_text, 'Optional default alt text for images.') }}
+            {{ form_actions(form) }}
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block media_extra_js %}
+<script>
+    window.GURUH_MEDIA_UPLOAD = {
+        apiUrl: {{ url_for('admin.media_api_upload') | tojson }},
+        libraryUrl: {{ url_for('admin.media_library') | tojson }},
+        csrfToken: {{ form.csrf_token.current_token | tojson }}
+    };
+</script>
+{% endblock %}

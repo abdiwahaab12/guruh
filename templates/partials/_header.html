@@ -1,0 +1,183 @@
+{#
+  Site header — primary nav (template-only layout).
+  Top level: Home, About, Services, Contact
+  Services dropdown: All Services, Projects, Gallery, Team, Equipment
+#}
+{% set ns = namespace(labels={}) %}
+{% for item in nav_items %}
+{% if ns.labels.update({item.endpoint: item.label}) %}{% endif %}
+{% for child in item.children %}
+{% if ns.labels.update({child.endpoint: child.label}) %}{% endif %}
+{% endfor %}
+{% endfor %}
+
+{% set services_endpoints = ['main.services', 'main.projects', 'main.gallery', 'main.team', 'main.equipment'] %}
+{% set services_active = request.endpoint in services_endpoints %}
+
+<header id="header" class="site-header fixed-top">
+
+    {% include 'partials/_topbar.html' %}
+
+    <nav class="navbar navbar-expand-lg main-navbar" aria-label="Primary">
+        <div class="container">
+
+            <a class="navbar-brand" href="{{ url_for('main.index') }}" aria-label="{{ company.name }} — Home">
+                {% from 'macros/media.html' import smart_image %}
+                {{ smart_image(company.logo_path, company.name ~ ' logo', 'logo', 'logo-img', lazy=false, eager=true) }}
+            </a>
+
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mainNavbar"
+                    aria-controls="mainNavbar"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav mx-lg-auto">
+                    {# Home #}
+                    <li class="nav-item">
+                        <a class="nav-link{% if request.endpoint == 'main.index' %} active{% endif %}"
+                           href="{{ url_for('main.index') }}"
+                           {% if request.endpoint == 'main.index' %}aria-current="page"{% endif %}>
+                            {{ ns.labels.get('main.index', 'Home') }}
+                        </a>
+                    </li>
+
+                    {# About #}
+                    <li class="nav-item">
+                        <a class="nav-link{% if request.endpoint == 'main.about' %} active{% endif %}"
+                           href="{{ url_for('main.about') }}"
+                           {% if request.endpoint == 'main.about' %}aria-current="page"{% endif %}>
+                            {{ ns.labels.get('main.about', 'About') }}
+                        </a>
+                    </li>
+
+                    {# Services — desktop hover dropdown / mobile collapse #}
+                    <li class="nav-item nav-item--services{% if services_active %} is-active-branch{% endif %}">
+                        <a class="nav-link nav-link--services d-none d-lg-inline-flex align-items-center gap-1{% if services_active %} active{% endif %}"
+                           href="#"
+                           id="navServicesMenu"
+                           role="button"
+                           aria-haspopup="true"
+                           aria-expanded="false"
+                           aria-controls="navServicesDropdown"
+                           {% if services_active %}aria-current="true"{% endif %}>
+                            {{ ns.labels.get('main.services', 'Services') }}
+                            <i class="bi bi-chevron-down nav-services-chevron" aria-hidden="true"></i>
+                        </a>
+                        <a class="nav-link nav-link--submenu-toggle d-lg-none{% if services_active %} active{% endif %}"
+                           href="#navSubmenuServices"
+                           data-bs-toggle="collapse"
+                           role="button"
+                           aria-expanded="false"
+                           aria-controls="navSubmenuServices">
+                            {{ ns.labels.get('main.services', 'Services') }}
+                            <i class="bi bi-chevron-down nav-submenu-chevron" aria-hidden="true"></i>
+                        </a>
+                        <ul class="dropdown-menu nav-dropdown-menu nav-services-menu d-none d-lg-block"
+                            id="navServicesDropdown"
+                            role="menu"
+                            aria-labelledby="navServicesMenu">
+                            <li role="none">
+                                <a class="dropdown-item{% if request.endpoint == 'main.services' %} active{% endif %}"
+                                   href="{{ url_for('main.services') }}"
+                                   role="menuitem"
+                                   {% if request.endpoint == 'main.services' %}aria-current="page"{% endif %}>
+                                    All Services
+                                </a>
+                            </li>
+                            <li role="none"><hr class="dropdown-divider"></li>
+                            <li role="none">
+                                <a class="dropdown-item{% if request.endpoint == 'main.projects' %} active{% endif %}"
+                                   href="{{ url_for('main.projects') }}"
+                                   role="menuitem"
+                                   {% if request.endpoint == 'main.projects' %}aria-current="page"{% endif %}>
+                                    {{ ns.labels.get('main.projects', 'Projects') }}
+                                </a>
+                            </li>
+                            <li role="none">
+                                <a class="dropdown-item{% if request.endpoint == 'main.gallery' %} active{% endif %}"
+                                   href="{{ url_for('main.gallery') }}"
+                                   role="menuitem"
+                                   {% if request.endpoint == 'main.gallery' %}aria-current="page"{% endif %}>
+                                    {{ ns.labels.get('main.gallery', 'Gallery') }}
+                                </a>
+                            </li>
+                            <li role="none">
+                                <a class="dropdown-item{% if request.endpoint == 'main.team' %} active{% endif %}"
+                                   href="{{ url_for('main.team') }}"
+                                   role="menuitem"
+                                   {% if request.endpoint == 'main.team' %}aria-current="page"{% endif %}>
+                                    {{ ns.labels.get('main.team', 'Team') }}
+                                </a>
+                            </li>
+                            <li role="none">
+                                <a class="dropdown-item{% if request.endpoint == 'main.equipment' %} active{% endif %}"
+                                   href="{{ url_for('main.equipment') }}"
+                                   role="menuitem"
+                                   {% if request.endpoint == 'main.equipment' %}aria-current="page"{% endif %}>
+                                    {{ ns.labels.get('main.equipment', 'Equipment') }}
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="nav-submenu collapse d-lg-none" id="navSubmenuServices">
+                            <li class="nav-submenu-item">
+                                <a class="nav-link nav-link--sub{% if request.endpoint == 'main.services' %} active{% endif %}"
+                                   href="{{ url_for('main.services') }}">
+                                    All Services
+                                </a>
+                            </li>
+                            <li class="nav-submenu-item">
+                                <a class="nav-link nav-link--sub{% if request.endpoint == 'main.projects' %} active{% endif %}"
+                                   href="{{ url_for('main.projects') }}">
+                                    {{ ns.labels.get('main.projects', 'Projects') }}
+                                </a>
+                            </li>
+                            <li class="nav-submenu-item">
+                                <a class="nav-link nav-link--sub{% if request.endpoint == 'main.gallery' %} active{% endif %}"
+                                   href="{{ url_for('main.gallery') }}">
+                                    {{ ns.labels.get('main.gallery', 'Gallery') }}
+                                </a>
+                            </li>
+                            <li class="nav-submenu-item">
+                                <a class="nav-link nav-link--sub{% if request.endpoint == 'main.team' %} active{% endif %}"
+                                   href="{{ url_for('main.team') }}">
+                                    {{ ns.labels.get('main.team', 'Team') }}
+                                </a>
+                            </li>
+                            <li class="nav-submenu-item">
+                                <a class="nav-link nav-link--sub{% if request.endpoint == 'main.equipment' %} active{% endif %}"
+                                   href="{{ url_for('main.equipment') }}">
+                                    {{ ns.labels.get('main.equipment', 'Equipment') }}
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    {# Contact #}
+                    <li class="nav-item">
+                        <a class="nav-link{% if request.endpoint == 'main.contact' %} active{% endif %}"
+                           href="{{ url_for('main.contact') }}"
+                           {% if request.endpoint == 'main.contact' %}aria-current="page"{% endif %}>
+                            {{ ns.labels.get('main.contact', 'Contact') }}
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="navbar-cta d-lg-block mt-3 mt-lg-0">
+                    <a href="{{ url_for('main.request_quote') }}"
+                       class="btn btn-accent btn-quote w-100 w-lg-auto">
+                        <i class="bi bi-file-earmark-text me-1" aria-hidden="true"></i>Request Quote
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+</header>
+
+<div class="header-spacer" aria-hidden="true"></div>

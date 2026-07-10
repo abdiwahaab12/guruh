@@ -1,0 +1,16 @@
+{% extends "admin/auth_base.html" %}
+
+{% block title %}401 Unauthorized | GURUH CMS{% endblock %}
+{% block auth_heading %}Authentication Required{% endblock %}
+{% block auth_subheading %}You must sign in to access this area{% endblock %}
+
+{% block auth_content %}
+<div class="text-center py-2">
+    <div class="admin-error-code" aria-hidden="true">401</div>
+    <p class="mb-4">Your session is missing or has expired. Please sign in to continue.</p>
+    <div class="d-grid gap-2">
+        <a href="{{ url_for('admin.login') }}" class="btn btn-guruh-primary btn-lg">Sign In</a>
+        <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary">Return to Website</a>
+    </div>
+</div>
+{% endblock %}

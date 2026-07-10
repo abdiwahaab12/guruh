@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Construction team">
+  <defs>
+    <linearGradient id="abg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#A0D2F2"/>
+      <stop offset="100%" style="stop-color:#D9F5E1"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#abg)" rx="12"/>
+  <g transform="translate(250,120)">
+    <rect x="60" y="200" width="180" height="160" fill="#3D3D3D" opacity="0.15" rx="4"/>
+    <polygon points="60,200 150,120 240,200" fill="#33A8FF" opacity="0.25"/>
+    <rect x="100" y="260" width="40" height="50" fill="#33A8FF" opacity="0.3" rx="2"/>
+    <rect x="160" y="260" width="40" height="50" fill="#33A8FF" opacity="0.3" rx="2"/>
+  </g>
+  <g fill="#33A8FF" opacity="0.12">
+    <circle cx="650" cy="100" r="60"/><rect x="600" y="400" width="120" height="8" rx="4" transform="rotate(-30 660 404)"/>
+  </g>
+  <g fill="none" stroke="#3D3D3D" stroke-width="2" opacity="0.2">
+    <path d="M50,500 L750,500"/><path d="M100,480 L100,520"/><path d="M700,480 L700,520"/>
+  </g>
+</svg>

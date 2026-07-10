@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% from 'macros/page_layout.html' import render_page_seo %}
+
+{% block title %}{{ page.meta_title if page else 'Testimonials' }} | {{ company.name }}{% endblock %}
+{% block meta_description %}{{ page.meta_description if page else company.tagline }}{% endblock %}
+{% block seo_meta %}{{ render_page_seo(page, company, canonical_url, og_image_url, breadcrumbs) }}{% endblock %}
+
+{% block content %}
+{% include "components/ui/page_hero.html" %}
+
+<section class="section-padding" aria-labelledby="testimonials-list-heading">
+    <div class="container">
+        <h2 id="testimonials-list-heading" class="visually-hidden">{{ page.title if page else 'Testimonials' }}</h2>
+        <div class="row g-4">
+            {% for testimonial in testimonials %}
+            <div class="col-md-6">
+                {% include "components/catalog/testimonial_card.html" %}
+            </div>
+            {% else %}
+            <div class="col-12 text-center text-muted py-5">
+                <p>No testimonials available at this time.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% include "components/ui/cta_section.html" %}
+{% endblock %}

@@ -1,0 +1,177 @@
+/**
+ * GURUH Construction — Admin Authentication UI
+ * Consistent with public site branding (#33A8FF primary)
+ */
+
+:root {
+    --guruh-primary: #33A8FF;
+    --guruh-primary-dark: #1A94EB;
+    --guruh-accent: #E91E63;
+    --guruh-dark: #3D3D3D;
+    --guruh-gray: #6B7280;
+    --guruh-light: #F8FAFC;
+    --guruh-white: #FFFFFF;
+    --guruh-border: #E5E7EB;
+    --shadow-auth: 0 12px 40px rgba(51, 168, 255, 0.12);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body.admin-auth-body {
+    min-height: 100vh;
+    margin: 0;
+    font-family: "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--guruh-dark);
+    background:
+        radial-gradient(circle at top right, rgba(51, 168, 255, 0.12), transparent 45%),
+        radial-gradient(circle at bottom left, rgba(233, 30, 99, 0.06), transparent 40%),
+        var(--guruh-light);
+}
+
+.admin-auth-shell {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.admin-auth-card {
+    width: 100%;
+    max-width: 440px;
+    background: var(--guruh-white);
+    border: 1px solid var(--guruh-border);
+    border-radius: 14px;
+    box-shadow: var(--shadow-auth);
+    overflow: hidden;
+}
+
+.admin-auth-header {
+    text-align: center;
+    padding: 2rem 2rem 1rem;
+    border-bottom: 1px solid var(--guruh-border);
+    background: linear-gradient(180deg, rgba(51, 168, 255, 0.06), transparent);
+}
+
+.admin-auth-logo {
+    height: 56px;
+    width: auto;
+    margin-bottom: 0.75rem;
+}
+
+.admin-auth-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem;
+    color: var(--guruh-dark);
+}
+
+.admin-auth-subtitle {
+    margin: 0;
+    color: var(--guruh-gray);
+    font-size: 0.95rem;
+}
+
+.admin-auth-body-inner {
+    padding: 1.75rem 2rem 2rem;
+}
+
+.admin-auth-body-inner .form-label {
+    font-weight: 600;
+    color: var(--guruh-dark);
+}
+
+.admin-auth-body-inner .form-control {
+    border-radius: 8px;
+    border-color: var(--guruh-border);
+    padding: 0.65rem 0.85rem;
+}
+
+.admin-auth-body-inner .form-control:focus {
+    border-color: var(--guruh-primary);
+    box-shadow: 0 0 0 0.2rem rgba(51, 168, 255, 0.2);
+}
+
+.btn-guruh-primary {
+    background-color: var(--guruh-primary);
+    border-color: var(--guruh-primary);
+    color: #fff;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 0.65rem 1rem;
+}
+
+.btn-guruh-primary:hover,
+.btn-guruh-primary:focus {
+    background-color: var(--guruh-primary-dark);
+    border-color: var(--guruh-primary-dark);
+    color: #fff;
+}
+
+.admin-auth-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+.admin-auth-links a {
+    color: var(--guruh-primary);
+    text-decoration: none;
+}
+
+.admin-auth-links a:hover {
+    color: var(--guruh-primary-dark);
+    text-decoration: underline;
+}
+
+.admin-auth-footer {
+    text-align: center;
+    padding: 1rem 2rem 1.5rem;
+    border-top: 1px solid var(--guruh-border);
+    background: var(--guruh-light);
+    font-size: 0.85rem;
+    color: var(--guruh-gray);
+}
+
+.admin-auth-footer a {
+    color: var(--guruh-primary);
+    text-decoration: none;
+}
+
+.admin-auth-footer a:hover {
+    text-decoration: underline;
+}
+
+.admin-flash-stack {
+    margin-bottom: 1rem;
+}
+
+.admin-error-icon {
+    font-size: 3rem;
+    color: var(--guruh-accent);
+    margin-bottom: 1rem;
+}
+
+.admin-error-code {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--guruh-primary);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+@media (max-width: 575.98px) {
+    .admin-auth-body-inner,
+    .admin-auth-header,
+    .admin-auth-footer {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+}

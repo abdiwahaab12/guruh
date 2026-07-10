@@ -1,0 +1,37 @@
+{% extends 'admin/layouts/base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin-website.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-page-header">
+    <div>
+        <h1 class="admin-page-title">{% block website_title %}{{ page_title }}{% endblock %}</h1>
+        <p class="admin-page-subtitle">{% block website_subtitle %}Manage public pages, sections, and CMS content blocks.{% endblock %}</p>
+    </div>
+    <div class="admin-page-actions">
+        {% block website_actions %}{% endblock %}
+    </div>
+</div>
+
+<nav class="admin-website-tabs" aria-label="Website CMS sections">
+    <a href="{{ url_for('admin.website_dashboard') }}" class="admin-website-tab{% if website_active_section == 'dashboard' %} active{% endif %}">All Pages</a>
+</nav>
+
+{% include 'admin/partials/_breadcrumb.html' %}
+{% include 'admin/partials/_flash_messages.html' %}
+
+{% block website_content %}{% endblock %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    window.GURUH_MEDIA_UPLOAD = window.GURUH_MEDIA_UPLOAD || {
+        apiUrl: {{ url_for('admin.media_api_upload') | tojson }},
+        csrfToken: {{ csrf_token() | tojson }}
+    };
+</script>
+<script src="{{ url_for('static', filename='js/admin-website.js') }}" defer></script>
+{% block website_extra_js %}{% endblock %}
+{% endblock %}

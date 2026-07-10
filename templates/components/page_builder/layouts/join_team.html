@@ -1,0 +1,25 @@
+{# Join our team — careers promotion #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading, pb_paragraphs %}
+{% set extra = block.extra if block and block.extra else {} %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 text-center" data-animate>
+            {{ pb_heading(section, block, 'center') }}
+            {{ pb_paragraphs(block.full_content if block else '') }}
+            <div class="pb-join-team-actions mt-4">
+                {% if extra.button_url %}
+                <a href="{{ extra.button_url | safe_href }}" class="btn btn-primary btn-lg me-2 mb-2">
+                    {{ extra.button_text or 'View Careers' }}
+                </a>
+                {% endif %}
+                {% if extra.secondary_button_url %}
+                <a href="{{ extra.secondary_button_url | safe_href }}" class="btn btn-outline-primary btn-lg mb-2">
+                    {{ extra.secondary_button_text or 'Contact Us' }}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{{ pb_close_section() }}

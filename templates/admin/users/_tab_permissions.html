@@ -1,0 +1,24 @@
+<div class="admin-panel">
+    <div class="table-responsive">
+        <table class="table table-sm align-middle">
+            <thead>
+                <tr>
+                    <th>Permission</th>
+                    <th>Slug</th>
+                    <th>Roles</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for perm in permissions %}
+                <tr>
+                    <td>{{ perm.name }}</td>
+                    <td><code>{{ perm.slug }}</code></td>
+                    <td>{{ perm.role_count }}</td>
+                    <td>{% if perm.is_active %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Inactive</span>{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

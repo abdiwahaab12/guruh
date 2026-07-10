@@ -1,0 +1,17 @@
+{# Project card — expects `project` variable #}
+{% from 'macros/media.html' import smart_image %}
+<div class="card project-card h-100 border-0 shadow-sm">
+    {{ smart_image(project.cover_image, project.title, 'project', 'card-img-top', true) }}
+    <div class="card-body">
+        {% if project.category %}
+        <span class="badge bg-primary mb-2">{{ project.category }}</span>
+        {% endif %}
+        <h3 class="card-title h5">{{ project.title }}</h3>
+        <p class="card-text text-muted">{{ project.description | truncate(120) }}</p>
+        {% if project.location %}
+        <p class="card-meta small text-muted mb-0">
+            <i class="bi bi-geo-alt me-1" aria-hidden="true"></i>{{ project.location }}
+        </p>
+        {% endif %}
+    </div>
+</div>

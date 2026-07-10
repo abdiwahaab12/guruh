@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% from 'macros/page_layout.html' import render_page_seo %}
+{% from 'macros/page_builder.html' import render_page_sections %}
+{% block title %}{{ page.meta_title if page else 'Equipment' }} | {{ company.name }}{% endblock %}
+{% block meta_description %}{{ page.meta_description if page else company.tagline }}{% endblock %}
+{% block body_class %}page-equipment{% endblock %}
+
+{% block seo_meta %}
+{% set equipment_og = url_for('static', filename=page.banner_image, _external=True) if page and page.banner_image else og_image_url %}
+{{ render_page_seo(page, company, canonical_url, og_image_url, breadcrumbs, image=equipment_og) }}
+{% endblock %}
+
+{% block extra_head %}
+{% set site_root = url_for('main.index', _external=True) %}
+{% set schema_ns = namespace(faq_items=[]) %}
+{% if page_composition and page_composition.sections %}
+{% for sec in page_composition.sections %}
+{% if sec.section_key == 'faq' and sec.block and sec.block.items %}
+{% set schema_ns.faq_items = sec.block.items %}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if page and page.banner_image %}
+<link rel="preload" as="image" href="{{ url_for('static', filename=page.banner_image) }}">
+{% endif %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": {{ (canonical_url ~ '#webpage') | tojson }},
+      "url": {{ canonical_url | tojson }},
+      "name": {{ (page.meta_title if page else 'Equipment & Machinery') | tojson }},
+      "description": {{ (page.meta_description if page else company.tagline) | tojson }},
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": {{ (site_root ~ '#website') | tojson }},
+        "name": {{ company.name | tojson }},
+        "url": {{ site_root | tojson }}
+      }
+    },
+    {
+      "@type": "ItemList",
+      "@id": {{ (canonical_url ~ '#equipment-list') | tojson }},
+      "name": "Construction Equipment Fleet",
+      "itemListElement": [
+        {% for item in equipment %}
+        {
+          "@type": "ListItem",
+          "position": {{ loop.index }},
+          "item": {
+            "@type": "Product",
+            "name": {{ item.name | tojson }},
+            "description": {{ item.short_description | tojson }},
+            "url": {{ url_for('main.equipment_detail', slug=item.slug, _external=True) | tojson }},
+            "category": {{ item.category | tojson }},
+            "brand": {
+              "@type": "Brand",
+              "name": {{ company.name | tojson }}
+            },
+            "manufacturer": {
+              "@type": "Organization",
+              "name": {{ company.name | tojson }}
+            }
+          }
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }{% if schema_ns.faq_items %},
+    {
+      "@type": "FAQPage",
+      "@id": {{ (canonical_url ~ '#faq') | tojson }},
+      "mainEntity": [
+        {% set faq_comma = namespace(first=true) %}
+        {% for item in schema_ns.faq_items %}
+        {% if item.is_active %}
+        {% if not faq_comma.first %},{% endif %}
+        {
+          "@type": "Question",
+          "name": {{ item.title | tojson }},
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": {{ (item.full_content or item.short_summary) | tojson }}
+          }
+        }
+        {% set faq_comma.first = false %}
+        {% endif %}
+        {% endfor %}
+      ]
+    }{% endif %}
+  ]
+}
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sections-shared.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page-builder.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/equipment.css') }}">
+{% endblock %}
+
+{% block content %}
+{% if page_composition and page_composition.sections %}
+{{ render_page_sections(page_composition.sections, page, projects, services, equipment=equipment) }}
+{% endif %}
+{% endblock %}

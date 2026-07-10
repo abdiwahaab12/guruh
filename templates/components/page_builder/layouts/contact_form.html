@@ -1,0 +1,28 @@
+{# Contact form — validation ready, no submission yet #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{% from 'macros/forms.html' import render_dynamic_form %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10" data-animate>
+            <div class="pb-section-head text-center mb-4">
+                {{ pb_heading(section, block, 'center') }}
+            </div>
+            <div class="premium-card pb-form-card">
+                <div class="premium-card-body p-4 p-lg-5">
+                    {% set extra = block.extra if block and block.extra else {} %}
+                    {% set fields = contact_form_fields if contact_form_fields else (extra.fields if extra.fields else []) %}
+                    {{ render_dynamic_form(
+                        extra.form_id or 'contact-form',
+                        fields,
+                        extra.action_url or '/contact',
+                        extra.submit_label or 'Send Message',
+                        extra.success_message or 'Thank you for your message.',
+                        services=services
+                    ) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{ pb_close_section() }}

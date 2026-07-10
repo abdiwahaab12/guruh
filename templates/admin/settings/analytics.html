@@ -1,0 +1,21 @@
+{% extends 'admin/settings/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field, form_actions %}
+
+{% block settings_subtitle %}Tracking IDs for Google Analytics, Tag Manager, and Facebook Pixel.{% endblock %}
+
+{% block settings_content %}
+<form method="post" class="admin-settings-form" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="admin-panel">
+        {{ render_field(form.google_analytics_id, 'e.g. G-XXXXXXXXXX') }}
+        {{ render_field(form.google_tag_manager_id, 'e.g. GTM-XXXXXXX') }}
+        {{ render_field(form.facebook_pixel_id) }}
+        <div class="form-check form-switch mt-3">
+            {{ form.enable_dashboard_widgets(class="form-check-input") }}
+            {{ form.enable_dashboard_widgets.label(class="form-check-label") }}
+        </div>
+        <p class="form-text">Dashboard widgets remain placeholder until live analytics integration is enabled in a future step.</p>
+        {{ form_actions(form) }}
+    </div>
+</form>
+{% endblock %}

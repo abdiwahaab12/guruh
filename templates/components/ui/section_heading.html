@@ -1,0 +1,19 @@
+{# Reusable section heading — pass section_id for aria-labelledby #}
+{% set sh = section_heading if section_heading is defined and section_heading else none %}
+{% set h = sh.heading if sh else heading %}
+{% set sub = sh.subheading if sh else subheading %}
+{% set intro_text = sh.intro if sh else intro %}
+{% set sid = section_id if section_id is defined else none %}
+
+<div class="section-heading{% if align == 'left' %} section-heading--left{% else %} text-center{% endif %} mb-5 pb-1" data-animate>
+    {% if sub %}
+    <p class="section-subheading">{{ sub }}</p>
+    {% endif %}
+    {% if h %}
+    <h2 class="section-title"{% if sid %} id="{{ sid }}-heading"{% endif %}>{{ h }}</h2>
+    {% endif %}
+    <div class="section-divider{% if align != 'left' %} mx-auto{% endif %}" aria-hidden="true"></div>
+    {% if intro_text %}
+    <p class="section-intro{% if align != 'left' %} mx-auto{% endif %}">{{ intro_text }}</p>
+    {% endif %}
+</div>

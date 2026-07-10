@@ -1,0 +1,82 @@
+{# Office information — headquarters and branch offices (contact page shows current ops only) #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+    </div>
+    {% set office_list = offices if offices else ([office] if office else []) %}
+    <div class="row g-4 justify-content-center">
+        {% for current_office in office_list %}
+        <div class="col-lg-10" data-animate>
+            <div class="premium-card pb-office-card">
+                <div class="premium-card-body">
+                    <div class="row g-4">
+                        {% set office_data = block.extra if block and block.extra else {} %}
+                        <div class="col-md-6">
+                            <div class="pb-office-block">
+                                <h3 class="pb-office-block-title">
+                                    <i class="bi bi-building text-primary me-2" aria-hidden="true"></i>
+                                    {{ current_office.name if current_office else (office_data.office_name or 'Head Office') }}
+                                </h3>
+                                <dl class="pb-office-list mb-0">
+                                    <div class="pb-office-row">
+                                        <dt><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> {{ current_office.office_label if current_office and current_office.office_label else (office_data.head_office_label or company.head_office_label or 'Head Office') }}</dt>
+                                        <dd>{{ current_office.address if current_office else (office_data.address or company.address) }}</dd>
+                                    </div>
+                                    {% if current_office and current_office.address_country %}
+                                    <div class="pb-office-row">
+                                        <dt><i class="bi bi-globe2" aria-hidden="true"></i> Operating Country</dt>
+                                        <dd>{{ current_office.address_country }}</dd>
+                                    </div>
+                                    {% endif %}
+                                    <div class="pb-office-row">
+                                        <dt><i class="bi bi-mailbox" aria-hidden="true"></i> Postal Address</dt>
+                                        <dd>{{ current_office.postal_address if current_office else (office_data.postal_address or '') }}</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="pb-office-block">
+                                <h3 class="pb-office-block-title">
+                                    <i class="bi bi-telephone-fill text-primary me-2" aria-hidden="true"></i>
+                                    Contact Details
+                                </h3>
+                                <dl class="pb-office-list mb-0">
+                                    <div class="pb-office-row">
+                                        <dt><i class="bi bi-telephone" aria-hidden="true"></i> Phone</dt>
+                                        <dd>
+                                            {% set phone_display = current_office.phone_primary if current_office else (office_data.phone_primary or company.phone_primary) %}
+                                            {% set phone_href = current_office.phone_tel if current_office and current_office.phone_tel else (office_data.phone_tel or company.phone_tel) %}
+                                            <a href="tel:{{ phone_href }}">{{ phone_display }}</a>
+                                            {% set phone_secondary = current_office.phone_secondary if current_office else (office_data.phone_secondary or company.phone_secondary) %}
+                                            {% if phone_secondary %}
+                                            <span class="pb-office-sep"> / </span>
+                                            <a href="tel:{{ phone_secondary | replace(' ', '') }}">{{ phone_secondary }}</a>
+                                            {% endif %}
+                                        </dd>
+                                    </div>
+                                    <div class="pb-office-row">
+                                        <dt><i class="bi bi-envelope-fill" aria-hidden="true"></i> Email</dt>
+                                        <dd>
+                                            <a href="mailto:{{ current_office.email if current_office else (office_data.email or company.email) }}">
+                                                {{ current_office.email if current_office else (office_data.email or company.email) }}
+                                            </a>
+                                        </dd>
+                                    </div>
+                                    <div class="pb-office-row">
+                                        <dt><i class="bi bi-clock-fill" aria-hidden="true"></i> Office Hours</dt>
+                                        <dd>{{ current_office.office_hours if current_office else (office_data.office_hours or company.office_hours) }}</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{{ pb_close_section() }}

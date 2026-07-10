@@ -1,0 +1,44 @@
+<nav class="admin-system-log-tabs mb-3" aria-label="Log types">
+    {% for tab in log_tabs %}
+    <a href="{{ url_for('admin.system_dashboard', tab='logs', log_tab=tab.slug, q=log_query) }}"
+       class="btn btn-sm{% if log_tab == tab.slug %} btn-primary{% else %} btn-outline-secondary{% endif %} me-1 mb-1">
+        <i class="bi {{ tab.icon }} me-1"></i>{{ tab.label }}
+    </a>
+    {% endfor %}
+</nav>
+
+<form method="get" action="{{ url_for('admin.system_dashboard') }}" class="row g-2 mb-3">
+    <input type="hidden" name="tab" value="logs">
+    <input type="hidden" name="log_tab" value="{{ log_tab }}">
+    <div class="col-md-6">
+        <input type="search" class="form-control form-control-sm" name="q" value="{{ log_query }}" placeholder="Search logs…">
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-primary btn-sm">Search</button>
+    </div>
+</form>
+
+<div class="admin-system-panel">
+    <div class="table-responsive">
+        <table class="table table-sm table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr><th style="width:4rem">#</th><th>Entry</th></tr>
+            </thead>
+            <tbody>
+                {% if log_lines %}
+                {% for line in log_lines %}
+                <tr>
+                    <td class="text-muted">{{ line.line_number }}</td>
+                    <td class="admin-system-log-entry text-{{ line.level }}"><code class="small">{{ line.content }}</code></td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr><td colspan="2" class="text-center text-muted py-4">No log entries found.</td></tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    {% if log_total > 50 %}
+    <p class="small text-muted mt-2 mb-0">Showing page {{ log_page }} · {{ log_total }} total entries</p>
+    {% endif %}
+</div>

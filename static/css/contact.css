@@ -1,0 +1,299 @@
+/**
+ * GURUH Construction — Contact Page
+ * Shared shell: sections-shared.css + page-builder.css
+ */
+
+.page-contact .pb-office-card {
+    border: none;
+    box-shadow: var(--section-shadow-soft);
+}
+
+.page-contact .pb-office-block-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    color: var(--guruh-dark);
+}
+
+.page-contact .pb-office-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.page-contact .pb-office-row dt {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--pb-muted);
+    margin-bottom: 0.25rem;
+}
+
+.page-contact .pb-office-row dt i {
+    color: var(--guruh-primary);
+    margin-right: 0.35rem;
+}
+
+.page-contact .pb-office-row dd {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.page-contact .pb-office-row dd a {
+    color: var(--guruh-dark);
+    text-decoration: none;
+}
+
+.page-contact .pb-office-row dd a:hover {
+    color: var(--guruh-primary);
+}
+
+.page-contact .pb-office-sep {
+    color: var(--pb-muted);
+}
+
+/* Google Maps */
+.page-contact .pb-google-map-shell {
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: var(--section-shadow-soft);
+    background: #e8eef4;
+    min-height: 360px;
+}
+
+.page-contact .pb-google-map-embed {
+    width: 100%;
+    height: 360px;
+    border: 0;
+    display: block;
+}
+
+.page-contact .pb-google-map-placeholder {
+    min-height: 360px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    background: linear-gradient(145deg, #eef4fa 0%, #dce8f4 100%);
+}
+
+.page-contact .pb-google-map-pin {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(51, 168, 255, 0.15);
+    color: var(--guruh-primary);
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+}
+
+.page-contact .pb-google-map-label {
+    font-weight: 600;
+    color: var(--guruh-dark);
+    margin-bottom: 0.35rem;
+}
+
+.page-contact .pb-google-map-note {
+    font-size: 0.875rem;
+    color: var(--pb-muted);
+    margin-bottom: 0;
+}
+
+.page-contact .pb-map-coords {
+    display: grid;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.page-contact .pb-map-coord-row {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.page-contact .pb-map-coord-row dt {
+    font-weight: 600;
+    color: var(--pb-muted);
+    min-width: 5rem;
+}
+
+.page-contact .pb-map-coord-row dd {
+    margin: 0;
+    font-family: ui-monospace, monospace;
+}
+
+/* Forms */
+.page-contact .pb-form-card {
+    border: none;
+    box-shadow: var(--section-shadow-soft);
+}
+
+.page-contact .pb-form-label {
+    font-weight: 600;
+    color: var(--guruh-dark);
+}
+
+.page-contact .pb-form-control:focus {
+    border-color: var(--guruh-primary);
+    box-shadow: 0 0 0 0.2rem rgba(51, 168, 255, 0.15);
+}
+
+.page-contact .pb-form-file:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.page-contact .pb-form-help {
+    color: var(--pb-muted);
+}
+
+/* Department contacts */
+.page-contact .pb-dept-card {
+    border: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.page-contact .pb-dept-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.page-contact .pb-dept-contact-list {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    display: grid;
+    gap: 0.65rem;
+}
+
+.page-contact .pb-dept-contact-row dt {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--pb-muted);
+}
+
+.page-contact .pb-dept-contact-row dd {
+    margin: 0;
+}
+
+.page-contact .pb-dept-contact-row dd a {
+    color: var(--guruh-primary-dark);
+    text-decoration: none;
+}
+
+.page-contact .pb-bg--dark {
+    background: linear-gradient(135deg, #1a1a1a 0%, #1a4a6e 100%);
+    color: var(--guruh-white);
+}
+
+.page-contact .pb-bg--dark .section-title,
+.page-contact .pb-bg--dark .section-subheading,
+.page-contact .pb-bg--dark .section-intro {
+    color: var(--guruh-white);
+}
+
+.page-contact .pb-bg--dark .section-divider {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+.page-contact .pb-emergency-card {
+    background: linear-gradient(135deg, #1a1a1a 0%, #1a4a6e 100%);
+    color: var(--guruh-white);
+    border-radius: 1rem;
+    padding: clamp(2rem, 5vw, 3rem);
+}
+
+.page-contact .pb-emergency-card .section-title,
+.page-contact .pb-emergency-card .section-subheading,
+.page-contact .pb-emergency-card .section-intro {
+    color: var(--guruh-white);
+}
+
+.page-contact .pb-emergency-icon {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffc107;
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+}
+
+.page-contact .pb-emergency-desc {
+    opacity: 0.9;
+    max-width: 36rem;
+    margin: 0 auto 1.5rem;
+}
+
+.page-contact .pb-emergency-phone {
+    font-weight: 700;
+}
+
+.page-contact .pb-emergency-availability {
+    opacity: 0.85;
+    font-size: 0.9375rem;
+}
+
+/* Social */
+.page-contact .pb-social-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.page-contact .pb-social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.85rem 1.35rem;
+    border-radius: 999px;
+    background: var(--guruh-white);
+    box-shadow: var(--section-shadow-soft);
+    color: var(--guruh-dark);
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+}
+
+.page-contact .pb-social-link:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    color: var(--guruh-primary);
+}
+
+.page-contact .pb-social-icon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(51, 168, 255, 0.12);
+    color: var(--guruh-primary);
+}
+
+@media (max-width: 767.98px) {
+    .page-contact .pb-google-map-shell,
+    .page-contact .pb-google-map-placeholder,
+    .page-contact .pb-google-map-embed {
+        min-height: 280px;
+        height: 280px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-contact .pb-dept-card,
+    .page-contact .pb-social-link {
+        transition: none;
+    }
+}

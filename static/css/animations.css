@@ -1,0 +1,162 @@
+/**
+ * GURUH Construction — Global background & reveal animations (Step 23.2)
+ * Lightweight CSS-only; respects prefers-reduced-motion.
+ */
+
+/* ================================================================== */
+/*  Site-wide ambient background                                       */
+/* ================================================================== */
+.site-bg-animations {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.site-bg-shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.06;
+    filter: blur(1px);
+}
+
+.site-bg-shape--1 {
+    width: min(42vw, 420px);
+    height: min(42vw, 420px);
+    top: 8%;
+    left: -8%;
+    background: radial-gradient(circle, var(--guruh-primary) 0%, transparent 70%);
+    animation: float-drift-a 28s ease-in-out infinite;
+}
+
+.site-bg-shape--2 {
+    width: min(36vw, 360px);
+    height: min(36vw, 360px);
+    bottom: 12%;
+    right: -6%;
+    background: radial-gradient(circle, var(--guruh-accent) 0%, transparent 70%);
+    animation: float-drift-b 32s ease-in-out infinite;
+}
+
+.site-bg-shape--3 {
+    width: min(28vw, 280px);
+    height: min(28vw, 280px);
+    top: 45%;
+    left: 55%;
+    background: radial-gradient(circle, var(--guruh-green-dark) 0%, transparent 70%);
+    animation: float-drift-c 24s ease-in-out infinite;
+}
+
+.site-bg-lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(105deg, transparent 48%, rgba(51, 168, 255, 0.04) 49%, rgba(51, 168, 255, 0.04) 51%, transparent 52%),
+        linear-gradient(75deg, transparent 48%, rgba(51, 168, 255, 0.03) 49%, rgba(51, 168, 255, 0.03) 51%, transparent 52%);
+    background-size: 120px 120px, 180px 180px;
+    animation: lines-shift 40s linear infinite;
+}
+
+.site-bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(51, 168, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(51, 168, 255, 0.035) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, #000 20%, transparent 100%);
+    animation: grid-pulse 12s ease-in-out infinite;
+}
+
+@keyframes float-drift-a {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(24px, 18px) scale(1.05); }
+}
+
+@keyframes float-drift-b {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(-20px, -14px) rotate(3deg); }
+}
+
+@keyframes float-drift-c {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(16px, -20px); }
+}
+
+@keyframes lines-shift {
+    0% { background-position: 0 0, 0 0; }
+    100% { background-position: 120px 120px, -180px 180px; }
+}
+
+@keyframes grid-pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.85; }
+}
+
+/* ================================================================== */
+/*  Section reveal (pairs with main.js IntersectionObserver)           */
+/* ================================================================== */
+[data-animate] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+[data-animate].is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+[data-animate="fade"] {
+    transform: none;
+}
+
+[data-animate="scale"] {
+    transform: scale(0.97);
+}
+
+[data-animate="scale"].is-visible {
+    transform: scale(1);
+}
+
+.section-padding[data-animate] {
+    will-change: opacity, transform;
+}
+
+/* Stagger children inside animated sections */
+[data-animate-stagger] > * {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+[data-animate-stagger].is-visible > * {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+[data-animate-stagger].is-visible > *:nth-child(1) { transition-delay: 0.05s; }
+[data-animate-stagger].is-visible > *:nth-child(2) { transition-delay: 0.1s; }
+[data-animate-stagger].is-visible > *:nth-child(3) { transition-delay: 0.15s; }
+[data-animate-stagger].is-visible > *:nth-child(4) { transition-delay: 0.2s; }
+[data-animate-stagger].is-visible > *:nth-child(5) { transition-delay: 0.25s; }
+[data-animate-stagger].is-visible > *:nth-child(6) { transition-delay: 0.3s; }
+
+/* ================================================================== */
+/*  Reduced motion                                                     */
+/* ================================================================== */
+@media (prefers-reduced-motion: reduce) {
+    .site-bg-shape,
+    .site-bg-lines,
+    .site-bg-grid {
+        animation: none !important;
+    }
+
+    [data-animate],
+    [data-animate-stagger] > * {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+}

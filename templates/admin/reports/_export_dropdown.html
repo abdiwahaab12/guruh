@@ -1,0 +1,17 @@
+<div class="dropdown">
+    <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="reportsExportMenu" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-download me-1" aria-hidden="true"></i> Export
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="reportsExportMenu">
+        {% set report_key = 'overview' if active_tab == 'overview' else 'audit' %}
+        {% for fmt_key, fmt_label in export_formats.items() %}
+        <li>
+            <a class="dropdown-item"
+               href="{{ url_for('admin.reports_export', report=report_key, format=fmt_key, preset=date_range.preset, date_from=date_range.start, date_to=date_range.end, audit_tab=audit_tab) }}">
+                <i class="bi bi-file-earmark{% if fmt_key == 'pdf' %}-pdf{% elif fmt_key == 'excel' %}-spreadsheet{% else %}-text{% endif %} me-2" aria-hidden="true"></i>
+                {{ fmt_label }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>

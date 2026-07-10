@@ -1,0 +1,56 @@
+{# Card grid — core values, certifications, equipment, areas #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading, pb_paragraphs %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+        {% if block and block.full_content and not block.items %}
+        <div class="section-intro mx-auto text-center">{{ block.full_content }}</div>
+        {% endif %}
+    </div>
+    {% if block and block.items %}
+    <div class="row g-4">
+        {% for item in block.items %}
+        {% if item.is_active %}
+        <div class="col-sm-6 col-lg-4{% if block.items | length == 8 %} col-xl-3{% endif %}" data-animate>
+            <div class="premium-card pb-card-grid-item h-100">
+                <div class="premium-card-body">
+                    {% if item.icon %}
+                    <div class="premium-card-icon"><i class="bi {{ item.icon }}" aria-hidden="true"></i></div>
+                    {% endif %}
+                    <h3 class="premium-card-title">{{ item.title }}</h3>
+                    {% if item.subtitle %}
+                    <p class="text-primary small fw-semibold mb-2">{{ item.subtitle }}</p>
+                    {% endif %}
+                    {% if item.short_summary and not item.full_content %}
+                    <p class="premium-card-text">{{ item.short_summary }}</p>
+                    {% elif item.full_content %}
+                    <p class="premium-card-text">{{ item.full_content }}</p>
+                    {% endif %}
+                    {% if item.extra and (item.extra.reference or item.extra.valid_until) %}
+                    <dl class="pb-card-meta-list mb-0">
+                        {% if item.extra.reference %}
+                        <div class="pb-card-meta-row">
+                            <dt class="pb-card-meta-label">Reference</dt>
+                            <dd class="pb-card-meta-value">{{ item.extra.reference }}</dd>
+                        </div>
+                        {% endif %}
+                        {% if item.extra.valid_until %}
+                        <div class="pb-card-meta-row">
+                            <dt class="pb-card-meta-label">Valid until</dt>
+                            <dd class="pb-card-meta-value">{{ item.extra.valid_until }}</dd>
+                        </div>
+                        {% endif %}
+                    </dl>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% elif block %}
+    {{ pb_paragraphs(block.full_content) }}
+    {% endif %}
+</div>
+{{ pb_close_section() }}

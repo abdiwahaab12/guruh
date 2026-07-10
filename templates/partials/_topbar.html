@@ -1,0 +1,42 @@
+{#
+  Top information bar — all content loaded dynamically from database.
+#}
+<div class="topbar d-none d-lg-block">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <ul class="topbar-list list-unstyled mb-0 d-flex flex-wrap align-items-center">
+                    <li>
+                        <a href="tel:{{ company.phone_tel }}">
+                            <i class="bi bi-telephone-fill me-1"></i>{{ company.phone }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mailto:{{ company.email }}">
+                            <i class="bi bi-envelope-fill me-1"></i>{{ company.email }}
+                        </a>
+                    </li>
+                    <li>
+                        <span>
+                            <i class="bi bi-clock-fill me-1"></i>{{ company.office_hours }}
+                        </span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-4">
+                <div class="topbar-social d-flex justify-content-lg-end align-items-center">
+                    <span class="topbar-social-label me-2">Follow Us:</span>
+                    {% for social in social_links %}
+                    <a href="{{ social.url }}"
+                       class="topbar-social-link"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       aria-label="{{ social.label }}">
+                        <i class="bi {{ social.icon }}"></i>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,134 @@
+{# Premium full-screen hero — begins below fixed header; images from Media Library #}
+{% from 'macros/media.html' import hero_bg_image_style, hero_media_class %}
+{% if slides %}
+<section class="hero-slider" id="heroSlider" aria-label="Featured highlights">
+    <div class="hero-shapes" aria-hidden="true">
+        <span class="hero-shape hero-shape--1"></span>
+        <span class="hero-shape hero-shape--2"></span>
+        <span class="hero-shape hero-shape--3"></span>
+    </div>
+
+    <div id="heroCarousel"
+         class="carousel slide carousel-fade"
+         role="region"
+         aria-roledescription="carousel"
+         aria-label="Hero slideshow"
+         data-bs-ride="carousel"
+         data-bs-interval="6000"
+         data-bs-pause="hover"
+         data-bs-touch="true">
+
+        {% if slides|length > 1 %}
+        <div class="carousel-indicators hero-indicators">
+            {% for slide in slides %}
+            <button type="button"
+                    data-bs-target="#heroCarousel"
+                    data-bs-slide-to="{{ loop.index0 }}"
+                    {% if loop.first %}class="active" aria-current="true"{% endif %}
+                    aria-label="Slide {{ loop.index }}: {{ slide.title }}"></button>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="carousel-inner">
+            {% for slide in slides %}
+            {% set slide_image = slide.image or (page_banner_image if page_banner_image is defined else '') %}
+            {% set slide_overlay = slide.overlay_opacity if slide.overlay_opacity is defined else 0.65 %}
+            {% set slide_align = slide.text_alignment if slide.text_alignment is defined else 'left' %}
+            <div class="carousel-item{% if loop.first %} active{% endif %}"
+                 role="group"
+                 aria-roledescription="slide"
+                 aria-label="{{ loop.index }} of {{ slides|length }}">
+                <div class="hero-slide{{ hero_media_class(slide_image) }}"
+                     style="--hero-overlay-opacity: {{ slide_overlay }};">
+                    {% if slide_image %}
+                    <div class="hero-slide-bg" style="{{ hero_bg_image_style(slide_image) }}" aria-hidden="true"></div>
+                    {% endif %}
+                    <div class="hero-overlay" aria-hidden="true"></div>
+                    <div class="container h-100 position-relative">
+                        <div class="row h-100 align-items-center hero-row--align-{{ slide_align }}">
+                            <div class="col-lg-8 col-xl-7 hero-col--align-{{ slide_align }}">
+                                <div class="hero-content hero-content--align-{{ slide_align }}">
+                                    {% if slide.subtitle %}
+                                    <p class="hero-badge hero-anim" style="--delay:0.1s">{{ slide.subtitle }}</p>
+                                    {% endif %}
+                                    {% if loop.first %}
+                                    <h1 class="hero-title hero-anim" style="--delay:0.2s">{{ slide.title }}</h1>
+                                    {% else %}
+                                    <h2 class="hero-title hero-anim" style="--delay:0.2s">{{ slide.title }}</h2>
+                                    {% endif %}
+                                    {% if slide.description %}
+                                    <p class="hero-description hero-anim" style="--delay:0.35s">{{ slide.description }}</p>
+                                    {% endif %}
+                                    <div class="hero-actions hero-anim" style="--delay:0.5s">
+                                        {% if slide.cta_text and slide.cta_url %}
+                                        <a href="{{ slide.cta_url | safe_href }}" class="btn btn-accent btn-lg hero-btn-primary">
+                                            {{ slide.cta_text }} <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i>
+                                        </a>
+                                        {% endif %}
+                                        {% if slide.secondary_cta_text and slide.secondary_cta_url %}
+                                        <a href="{{ slide.secondary_cta_url | safe_href }}" class="btn btn-hero-outline btn-lg">{{ slide.secondary_cta_text }}</a>
+                                        {% elif slide.secondary_cta_text %}
+                                        <a href="{{ url_for('main.contact') }}" class="btn btn-hero-outline btn-lg">{{ slide.secondary_cta_text }}</a>
+                                        {% else %}
+                                        <a href="{{ url_for('main.contact') }}" class="btn btn-hero-outline btn-lg">Contact Us</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if slides|length > 1 %}
+        <button class="carousel-control-prev hero-control" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="hero-control-icon"><i class="bi bi-chevron-left" aria-hidden="true"></i></span>
+            <span class="visually-hidden">Previous slide</span>
+        </button>
+        <button class="carousel-control-next hero-control" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="hero-control-icon"><i class="bi bi-chevron-right" aria-hidden="true"></i></span>
+            <span class="visually-hidden">Next slide</span>
+        </button>
+        {% endif %}
+
+        <div class="hero-bottom-meta">
+            <div class="container">
+                <div class="row align-items-end g-3">
+                    {% if trust_badges %}
+                    <div class="col-lg-7">
+                        <div class="hero-trust-badges" role="list" aria-label="Trust credentials">
+                            {% for badge in trust_badges %}
+                            <div class="hero-trust-badge" role="listitem">
+                                <i class="bi {{ badge.icon }}" aria-hidden="true"></i>
+                                <span>{{ badge.label }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if floating_stats %}
+                    <div class="col-lg-5">
+                        <div class="hero-floating-stats" role="list" aria-label="Key statistics">
+                            {% for stat in floating_stats %}
+                            <div class="hero-stat-pill" role="listitem">
+                                <span class="hero-stat-value">{{ stat.value }}{{ stat.suffix }}</span>
+                                <span class="hero-stat-label">{{ stat.label }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <a href="#aboutPreview" class="hero-scroll-hint" aria-label="Scroll to about section">
+            <span class="hero-scroll-line" aria-hidden="true"></span>
+            <span class="hero-scroll-text">Discover</span>
+        </a>
+    </div>
+</section>
+{% endif %}

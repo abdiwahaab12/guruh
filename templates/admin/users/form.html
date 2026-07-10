@@ -1,0 +1,59 @@
+{% extends 'admin/users/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field %}
+
+{% block users_actions %}
+<a href="{{ url_for('admin.users_dashboard', tab='users') }}" class="btn btn-outline-secondary btn-sm">Back to Users</a>
+{% endblock %}
+
+{% block users_content %}
+<form method="post" class="admin-panel" novalidate>
+    {{ form.hidden_tag() }}
+    {{ form.user_id }}
+    <div class="row g-3">
+        <div class="col-md-8">
+            {{ render_field(form.email) }}
+            <div class="row g-3">
+                <div class="col-md-6">{{ render_field(form.first_name) }}</div>
+                <div class="col-md-6">{{ render_field(form.last_name) }}</div>
+            </div>
+            {{ render_field(form.role_id) }}
+            <div class="form-check form-switch">{{ form.is_active(class="form-check-input") }}{{ form.is_active.label(class="form-check-label") }}</div>
+            {% if is_edit %}
+            {{ render_field(form.new_password, 'Leave blank to keep current password.') }}
+            {% else %}
+            {{ render_field(form.password) }}
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            {% if is_edit and admin_user %}
+            <div class="admin-users-meta card card-body bg-light">
+                <h3 class="h6">Account Info</h3>
+                <p class="small mb-1"><strong>Last login:</strong> {{ admin_user.last_login_at_label }}</p>
+                <p class="small mb-1"><strong>IP:</strong> {{ admin_user.last_login_ip or '—' }}</p>
+                <p class="small mb-1"><strong>Failed attempts:</strong> {{ admin_user.failed_login_attempts }}</p>
+                <p class="small mb-0"><strong>Created:</strong> {{ admin_user.created_at_label }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="admin-settings-form-actions mt-3">
+        {{ form.submit(class="btn btn-primary btn-lg") }}
+        <a href="{{ url_for('admin.users_dashboard', tab='users') }}" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+</form>
+
+{% if is_edit and reset_form is defined %}
+<div class="admin-panel mt-4">
+    <h2 class="h6">Reset Password</h2>
+    <form method="post" action="{{ url_for('admin.users_reset_password', user_id=admin_user.id) }}" class="row g-3 align-items-end" novalidate>
+        {{ reset_form.hidden_tag() }}
+        <div class="col-md-6">{{ render_field(reset_form.new_password) }}</div>
+        <div class="col-md-3">{{ reset_form.submit(class="btn btn-warning") }}</div>
+    </form>
+    <form method="post" action="{{ url_for('admin.users_reset_link', user_id=admin_user.id) }}" class="mt-2">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn btn-outline-secondary btn-sm">Generate Reset Link</button>
+    </form>
+</div>
+{% endif %}
+{% endblock %}

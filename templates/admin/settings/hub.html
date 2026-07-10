@@ -1,0 +1,16 @@
+{% extends 'admin/settings/layout.html' %}
+
+{% block settings_title %}Website Settings{% endblock %}
+{% block settings_subtitle %}Choose a section to configure company profile, integrations, and site behavior.{% endblock %}
+
+{% block settings_content %}
+<div class="admin-settings-hub-grid">
+    {% for section in sections %}
+    <a href="{{ url_for(section.endpoint) }}" class="admin-settings-hub-card">
+        <span class="admin-settings-hub-icon"><i class="bi {{ section.icon }}" aria-hidden="true"></i></span>
+        <span class="admin-settings-hub-label">{{ section.label }}</span>
+        <span class="admin-settings-hub-desc">{{ section.description }}</span>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'admin/equipment/layout.html' %}
+
+{% block equipment_subtitle %}Fleet statistics and recent equipment updates.{% endblock %}
+
+{% block equipment_content %}
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="admin-equipment-stat"><span class="label">Total Equipment</span><span class="value">{{ stats.total }}</span></div></div>
+    <div class="col-md-3"><div class="admin-equipment-stat"><span class="label">Active</span><span class="value">{{ stats.active }}</span></div></div>
+    <div class="col-md-3"><div class="admin-equipment-stat"><span class="label">Inactive</span><span class="value">{{ stats.inactive }}</span></div></div>
+    <div class="col-md-3"><div class="admin-equipment-stat"><span class="label">Featured</span><span class="value">{{ stats.featured }}</span></div></div>
+</div>
+
+<section class="admin-panel">
+    <div class="admin-panel-header">
+        <h2 class="admin-panel-title">Recent Updates</h2>
+        <a href="{{ url_for('admin.equipment_list') }}" class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    {% if stats.recent %}
+    <div class="table-responsive">
+        <table class="table admin-equipment-table align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">Equipment</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Updated</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for e in stats.recent %}
+                <tr class="{% if not e.is_active %}text-muted{% endif %}">
+                    <td>
+                        <strong>{{ e.name }}</strong>
+                        {% if e.is_featured %}<span class="badge bg-primary ms-1">Featured</span>{% endif %}
+                        {% if not e.is_active %}<span class="badge bg-secondary ms-1">Deleted</span>{% endif %}
+                    </td>
+                    <td>{{ e.category }}</td>
+                    <td>{% if e.is_active %}Active{% else %}Inactive{% endif %}</td>
+                    <td>{{ e.updated_at_label }}</td>
+                    <td class="text-end">
+                        <a href="{{ url_for('admin.equipment_edit', equipment_id=e.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted mb-0">No equipment yet. <a href="{{ url_for('admin.equipment_create') }}">Add the first item</a>.</p>
+    {% endif %}
+</section>
+{% endblock %}

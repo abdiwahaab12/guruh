@@ -1,0 +1,42 @@
+{% extends 'admin/layouts/base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin-users.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-page-header">
+    <div>
+        <h1 class="admin-page-title">{% block users_title %}{{ page_title }}{% endblock %}</h1>
+        <p class="admin-page-subtitle">{% block users_subtitle %}Manage users, roles, permissions, sessions, and audit trails.{% endblock %}</p>
+    </div>
+    <div class="admin-page-actions">
+        {% block users_actions %}
+        {% if active_tab == 'users' %}
+        <a href="{{ url_for('admin.users_create') }}" class="btn btn-primary btn-sm">
+            <i class="bi bi-person-plus me-1" aria-hidden="true"></i> Create User
+        </a>
+        {% endif %}
+        {% endblock %}
+    </div>
+</div>
+
+<nav class="admin-users-tabs" aria-label="Users and RBAC sections">
+    {% for tab in users_tabs %}
+    <a href="{{ url_for('admin.users_dashboard', tab=tab.slug) }}"
+       class="admin-users-tab{% if active_tab == tab.slug %} active{% endif %}">
+        <i class="bi {{ tab.icon }} me-1" aria-hidden="true"></i>{{ tab.label }}
+    </a>
+    {% endfor %}
+</nav>
+
+{% include 'admin/partials/_breadcrumb.html' %}
+{% include 'admin/partials/_flash_messages.html' %}
+
+{% block users_content %}{% endblock %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/admin-users.js') }}" defer></script>
+{% block users_extra_js %}{% endblock %}
+{% endblock %}

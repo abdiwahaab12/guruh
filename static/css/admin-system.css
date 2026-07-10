@@ -1,0 +1,75 @@
+/* Enterprise System Administration — Step 27 */
+
+.admin-system-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--admin-border, #dee2e6);
+    padding-bottom: 0.5rem;
+}
+
+.admin-system-tab {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem 0.375rem 0 0;
+    text-decoration: none;
+    color: var(--admin-muted, #6c757d);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.admin-system-tab.active,
+.admin-system-tab:hover {
+    color: var(--admin-primary, #0d6efd);
+    background: rgba(13, 110, 253, 0.08);
+}
+
+.admin-system-card,
+.admin-system-panel,
+.admin-system-health-card {
+    background: var(--admin-panel-bg, #fff);
+    border: 1px solid var(--admin-border, #dee2e6);
+    border-radius: 0.5rem;
+    padding: 1rem 1.25rem;
+}
+
+.admin-system-card-label {
+    font-size: 0.875rem;
+    color: var(--admin-muted, #6c757d);
+}
+
+.admin-system-card-value {
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+.admin-system-health-card.status-healthy {
+    border-left: 4px solid var(--bs-success);
+}
+
+.admin-system-health-card.status-unhealthy {
+    border-left: 4px solid var(--bs-danger);
+}
+
+.admin-system-log-list {
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+.admin-system-log-line {
+    font-size: 0.8125rem;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid var(--admin-border, #eee);
+}
+
+.admin-system-log-entry code {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+@media (max-width: 767.98px) {
+    .admin-system-tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+    }
+}

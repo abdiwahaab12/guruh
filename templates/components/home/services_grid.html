@@ -1,0 +1,32 @@
+{# Featured services grid #}
+{% if services %}
+<section class="home-section home-services" id="services"{% if section_id %} aria-labelledby="{{ section_id }}-heading"{% endif %}>
+    <div class="container">
+        {% include "components/ui/section_heading.html" %}
+
+        <div class="row g-4 g-lg-5">
+            {% for service in services %}
+            <div class="col-md-6 col-lg-4" data-animate>
+                <article class="premium-card home-service-card h-100">
+                    <div class="premium-card-icon">
+                        <i class="bi {{ service.icon }}" aria-hidden="true"></i>
+                    </div>
+                    <div class="premium-card-body">
+                        <h3 class="premium-card-title">{{ service.title }}</h3>
+                        <p class="premium-card-text">{{ service.short_description }}</p>
+                        <a href="{{ url_for('main.services') }}" class="premium-card-link">
+                            Learn More <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-5 pt-2" data-animate>
+            <a href="{{ url_for('main.services') }}" class="btn btn-outline-primary btn-lg">View All Services</a>
+        </div>
+    </div>
+</section>
+{% include "components/ui/section_divider.html" %}
+{% endif %}

@@ -1,0 +1,65 @@
+{# Download center — company documents placeholder for future uploads #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{% set downloads = gallery_downloads if gallery_downloads else [] %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+    </div>
+    <div class="row g-4 justify-content-center">
+        {% if block and block.items %}
+        {% for item in block.items if item.is_active %}
+        {% set ex = item.extra if item.extra else {} %}
+        <div class="col-md-6 col-lg-3" data-animate>
+            <article class="premium-card pb-download-card h-100 text-center">
+                <div class="premium-card-body">
+                    <div class="pb-download-icon" aria-hidden="true">
+                        <i class="bi {{ item.icon or 'bi-file-earmark-pdf' }}"></i>
+                    </div>
+                    <span class="pb-download-type">{{ ex.file_type or item.subtitle }}</span>
+                    <h3 class="premium-card-title">{{ item.title }}</h3>
+                    <p class="premium-card-text small">{{ item.short_summary }}</p>
+                    {% if ex.is_ready and ex.file_url %}
+                    <a href="{{ ex.file_url | safe_href }}"
+                       class="btn btn-primary btn-sm mt-2"
+                       download
+                       aria-label="Download {{ item.title }}">
+                        <i class="bi bi-download me-1" aria-hidden="true"></i>Download
+                    </a>
+                    {% else %}
+                    <button type="button" class="btn btn-outline-secondary btn-sm mt-2" disabled aria-disabled="true">
+                        <i class="bi bi-clock me-1" aria-hidden="true"></i>Available Soon
+                    </button>
+                    {% endif %}
+                </div>
+            </article>
+        </div>
+        {% endfor %}
+        {% elif downloads %}
+        {% for doc in downloads if doc.is_active %}
+        <div class="col-md-6 col-lg-3" data-animate>
+            <article class="premium-card pb-download-card h-100 text-center">
+                <div class="premium-card-body">
+                    <div class="pb-download-icon" aria-hidden="true">
+                        <i class="bi {{ doc.icon }}"></i>
+                    </div>
+                    <span class="pb-download-type">{{ doc.file_type }}</span>
+                    <h3 class="premium-card-title">{{ doc.title }}</h3>
+                    <p class="premium-card-text small">{{ doc.description }}</p>
+                    {% if doc.is_ready and doc.file_url %}
+                    <a href="{{ doc.file_url | safe_href }}" class="btn btn-primary btn-sm mt-2" download>
+                        <i class="bi bi-download me-1"></i>Download
+                    </a>
+                    {% else %}
+                    <button type="button" class="btn btn-outline-secondary btn-sm mt-2" disabled aria-disabled="true">
+                        <i class="bi bi-clock me-1"></i>Available Soon
+                    </button>
+                    {% endif %}
+                </div>
+            </article>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{{ pb_close_section() }}

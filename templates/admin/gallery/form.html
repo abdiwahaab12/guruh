@@ -1,0 +1,95 @@
+{% extends 'admin/gallery/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field %}
+
+{% block gallery_actions %}
+{% if is_edit is defined and is_edit and delete_form is defined %}
+<form method="post" action="{{ url_for('admin.gallery_delete', gallery_item_id=gallery_item.id) }}" class="d-inline" onsubmit="return confirm('Soft-delete this gallery item?');">
+    {{ delete_form.hidden_tag() }}
+    <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+</form>
+{% endif %}
+<a href="{{ url_for('admin.gallery_list') }}" class="btn btn-outline-secondary btn-sm">Back to List</a>
+{% endblock %}
+
+{% block gallery_content %}
+<form method="post" class="admin-gallery-form" novalidate>
+    {{ form.hidden_tag() }}
+    {{ form.gallery_item_id }}
+
+    <ul class="nav nav-tabs admin-gallery-form-tabs" role="tablist">
+        {% for tab in form_tabs %}
+        <li class="nav-item" role="presentation">
+            <button class="nav-link{% if active_tab == tab.slug %} active{% endif %}"
+                    type="button"
+                    data-bs-toggle="tab"
+                    data-bs-target="#tab-{{ tab.slug }}"
+                    role="tab">
+                <i class="bi {{ tab.icon }} me-1" aria-hidden="true"></i>{{ tab.label }}
+            </button>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div class="tab-content admin-panel admin-gallery-tab-content">
+        <div class="tab-pane fade{% if active_tab == 'general' %} show active{% endif %}" id="tab-general" role="tabpanel">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    {{ render_field(form.title) }}
+                    {{ render_field(form.slug, 'Auto-generated from title if blank.') }}
+                    {{ render_field(form.category) }}
+                    <p class="text-muted small" id="galleryCategoryHelp">Choose a category to control which gallery section displays this item.</p>
+                    {{ render_field(form.media_type) }}
+                    {{ render_field(form.album) }}
+                    {{ render_field(form.caption) }}
+                    {{ render_field(form.location) }}
+                    <div class="row g-3">
+                        <div class="col-md-4">{{ render_field(form.county) }}</div>
+                        <div class="col-md-4">{{ render_field(form.country) }}</div>
+                        <div class="col-md-4">{{ render_field(form.year) }}</div>
+                    </div>
+                    {{ render_field(form.media_date) }}
+                </div>
+                <div class="col-md-4">
+                    {{ render_field(form.sort_order) }}
+                    <div class="form-check form-switch">{{ form.is_featured(class="form-check-input") }}{{ form.is_featured.label(class="form-check-label") }}</div>
+                    <div class="form-check form-switch">{{ form.is_active(class="form-check-input") }}{{ form.is_active.label(class="form-check-label") }}</div>
+                    {% if is_edit %}
+                    <p class="text-muted small mt-3 mb-0">Created {{ gallery_item.created_at_label }} · Updated {{ gallery_item.updated_at_label }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade{% if active_tab == 'media' %} show active{% endif %}" id="tab-media" role="tabpanel">
+            <p class="text-muted small">Upload files in <a href="{{ url_for('admin.media_upload', folder='gallery') }}" target="_blank" rel="noopener">Media → Upload</a> first, then pick them below. Videos appear in the <strong>Video Gallery</strong> section on the public site.</p>
+            {% include 'admin/gallery/_media_picker.html' %}
+            <div class="admin-gallery-video-fields mt-4" id="galleryVideoFields">
+                <h3 class="h6">Video Details</h3>
+                <p class="text-muted small">For uploaded MP4/WebM files: set <strong>Media Type</strong> to Video, provider to <strong>Uploaded Video</strong>, and use a JPG/PNG as the card thumbnail (or pick the video file and add a poster in OG Image on SEO tab).</p>
+                {{ render_field(form.video_provider) }}
+                {{ render_field(form.video_id) }}
+                {{ render_field(form.embed_url, 'Optional for YouTube/Vimeo embed URL, or auto-filled for uploaded video files.') }}
+            </div>
+        </div>
+
+        <div class="tab-pane fade{% if active_tab == 'relationships' %} show active{% endif %}" id="tab-relationships" role="tabpanel">
+            {{ render_field(form.project_id, 'Primary project this media belongs to.') }}
+            {{ render_field(form.service_slug) }}
+            {{ render_field(form.equipment_slug) }}
+            {{ render_field(form.team_member_ids, 'Hold Ctrl/Cmd to select multiple team members.') }}
+        </div>
+
+        <div class="tab-pane fade{% if active_tab == 'seo' %} show active{% endif %}" id="tab-seo" role="tabpanel">
+            {{ render_field(form.meta_title) }}
+            {{ render_field(form.meta_description) }}
+            <p class="text-muted small">Video poster and Before &amp; After images are managed on the <strong>Media</strong> tab.</p>
+            {{ render_field(form.canonical_url) }}
+        </div>
+    </div>
+
+    <div class="admin-settings-form-actions mt-3">
+        {{ form.submit(class="btn btn-primary btn-lg") }}
+        <a href="{{ url_for('admin.gallery_list') }}" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+</form>
+{% endblock %}

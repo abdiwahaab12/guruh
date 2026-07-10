@@ -1,0 +1,24 @@
+{# Hero Banner — uses PageMetaDTO (system section, no CMS block) #}
+{% from 'macros/media.html' import hero_bg_image_style, hero_media_class %}
+{% set hero_src = page.banner_image if page and page.banner_image else '' %}
+<section
+    id="{{ section.seo_anchor }}"
+    class="page-hero pb-section pb-layout--hero-banner{% if hero_src %} page-hero--has-cover{% endif %}"
+    data-section-key="{{ section.section_key }}"
+    data-layout="{{ section.layout_type }}"
+    aria-labelledby="page-hero-title">
+    <div class="page-hero-bg page-hero-bg-cover{{ hero_media_class(hero_src) }}"
+         {% if hero_src %}style="{{ hero_bg_image_style(hero_src) }}"{% endif %}
+         aria-hidden="true"></div>
+    <div class="page-hero-overlay page-hero-overlay--cover" aria-hidden="true"></div>
+    <div class="container page-hero-inner">
+        {% include "components/ui/breadcrumb.html" %}
+        <h1 class="page-hero-title" id="page-hero-title">
+            {{ page.title if page else section.section_title }}
+        </h1>
+        {% set hero_subtitle = (page.banner_subtitle or page.meta_description) if page else '' %}
+        {% if hero_subtitle %}
+        <p class="page-hero-subtitle">{{ hero_subtitle }}</p>
+        {% endif %}
+    </div>
+</section>

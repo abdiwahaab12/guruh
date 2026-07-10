@@ -1,0 +1,46 @@
+{% extends 'admin/website/layout.html' %}
+
+{% block website_content %}
+<div class="admin-panel">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle admin-website-pages-table">
+            <thead>
+                <tr>
+                    <th scope="col">Page</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Sections</th>
+                    <th scope="col">Last Updated</th>
+                    <th scope="col" class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for page in pages %}
+                <tr>
+                    <td>
+                        <div class="fw-semibold">{{ page.title }}</div>
+                        <div class="text-muted small">{{ page.public_path }}</div>
+                    </td>
+                    <td>
+                        <span class="badge {% if page.status == 'published' %}bg-success{% else %}bg-secondary{% endif %}">
+                            {{ page.status_label }}
+                        </span>
+                    </td>
+                    <td>{{ page.sections_count }}</td>
+                    <td>{{ page.updated_at_label }}</td>
+                    <td class="text-end">
+                        <div class="btn-group btn-group-sm" role="group" aria-label="Actions for {{ page.title }}">
+                            <a href="{{ url_for('admin.website_page', slug=page.slug) }}" class="btn btn-outline-primary">Edit</a>
+                            <a href="{{ page.preview_url }}" class="btn btn-outline-secondary" target="_blank" rel="noopener">Preview</a>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-muted text-center py-4">No pages configured.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

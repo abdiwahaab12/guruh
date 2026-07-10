@@ -1,0 +1,81 @@
+{# Full service detail section #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading, pb_paragraphs %}
+{% from 'macros/media.html' import smart_image %}
+{% set extra = block.extra if block and block.extra else {} %}
+{% set scope_items = extra.scope_of_work if extra.scope_of_work else [] %}
+{% set benefit_items = extra.benefits if extra.benefits else [] %}
+{% set equipment_items = extra.related_equipment if extra.related_equipment else [] %}
+{% set gallery = block.gallery_images if block and block.gallery_images else [] %}
+{% set project_slugs = extra.typical_project_slugs if extra.typical_project_slugs else [] %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="row g-5 align-items-start">
+        <div class="col-lg-5" data-animate>
+            {{ smart_image(block.hero_image if block else '', section.section_title, 'service', 'img-fluid rounded pb-section-image', lazy=not eager_image, eager=eager_image|default(false)) }}
+            {% if gallery %}
+            <div class="pb-service-gallery mt-4" aria-label="{{ section.section_title }} gallery preview">
+                <div class="row g-2">
+                    {% for img in gallery[:3] %}
+                    <div class="col-4">
+                        {{ smart_image(img, '', 'project', 'img-fluid rounded pb-service-gallery-thumb', lazy=true) }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-lg-7" data-animate>
+            {{ pb_heading(section, block, 'left') }}
+            {{ pb_paragraphs(block.full_content) }}
+
+            {% if scope_items %}
+            <div class="pb-service-detail-block mt-4">
+                <h3 class="pb-service-detail-label">Scope of Work</h3>
+                <ul class="pb-service-detail-list">
+                    {% for line in scope_items %}
+                    <li>{{ line }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if benefit_items %}
+            <div class="pb-service-detail-block mt-4">
+                <h3 class="pb-service-detail-label">Benefits</h3>
+                <ul class="pb-service-detail-list pb-service-detail-list--checks">
+                    {% for line in benefit_items %}
+                    <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>{{ line }}</span></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if project_slugs and projects %}
+            <div class="pb-service-detail-block mt-4">
+                <h3 class="pb-service-detail-label">Typical Projects</h3>
+                <ul class="pb-service-detail-list">
+                    {% for project in projects %}
+                    {% if project.slug in project_slugs %}
+                    <li>
+                        <a href="{{ url_for('main.project_detail', slug=project.slug) }}">{{ project.title }}</a>{% if project.location %} — <span class="pb-item-desc">{{ project.location }}</span>{% endif %}
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if equipment_items %}
+            <div class="pb-service-detail-block mt-4">
+                <h3 class="pb-service-detail-label">Related Equipment</h3>
+                <ul class="pb-service-equipment-list" aria-label="Related equipment for {{ section.section_title }}">
+                    {% for eq in equipment_items %}
+                    <li class="pb-service-tag">{{ eq }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{{ pb_close_section() }}

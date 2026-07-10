@@ -1,0 +1,70 @@
+<aside class="admin-sidebar" id="adminSidebar" aria-label="Admin navigation">
+    <div class="admin-sidebar-brand">
+        <a href="{{ url_for('admin.dashboard') }}" class="admin-brand-link">
+            <img src="{{ url_for('static', filename=company.logo_path) }}"
+                 alt="{{ company.short_name }}"
+                 class="admin-brand-logo">
+            <span class="admin-brand-text">
+                <strong>GURUH</strong>
+                <small data-i18n="brand.cms">CMS Admin</small>
+            </span>
+        </a>
+        <button type="button"
+                class="admin-sidebar-close btn btn-link d-lg-none"
+                id="adminSidebarClose"
+                aria-label="Close navigation">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+    </div>
+
+    <nav class="admin-sidebar-nav" aria-label="Primary">
+        <ul class="admin-nav-list">
+            {% for item in admin_nav %}
+            {% set is_active = active_nav == item.id or active_nav == item.slug %}
+            <li class="admin-nav-item{% if item.children %} has-children{% endif %}{% if is_active %} is-active{% endif %}">
+                {% if item.slug %}
+                <a href="{{ url_for(item.endpoint, module_slug=item.slug) }}"
+                   class="admin-nav-link{% if is_active %} active{% endif %}"
+                   data-i18n="{{ item.i18n_key }}"
+                   {% if is_active %}aria-current="page"{% endif %}>
+                    <i class="bi {{ item.icon }} admin-nav-icon" aria-hidden="true"></i>
+                    <span class="admin-nav-label">{{ item.label }}</span>
+                    {% if item.badge %}
+                    <span class="admin-nav-badge">{{ item.badge }}</span>
+                    {% endif %}
+                </a>
+                {% else %}
+                <a href="{{ url_for(item.endpoint) }}"
+                   class="admin-nav-link{% if is_active %} active{% endif %}"
+                   data-i18n="{{ item.i18n_key }}"
+                   {% if is_active %}aria-current="page"{% endif %}>
+                    <i class="bi {{ item.icon }} admin-nav-icon" aria-hidden="true"></i>
+                    <span class="admin-nav-label">{{ item.label }}</span>
+                </a>
+                {% endif %}
+
+                {% if item.children %}
+                <ul class="admin-nav-sublist">
+                    {% for child in item.children %}
+                    <li>
+                        <a href="{% if child.endpoint %}{% if child.query %}{{ url_for(child.endpoint, **child.query) }}{% else %}{{ url_for(child.endpoint) }}{% endif %}{% if child.anchor %}#{{ child.anchor }}{% endif %}{% else %}{{ url_for('admin.module', module_slug=child.slug) }}{% if child.anchor %}#{{ child.anchor }}{% endif %}{% endif %}"
+                           class="admin-nav-sublink"
+                           data-i18n="{{ child.i18n_key }}">
+                            {{ child.label }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </nav>
+
+    <div class="admin-sidebar-footer">
+        <a href="{{ url_for('main.index') }}" class="admin-sidebar-public-link" target="_blank" rel="noopener">
+            <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+            <span data-i18n="nav.view_website">View Website</span>
+        </a>
+    </div>
+</aside>

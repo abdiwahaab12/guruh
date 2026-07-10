@@ -1,0 +1,21 @@
+{#
+  Standard inner-page SEO — canonical, Open Graph, Twitter, breadcrumb JSON-LD.
+  Usage:
+    {% from 'macros/page_layout.html' import render_page_seo %}
+    {% block seo_meta %}{{ render_page_seo(page, company, canonical_url, og_image_url, breadcrumbs) }}{% endblock %}
+#}
+{% from 'macros/seo.html' import render_seo, breadcrumb_json_ld %}
+
+{% macro render_page_seo(page, company, canonical_url, og_image_url, breadcrumbs, image='', breadcrumb_ld=True) %}
+{% set seo_title = (page.meta_title if page else company.name) ~ ' | ' ~ company.name %}
+{% set seo_desc = page.meta_description if page else company.tagline %}
+{% set seo_image = image if image else og_image_url %}
+{{ render_seo(seo_title, seo_desc, canonical_url, og_image_url, company.name, image=seo_image) }}
+{% if breadcrumb_ld and breadcrumbs %}
+{% set ld_items = [] %}
+{% for crumb in breadcrumbs %}
+{% set _ = ld_items.append({'name': crumb.label, 'url': crumb.url}) %}
+{% endfor %}
+{{ breadcrumb_json_ld(ld_items) }}
+{% endif %}
+{% endmacro %}

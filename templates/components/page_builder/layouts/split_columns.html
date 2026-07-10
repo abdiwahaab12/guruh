@@ -1,0 +1,38 @@
+{# Split columns — image + content, or dual blocks (Vision & Mission) #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading, pb_paragraphs %}
+{% from 'macros/media.html' import smart_image %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    {% if section.blocks | length > 1 %}
+    <div class="pb-section-head text-center mb-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+    </div>
+    <div class="row g-4 g-lg-5">
+        {% for item_block in section.blocks %}
+        <div class="col-md-6" data-animate>
+            <div class="premium-card pb-vision-card h-100">
+                <div class="premium-card-body">
+                    {% if item_block.subtitle %}
+                    <p class="section-subheading">{{ item_block.subtitle }}</p>
+                    {% endif %}
+                    <h3 class="premium-card-title">{{ item_block.title }}</h3>
+                    <div class="section-divider section-divider--left"></div>
+                    {{ pb_paragraphs(item_block.full_content or item_block.short_summary) }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% elif block %}
+    <div class="row align-items-center g-5">
+        <div class="col-lg-6 order-lg-2" data-animate>
+            {{ pb_heading(section, block, 'left') }}
+            {{ pb_paragraphs(block.full_content) }}
+        </div>
+        <div class="col-lg-6 order-lg-1" data-animate>
+            {{ smart_image(block.hero_image, section.section_title, 'about', 'img-fluid rounded pb-section-image', lazy=not eager_image, eager=eager_image|default(false)) }}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{{ pb_close_section() }}

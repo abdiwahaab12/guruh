@@ -1,0 +1,261 @@
+/**
+ * GURUH Admin — Enterprise Media Manager styles
+ */
+
+.admin-media-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-bottom: 1rem;
+}
+
+.admin-media-tab {
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid var(--admin-border);
+    background: var(--admin-surface);
+    color: var(--admin-text);
+    text-decoration: none;
+    font-size: 0.88rem;
+}
+
+.admin-media-tab:hover,
+.admin-media-tab.active {
+    background: var(--admin-primary-soft);
+    border-color: var(--admin-primary);
+    color: var(--admin-primary-dark);
+}
+
+.admin-media-stat-card {
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+    padding: 1rem;
+    box-shadow: var(--admin-shadow);
+}
+
+.admin-media-stat-label {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--admin-text-muted);
+}
+
+.admin-media-stat-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.admin-media-type-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.admin-media-type-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.45rem 0;
+    border-bottom: 1px solid var(--admin-border);
+}
+
+.admin-media-type-item:last-child {
+    border-bottom: 0;
+}
+
+.admin-media-grid,
+.admin-media-recent-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+}
+
+.admin-media-card {
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--admin-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-media-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--admin-shadow-lg);
+}
+
+.admin-media-card-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+.admin-media-thumb {
+    aspect-ratio: 4 / 3;
+    background: var(--admin-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.admin-media-thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.admin-media-thumb-icon {
+    font-size: 2rem;
+    color: var(--admin-primary);
+}
+
+.admin-media-card-body {
+    padding: 0.65rem 0.75rem;
+}
+
+.admin-media-card-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.admin-media-card-meta {
+    margin: 0.15rem 0 0;
+    font-size: 0.75rem;
+    color: var(--admin-text-muted);
+}
+
+.admin-media-filters {
+    margin-bottom: 1rem;
+}
+
+.admin-media-list-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--admin-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-media-list-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.admin-media-pagination {
+    margin-top: 1.5rem;
+}
+
+.admin-media-empty {
+    text-align: center;
+    padding: 2rem;
+}
+
+.admin-media-dropzone {
+    border: 2px dashed var(--admin-border);
+    border-radius: var(--admin-radius);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.admin-media-dropzone.is-dragover,
+.admin-media-dropzone:hover {
+    border-color: var(--admin-primary);
+    background: var(--admin-primary-soft);
+}
+
+.admin-media-dropzone-icon {
+    font-size: 2.5rem;
+    color: var(--admin-primary);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.admin-media-upload-preview-item {
+    padding: 0.5rem 0.75rem;
+    margin-top: 0.5rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+}
+
+.admin-media-upload-preview-item.is-success {
+    background: rgba(16, 185, 129, 0.12);
+}
+
+.admin-media-upload-preview-item.is-error {
+    background: rgba(239, 68, 68, 0.12);
+}
+
+.admin-media-preview-panel {
+    min-height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-media-preview-img {
+    max-width: 100%;
+    max-height: 480px;
+    border-radius: 8px;
+}
+
+.admin-media-preview-video {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+.admin-media-preview-pdf {
+    width: 100%;
+    min-height: 420px;
+    border: 0;
+    border-radius: 8px;
+}
+
+.admin-media-preview-file {
+    text-align: center;
+    padding: 2rem;
+}
+
+.admin-media-details dt {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--admin-text-muted);
+}
+
+.admin-media-details dd {
+    margin-bottom: 0.65rem;
+}
+
+.admin-media-usage li {
+    padding: 0.35rem 0;
+    border-bottom: 1px solid var(--admin-border);
+    font-size: 0.88rem;
+}
+
+.admin-media-usage li:last-child {
+    border-bottom: 0;
+}
+
+@media (max-width: 767.98px) {
+    .admin-media-grid,
+    .admin-media-recent-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    }
+}
+
+[data-admin-theme="dark"] .admin-media-table {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--admin-text);
+}

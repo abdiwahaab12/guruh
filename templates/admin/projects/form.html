@@ -1,0 +1,130 @@
+{% extends 'admin/projects/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field, form_actions %}
+
+{% block projects_actions %}
+{% if is_edit is defined and is_edit and delete_form is defined %}
+<form method="post" action="{{ url_for('admin.projects_delete', project_id=project.id) }}" class="d-inline" onsubmit="return confirm('Soft-delete this project?');">
+    {{ delete_form.hidden_tag() }}
+    <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+</form>
+{% endif %}
+<a href="{{ url_for('admin.projects_list') }}" class="btn btn-outline-secondary btn-sm">Back to List</a>
+{% endblock %}
+
+{% block projects_content %}
+<form method="post" class="admin-projects-form" novalidate>
+    {{ form.hidden_tag() }}
+    {{ form.project_id }}
+
+    <ul class="nav nav-tabs admin-projects-form-tabs" role="tablist">
+        {% for tab in form_tabs %}
+        <li class="nav-item" role="presentation">
+            <button class="nav-link{% if active_tab == tab.slug %} active{% endif %}"
+                    type="button"
+                    data-bs-toggle="tab"
+                    data-bs-target="#tab-{{ tab.slug }}"
+                    role="tab">
+                <i class="bi {{ tab.icon }} me-1" aria-hidden="true"></i>{{ tab.label }}
+            </button>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div class="tab-content admin-panel admin-projects-tab-content">
+        <div class="tab-pane fade{% if active_tab == 'general' %} show active{% endif %}" id="tab-general" role="tabpanel">
+            <div class="row g-3">
+                <div class="col-md-8">{{ render_field(form.title) }}{{ render_field(form.slug, 'Auto-generated from title if blank.') }}{{ render_field(form.description) }}{{ render_field(form.overview) }}</div>
+                <div class="col-md-4">
+                    {{ render_field(form.consultant) }}{{ render_field(form.duration) }}
+                    {{ render_field(form.completion_date) }}{{ render_field(form.completion_year) }}
+                    {{ render_field(form.sort_order) }}
+                    <div class="form-check form-switch">{{ form.is_featured(class="form-check-input") }}{{ form.is_featured.label(class="form-check-label") }}</div>
+                    <div class="form-check form-switch">{{ form.is_active(class="form-check-input") }}{{ form.is_active.label(class="form-check-label") }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade{% if active_tab == 'location' %} show active{% endif %}" id="tab-location" role="tabpanel">
+            <div class="row g-3">
+                <div class="col-md-6">{{ render_field(form.location) }}{{ render_field(form.country) }}</div>
+                <div class="col-md-6">{{ render_field(form.county) }}{{ render_field(form.status) }}{{ render_field(form.client) }}{{ render_field(form.category) }}</div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade{% if active_tab == 'services' %} show active{% endif %}" id="tab-services" role="tabpanel">
+            {{ render_field(form.service_slugs, 'Hold Ctrl/Cmd to select multiple services.') }}
+        </div>
+
+        <div class="tab-pane fade{% if active_tab == 'equipment' %} show active{% endif %}" id="tab-equipment" role="tabpanel">
+            {{ render_field(form.equipment) }}
+        </div>
+
+        <div class="tab-pane fade{% if active_tab == 'team' %} show active{% endif %}" id="tab-team" role="tabpanel">
+            {{ render_field(form.team_member_ids) }}
+        </div>
+
+        <div class="tab-pane fade{% if active_tab == 'seo' %} show active{% endif %}" id="tab-seo" role="tabpanel">
+            {{ render_field(form.meta_title) }}
+            {{ render_field(form.meta_description) }}
+            <div class="mb-3">
+                <label class="form-label" for="og_image">OG Image (Media Path)</label>
+                <div class="input-group">
+                    {{ form.og_image(class="form-control", id="og_image") }}
+                    <a href="{{ url_for('admin.media_library', folder='projects') }}" class="btn btn-outline-secondary" target="_blank" rel="noopener">Browse Library</a>
+                </div>
+            </div>
+            {{ render_field(form.canonical_url) }}
+        </div>
+
+        <div class="tab-pane fade{% if active_tab == 'gallery' %} show active{% endif %}" id="tab-gallery" role="tabpanel">
+            <p class="text-muted small">Select images from the Media Library — upload new files in <a href="{{ url_for('admin.media_upload', folder='projects') }}" target="_blank" rel="noopener">Media → Upload</a> first.</p>
+            {% include 'admin/projects/_media_picker_featured.html' %}
+            <hr>
+            <h3 class="h6">Gallery Images</h3>
+            <div class="admin-media-picker-grid">
+                {% for asset in media_assets %}
+                <label class="admin-media-picker-item">
+                    <input type="checkbox" name="gallery_paths" value="{{ asset.storage_path }}"{% if asset.storage_path in project.gallery_paths %} checked{% endif %}>
+                    <img src="{{ url_for('static', filename=asset.storage_path) }}" alt="{{ asset.title }}" loading="lazy">
+                    <span>{{ asset.title }}</span>
+                </label>
+                {% else %}
+                <p class="text-muted">No project media in library. Upload to the Projects folder first.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="tab-pane fade{% if active_tab == 'documents' %} show active{% endif %}" id="tab-documents" role="tabpanel">
+            <p class="text-muted small">Select PDFs/documents from Media Library (Downloads folder).</p>
+            <div class="admin-media-picker-grid">
+                {% for asset in document_assets %}
+                <label class="admin-media-picker-item admin-media-picker-item--doc">
+                    <input type="checkbox" name="document_paths" value="{{ asset.storage_path }}"{% if is_edit and asset.storage_path in project.document_paths %} checked{% endif %}>
+                    <i class="bi bi-file-earmark-pdf" aria-hidden="true"></i>
+                    <span>{{ asset.title }}</span>
+                </label>
+                {% else %}
+                <p class="text-muted">No documents in media library.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="tab-pane fade{% if active_tab == 'timeline' %} show active{% endif %}" id="tab-timeline" role="tabpanel">
+            {{ render_field(form.timeline) }}
+        </div>
+
+        <div class="tab-pane fade{% if active_tab == 'content' %} show active{% endif %}" id="tab-content" role="tabpanel">
+            {{ render_field(form.challenges) }}{{ render_field(form.solutions) }}{{ render_field(form.scope_of_work) }}
+        </div>
+
+        <div class="tab-pane fade{% if active_tab == 'related' %} show active{% endif %}" id="tab-related" role="tabpanel">
+            {{ render_field(form.related_project_ids) }}{{ render_field(form.related_service_slugs) }}
+        </div>
+    </div>
+
+    <div class="admin-settings-form-actions mt-3">
+        {{ form.submit(class="btn btn-primary btn-lg") }}
+        <a href="{{ url_for('admin.projects_list') }}" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+</form>
+{% endblock %}

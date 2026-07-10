@@ -1,0 +1,124 @@
+{% extends 'admin/services/layout.html' %}
+
+{% block services_subtitle %}Search, filter, and manage all service offerings.{% endblock %}
+
+{% block services_content %}
+<form class="admin-panel admin-services-filters" method="get" action="{{ url_for('admin.services_list') }}">
+    <div class="row g-2">
+        <div class="col-lg-4">
+            <label class="form-label" for="q">Search</label>
+            <input type="search" class="form-control" id="q" name="q" value="{{ list_page.query }}" placeholder="Title, slug, description…">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="featured">Featured</label>
+            <select class="form-select" id="featured" name="featured">
+                {% for key, label in featured_filter_options.items() %}
+                <option value="{{ key }}"{% if list_page.filters.featured == key %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="status">Status</label>
+            <select class="form-select" id="status" name="status">
+                {% for key, label in status_filter_options.items() %}
+                <option value="{{ key }}"{% if list_page.filters.status == key %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="sort">Sort</label>
+            <select class="form-select" id="sort" name="sort">
+                {% for key, label in sort_options.items() %}
+                <option value="{{ key }}"{% if list_page.sort == key %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="deleted" name="deleted" value="1"{% if list_page.include_deleted %} checked{% endif %}>
+                <label class="form-check-label" for="deleted">Show deleted only</label>
+            </div>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+            <a href="{{ url_for('admin.services_list') }}" class="btn btn-outline-secondary">Reset</a>
+        </div>
+    </div>
+</form>
+
+<form method="post" action="{{ url_for('admin.services_bulk') }}" class="admin-panel mt-3">
+    {{ bulk_form.hidden_tag() }}
+    <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+        <label class="me-2">Bulk:</label>
+        {{ bulk_form.action(class="form-select form-select-sm w-auto d-inline-block") }}
+        {{ bulk_form.submit(class="btn btn-sm btn-outline-primary") }}
+    </div>
+
+    <div class="table-responsive">
+        <table class="table admin-services-table align-middle">
+            <thead>
+                <tr>
+                    <th scope="col"><input type="checkbox" id="selectAllServices" aria-label="Select all"></th>
+                    <th scope="col">Service</th>
+                    <th scope="col">Slug</th>
+                    <th scope="col">Order</th>
+                    <th scope="col">Updated</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in list_page.items %}
+                <tr class="{% if not s.is_active %}text-muted{% endif %}">
+                    <td><input type="checkbox" name="service_ids" value="{{ s.id }}" class="service-row-check"></td>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            {% if s.image %}
+                            <img src="{{ url_for('static', filename=s.image) }}" alt="" class="admin-services-thumb" loading="lazy">
+                            {% elif s.icon %}
+                            <span class="admin-services-icon-thumb"><i class="bi {{ s.icon }}" aria-hidden="true"></i></span>
+                            {% endif %}
+                            <div>
+                                <strong>{{ s.title }}</strong>
+                                {% if s.is_featured %}<span class="badge bg-primary ms-1">Featured</span>{% endif %}
+                                {% if not s.is_active %}<span class="badge bg-secondary ms-1">Deleted</span>{% endif %}
+                            </div>
+                        </div>
+                    </td>
+                    <td><code>{{ s.slug }}</code></td>
+                    <td>{{ s.sort_order }}</td>
+                    <td>{{ s.updated_at_label }}</td>
+                    <td class="text-end">
+                        {% if s.is_active %}
+                        <a href="{{ url_for('admin.services_edit', service_id=s.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                        {% else %}
+                        <form method="post" action="{{ url_for('admin.services_restore', service_id=s.id) }}" class="d-inline">
+                            <input type="hidden" name="csrf_token" value="{{ bulk_form.csrf_token.current_token }}">
+                            <button type="submit" class="btn btn-sm btn-outline-success">Restore</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" class="text-center text-muted py-4">No services found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</form>
+
+{% if list_page.total_pages > 1 %}
+<nav class="mt-3" aria-label="Services pagination">
+    <ul class="pagination justify-content-center">
+        {% for p in range(1, list_page.total_pages + 1) %}
+        {% if p == list_page.page or p <= 2 or p >= list_page.total_pages - 1 or (p >= list_page.page - 1 and p <= list_page.page + 1) %}
+        <li class="page-item{% if p == list_page.page %} active{% endif %}">
+            <a class="page-link" href="{{ url_for('admin.services_list', page=p, q=list_page.query, featured=list_page.filters.featured, status=list_page.filters.status, sort=list_page.sort, deleted=1 if list_page.include_deleted else none) }}">{{ p }}</a>
+        </li>
+        {% elif p == 3 or p == list_page.total_pages - 2 %}
+        <li class="page-item disabled"><span class="page-link">…</span></li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

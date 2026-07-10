@@ -1,0 +1,28 @@
+{% extends 'admin/settings/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field, form_actions %}
+
+{% block settings_subtitle %}Public site brand colors and typography tokens.{% endblock %}
+
+{% block settings_content %}
+<form method="post" class="admin-settings-form" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="admin-panel">
+        <div class="row g-3">
+            <div class="col-md-4">
+                {{ render_field(form.primary_color) }}
+                <div class="admin-settings-color-preview" style="background: {{ form.primary_color.data or '#33A8FF' }};"></div>
+            </div>
+            <div class="col-md-4">
+                {{ render_field(form.accent_color) }}
+                <div class="admin-settings-color-preview" style="background: {{ form.accent_color.data or '#E91E63' }};"></div>
+            </div>
+            <div class="col-md-4">{{ render_field(form.font_family) }}</div>
+        </div>
+        <div class="form-check form-switch mt-3">
+            {{ form.enable_dark_mode(class="form-check-input") }}
+            {{ form.enable_dark_mode.label(class="form-check-label") }}
+        </div>
+        {{ form_actions(form) }}
+    </div>
+</form>
+{% endblock %}

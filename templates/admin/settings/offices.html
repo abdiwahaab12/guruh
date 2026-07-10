@@ -1,0 +1,72 @@
+{% extends 'admin/settings/layout.html' %}
+
+{% block settings_subtitle %}Manage headquarters and branch offices for the contact page.{% endblock %}
+
+{% block settings_actions %}
+<a href="{{ url_for('admin.settings_office_form') }}" class="btn btn-primary">
+    <i class="bi bi-plus-lg me-1" aria-hidden="true"></i> Add Office
+</a>
+{% endblock %}
+
+{% block settings_content %}
+<div class="admin-panel">
+    {% if offices %}
+    <div class="table-responsive">
+        <table class="table admin-settings-table align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">Office</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Contact</th>
+                    <th scope="col">Flags</th>
+                    <th scope="col" class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for office in offices %}
+                <tr class="{% if not office.is_active %}text-muted{% endif %}">
+                    <td>
+                        <strong>{{ office.name }}</strong>
+                        {% if office.is_headquarters %}
+                        <span class="badge bg-primary ms-1">HQ</span>
+                        {% endif %}
+                        {% if not office.is_active %}
+                        <span class="badge bg-secondary ms-1">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ office.address_locality or office.address }}</td>
+                    <td>
+                        <div class="small">{{ office.phone_primary }}</div>
+                        <div class="small text-muted">{{ office.email }}</div>
+                    </td>
+                    <td>
+                        {% if office.show_on_contact_page %}
+                        <span class="badge text-bg-light">Contact page</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <a href="{{ url_for('admin.settings_office_form', office_id=office.id) }}"
+                           class="btn btn-sm btn-outline-primary">Edit</a>
+                        {% if office.is_active %}
+                        <form method="post"
+                              action="{{ url_for('admin.settings_office_delete', office_id=office.id) }}"
+                              class="d-inline"
+                              onsubmit="return confirm('Remove this office location?');">
+                            {{ delete_form.hidden_tag() }}
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="admin-settings-empty">
+        <p class="text-muted mb-3">No office locations in the database yet.</p>
+        <a href="{{ url_for('admin.settings_office_form') }}" class="btn btn-primary">Add First Office</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

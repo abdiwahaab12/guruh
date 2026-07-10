@@ -1,0 +1,53 @@
+{% extends 'admin/careers/layout.html' %}
+
+{% block careers_subtitle %}Job statistics and recent listings.{% endblock %}
+
+{% block careers_content %}
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="admin-careers-stat"><span class="label">Total Jobs</span><span class="value">{{ stats.total }}</span></div></div>
+    <div class="col-md-3"><div class="admin-careers-stat"><span class="label">Active</span><span class="value">{{ stats.active }}</span></div></div>
+    <div class="col-md-3"><div class="admin-careers-stat"><span class="label">Closed</span><span class="value">{{ stats.closed }}</span></div></div>
+    <div class="col-md-3"><div class="admin-careers-stat"><span class="label">Draft</span><span class="value">{{ stats.draft }}</span></div></div>
+</div>
+
+<section class="admin-panel">
+    <div class="admin-panel-header">
+        <h2 class="admin-panel-title">Recent Jobs</h2>
+        <a href="{{ url_for('admin.careers_list') }}" class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    {% if stats.recent %}
+    <div class="table-responsive">
+        <table class="table admin-careers-table align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">Job</th>
+                    <th scope="col">Department</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Deadline</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for j in stats.recent %}
+                <tr class="{% if not j.is_active %}text-muted{% endif %}">
+                    <td>
+                        <strong>{{ j.title }}</strong>
+                        {% if j.is_featured %}<span class="badge bg-primary ms-1">Featured</span>{% endif %}
+                        {% if not j.is_active %}<span class="badge bg-secondary ms-1">Deleted</span>{% endif %}
+                    </td>
+                    <td>{{ j.department }}</td>
+                    <td><span class="badge admin-careers-status admin-careers-status--{{ j.status }}">{{ status_labels.get(j.status, j.status) }}</span></td>
+                    <td>{{ j.deadline or '—' }}</td>
+                    <td class="text-end">
+                        <a href="{{ url_for('admin.careers_edit', job_id=j.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted mb-0">No jobs yet. <a href="{{ url_for('admin.careers_create') }}">Create the first job</a>.</p>
+    {% endif %}
+</section>
+{% endblock %}

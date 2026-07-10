@@ -1,0 +1,67 @@
+{#
+  Smart image component — never shows broken images.
+  Usage: {% from 'macros/media.html' import smart_image %}
+         {{ smart_image(src, alt, fallback='service', css_class='...', lazy=true) }}
+
+  Fallback types: hero, about, service, project, partner, team, gallery, default
+  Paths mirror app/constants/media.py FALLBACK_IMAGES for admin parity.
+#}
+{% set _fallback_map = {
+    'hero': 'img/fallbacks/hero-1.svg',
+    'about': 'img/fallbacks/about.svg',
+    'service': 'img/fallbacks/service.svg',
+    'project': 'img/fallbacks/project.svg',
+    'partner': 'img/fallbacks/partner.svg',
+    'team': 'img/fallbacks/about.svg',
+    'gallery': 'img/fallbacks/project.svg',
+    'default': 'img/fallbacks/default.svg',
+    'logo': 'img/logo.svg',
+    'logo-light': 'img/logo-light.svg'
+} %}
+
+{% macro smart_image(src, alt, fallback='default', css_class='', lazy=true, eager=false) %}
+{% set fb = _fallback_map.get(fallback, _fallback_map['default']) %}
+{% set img_src = src if src else fb %}
+
+<img src="{{ url_for('static', filename=img_src) }}"
+     alt="{{ alt }}"
+     class="smart-image {{ css_class }}"
+     data-fallback="{{ url_for('static', filename=fb) }}"
+     {% if lazy and not eager %}loading="lazy" decoding="async"{% else %}loading="eager" decoding="async" fetchpriority="high"{% endif %}
+     onerror="if(this.dataset.fallback && this.src!==this.dataset.fallback){this.src=this.dataset.fallback;this.onerror=null;}">
+{% endmacro %}
+
+{# Resolve a media-library path to a static URL, or empty when unset #}
+{% macro media_static_url(src) -%}
+{%- if src and src.strip() -%}
+{{ url_for('static', filename=src.strip()) }}
+{%- endif -%}
+{%- endmacro %}
+
+{# Hero/page banner background URL — no SVG placeholder; gradient-only when empty #}
+{% macro bg_image_url(src) -%}
+{{ media_static_url(src) }}
+{%- endmacro %}
+
+{# Photo-only layer for hero slider (animated separately from gradient overlay) #}
+{% macro hero_bg_image_style(src) -%}
+{%- set url = bg_image_url(src) -%}
+{%- if url -%}background-image: url('{{ url }}');{%- endif -%}
+{%- endmacro %}
+
+{# Inline background-image for hero slider — gradient fallback when no photo layer #}
+{% macro hero_bg_style(src) -%}
+{%- set url = bg_image_url(src) -%}
+{%- if url -%}background-image: linear-gradient(115deg, rgba(26, 26, 26, 0.55) 0%, rgba(26, 74, 110, 0.35) 55%, rgba(26, 26, 26, 0.25) 100%), url('{{ url }}'); background-size: cover; background-position: center center; background-repeat: no-repeat;{%- endif -%}
+{%- endmacro %}
+
+{# Inline background-image for inner-page hero banners #}
+{% macro page_hero_bg_style(src) -%}
+{%- set url = bg_image_url(src) -%}
+{%- if url -%}background-image: linear-gradient(135deg, rgba(26, 26, 26, 0.72) 0%, rgba(42, 42, 42, 0.55) 45%, rgba(51, 168, 255, 0.28) 100%), url('{{ url }}'); background-size: cover; background-position: center center; background-repeat: no-repeat;{%- endif -%}
+{%- endmacro %}
+
+{# CSS class when a raster/SVG media path is present #}
+{% macro hero_media_class(src) -%}
+{%- if src and src.strip() -%} has-media{%- endif -%}
+{%- endmacro %}

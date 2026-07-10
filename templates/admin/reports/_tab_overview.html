@@ -1,0 +1,89 @@
+<div class="row g-3 mb-4 admin-reports-stats">
+    {% for card in overview.cards %}
+    <div class="col-sm-6 col-xl-3">
+        <div class="admin-reports-stat-card border-start border-4 border-{{ card.color }}">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <div class="admin-reports-stat-label">{{ card.label }}</div>
+                    <div class="admin-reports-stat-value">{{ card.value }}</div>
+                    {% if card.sublabel %}
+                    <div class="admin-reports-stat-sub text-muted">{{ card.sublabel }}</div>
+                    {% endif %}
+                </div>
+                <span class="admin-reports-stat-icon text-{{ card.color }}">
+                    <i class="bi {{ card.icon }}" aria-hidden="true"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="admin-reports-chart-card">
+            <h2 class="admin-reports-chart-title">Monthly Activity</h2>
+            <canvas id="monthlyActivity" height="220" aria-label="Monthly activity chart"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="admin-reports-chart-card">
+            <h2 class="admin-reports-chart-title">Messages Trend</h2>
+            <canvas id="messagesTrend" height="220" aria-label="Messages trend chart"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="admin-reports-chart-card">
+            <h2 class="admin-reports-chart-title">Projects by Country</h2>
+            <canvas id="projectsCountry" height="220" aria-label="Projects by country chart"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="admin-reports-chart-card">
+            <h2 class="admin-reports-chart-title">Gallery Growth</h2>
+            <canvas id="galleryGrowth" height="220" aria-label="Gallery growth chart"></canvas>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="admin-reports-chart-card">
+            <h2 class="admin-reports-chart-title">Users Activity</h2>
+            <canvas id="usersActivity" height="240" aria-label="Users activity chart"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="admin-reports-detail-card">
+            <h3 class="h6">Website</h3>
+            <ul class="list-unstyled mb-0 small">
+                <li><span class="text-muted">Published pages</span> <strong>{{ overview.website.published_pages }}</strong></li>
+                <li><span class="text-muted">Sections</span> <strong>{{ overview.website.sections }}</strong></li>
+                <li><span class="text-muted">Content blocks</span> <strong>{{ overview.website.content_blocks }}</strong></li>
+                <li><span class="text-muted">New in range</span> <strong>{{ overview.website.new_pages }}</strong></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="admin-reports-detail-card">
+            <h3 class="h6">Messages</h3>
+            <ul class="list-unstyled mb-0 small">
+                <li><span class="text-muted">Contacts</span> <strong>{{ overview.messages.contacts_total }}</strong> ({{ overview.messages.contacts_unread }} unread)</li>
+                <li><span class="text-muted">Quotes</span> <strong>{{ overview.messages.quotes_total }}</strong> ({{ overview.messages.quotes_unread }} unread)</li>
+                <li><span class="text-muted">Applications</span> <strong>{{ overview.messages.applications_total }}</strong> ({{ overview.messages.applications_unread }} unread)</li>
+                <li><span class="text-muted">New in range</span> <strong>{{ overview.messages.new_contacts + overview.messages.new_quotes + overview.messages.new_applications }}</strong></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="admin-reports-detail-card">
+            <h3 class="h6">Users</h3>
+            <ul class="list-unstyled mb-0 small">
+                <li><span class="text-muted">Active users</span> <strong>{{ overview.users.active_users }}</strong></li>
+                <li><span class="text-muted">Locked</span> <strong>{{ overview.users.locked_users }}</strong></li>
+                <li><span class="text-muted">Active sessions</span> <strong>{{ overview.users.active_sessions }}</strong></li>
+                <li><span class="text-muted">Team members</span> <strong>{{ overview.users.team_members }}</strong></li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+<div class="admin-system-panel mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h6 mb-0">Health Check</h2>
+        <form method="post" action="{{ url_for('admin.system_health_run') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-primary btn-sm">
+                <i class="bi bi-arrow-repeat me-1"></i> Run All Checks
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="row g-3">
+    {% for check in health_checks %}
+    <div class="col-md-6 col-xl-4">
+        <div class="admin-system-health-card status-{{ check.status }}">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h3 class="h6 mb-1">{{ check.label }}</h3>
+                    <p class="mb-1 small">{{ check.message }}</p>
+                    {% if check.detail %}<p class="mb-0 text-muted small">{{ check.detail }}</p>{% endif %}
+                </div>
+                <span class="badge bg-{{ 'success' if check.status == 'healthy' else 'danger' if check.status == 'unhealthy' else 'secondary' }}">{{ check.status }}</span>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>

@@ -1,0 +1,138 @@
+{% extends 'admin/careers/layout.html' %}
+
+{% block careers_subtitle %}Search, filter, and manage all job listings.{% endblock %}
+
+{% block careers_content %}
+<form class="admin-panel admin-careers-filters" method="get" action="{{ url_for('admin.careers_list') }}">
+    <div class="row g-2">
+        <div class="col-lg-3">
+            <label class="form-label" for="q">Search</label>
+            <input type="search" class="form-control" id="q" name="q" value="{{ list_page.query }}" placeholder="Title, department, location…">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="department">Department</label>
+            <select class="form-select" id="department" name="department">
+                <option value="">All</option>
+                {% for d in filter_departments %}
+                <option value="{{ d }}"{% if list_page.filters.department == d %} selected{% endif %}>{{ d }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="employment_type">Employment Type</label>
+            <select class="form-select" id="employment_type" name="employment_type">
+                <option value="">All</option>
+                {% for t in filter_employment_types %}
+                <option value="{{ t }}"{% if list_page.filters.employment_type == t %} selected{% endif %}>{{ t }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="location">Location</label>
+            <select class="form-select" id="location" name="location">
+                <option value="">All</option>
+                {% for l in filter_locations %}
+                <option value="{{ l }}"{% if list_page.filters.location == l %} selected{% endif %}>{{ l }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="status">Status</label>
+            <select class="form-select" id="status" name="status">
+                {% for key, label in status_filter_options.items() %}
+                <option value="{{ key }}"{% if list_page.filters.status == key %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="sort">Sort</label>
+            <select class="form-select" id="sort" name="sort">
+                {% for key, label in sort_options.items() %}
+                <option value="{{ key }}"{% if list_page.sort == key %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="deleted" name="deleted" value="1"{% if list_page.include_deleted %} checked{% endif %}>
+                <label class="form-check-label" for="deleted">Show deleted only</label>
+            </div>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+            <a href="{{ url_for('admin.careers_list') }}" class="btn btn-outline-secondary">Reset</a>
+        </div>
+    </div>
+</form>
+
+<form method="post" action="{{ url_for('admin.careers_bulk') }}" class="admin-panel mt-3">
+    {{ bulk_form.hidden_tag() }}
+    <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+        <label class="me-2">Bulk:</label>
+        {{ bulk_form.action(class="form-select form-select-sm w-auto d-inline-block") }}
+        {{ bulk_form.submit(class="btn btn-sm btn-outline-primary") }}
+    </div>
+
+    <div class="table-responsive">
+        <table class="table admin-careers-table align-middle">
+            <thead>
+                <tr>
+                    <th scope="col"><input type="checkbox" id="selectAllJobs" aria-label="Select all"></th>
+                    <th scope="col">Job Title</th>
+                    <th scope="col">Department</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Deadline</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for j in list_page.items %}
+                <tr class="{% if not j.is_active %}text-muted{% endif %}">
+                    <td><input type="checkbox" name="job_ids" value="{{ j.id }}" class="job-row-check"></td>
+                    <td>
+                        <strong>{{ j.title }}</strong>
+                        {% if j.is_featured %}<span class="badge bg-primary ms-1">Featured</span>{% endif %}
+                        {% if not j.is_active %}<span class="badge bg-secondary ms-1">Deleted</span>{% endif %}
+                    </td>
+                    <td>{{ j.department }}</td>
+                    <td>{{ j.location }}</td>
+                    <td>{{ j.employment_type }}</td>
+                    <td><span class="badge admin-careers-status admin-careers-status--{{ j.status }}">{{ status_labels.get(j.status, j.status) }}</span></td>
+                    <td>{{ j.deadline or '—' }}</td>
+                    <td class="text-end">
+                        {% if j.is_active %}
+                        <a href="{{ url_for('admin.careers_edit', job_id=j.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                        {% else %}
+                        <form method="post" action="{{ url_for('admin.careers_restore', job_id=j.id) }}" class="d-inline">
+                            <input type="hidden" name="csrf_token" value="{{ bulk_form.csrf_token.current_token }}">
+                            <button type="submit" class="btn btn-sm btn-outline-success">Restore</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="8" class="text-center text-muted py-4">No jobs found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</form>
+
+{% if list_page.total_pages > 1 %}
+<nav class="mt-3" aria-label="Jobs pagination">
+    <ul class="pagination justify-content-center">
+        {% for p in range(1, list_page.total_pages + 1) %}
+        {% if p == list_page.page or p <= 2 or p >= list_page.total_pages - 1 or (p >= list_page.page - 1 and p <= list_page.page + 1) %}
+        <li class="page-item{% if p == list_page.page %} active{% endif %}">
+            <a class="page-link" href="{{ url_for('admin.careers_list', page=p, q=list_page.query, department=list_page.filters.department, employment_type=list_page.filters.employment_type, location=list_page.filters.location, status=list_page.filters.status, sort=list_page.sort, deleted=1 if list_page.include_deleted else none) }}">{{ p }}</a>
+        </li>
+        {% elif p == 3 or p == list_page.total_pages - 2 %}
+        <li class="page-item disabled"><span class="page-link">…</span></li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

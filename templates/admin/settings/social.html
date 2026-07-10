@@ -1,0 +1,65 @@
+{% extends 'admin/settings/layout.html' %}
+
+{% block settings_subtitle %}Social profile links used in header, footer, and contact sections.{% endblock %}
+
+{% block settings_actions %}
+<a href="{{ url_for('admin.settings_social_form') }}" class="btn btn-primary">
+    <i class="bi bi-plus-lg me-1" aria-hidden="true"></i> Add Link
+</a>
+{% endblock %}
+
+{% block settings_content %}
+<div class="admin-panel">
+    {% if social_links %}
+    <div class="table-responsive">
+        <table class="table admin-settings-table align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">Platform</th>
+                    <th scope="col">Label</th>
+                    <th scope="col">URL</th>
+                    <th scope="col">Order</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for link in social_links %}
+                <tr class="{% if not link.is_active %}text-muted{% endif %}">
+                    <td><i class="bi {{ link.icon }} me-1" aria-hidden="true"></i>{{ link.platform }}</td>
+                    <td>{{ link.label }}</td>
+                    <td class="text-truncate" style="max-width: 220px;">{{ link.url }}</td>
+                    <td>{{ link.sort_order }}</td>
+                    <td>
+                        {% if link.is_active %}
+                        <span class="badge bg-success">Active</span>
+                        {% else %}
+                        <span class="badge bg-secondary">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <a href="{{ url_for('admin.settings_social_form', link_id=link.id) }}"
+                           class="btn btn-sm btn-outline-primary">Edit</a>
+                        {% if link.is_active %}
+                        <form method="post"
+                              action="{{ url_for('admin.settings_social_delete', link_id=link.id) }}"
+                              class="d-inline"
+                              onsubmit="return confirm('Remove this social link?');">
+                            {{ delete_form.hidden_tag() }}
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="admin-settings-empty">
+        <p class="text-muted mb-3">No social links configured yet.</p>
+        <a href="{{ url_for('admin.settings_social_form') }}" class="btn btn-primary">Add First Link</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

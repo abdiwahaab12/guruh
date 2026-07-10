@@ -1,0 +1,59 @@
+<form class="admin-panel admin-users-filters" method="get" action="{{ url_for('admin.users_dashboard') }}">
+    <input type="hidden" name="tab" value="sessions">
+    <div class="row g-2">
+        <div class="col-md-6">
+            <label class="form-label" for="q">Search</label>
+            <input type="search" class="form-control" name="q" value="{{ list_page.query }}" placeholder="Email or IP…">
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="status">Status</label>
+            <select class="form-select" name="status">
+                {% for key, label in session_status_options.items() %}
+                <option value="{{ key }}"{% if list_page.filters.status == key %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Apply</button>
+        </div>
+    </div>
+</form>
+
+<div class="admin-panel mt-3">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>IP</th>
+                    <th>User Agent</th>
+                    <th>Started</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in list_page.items %}
+                <tr>
+                    <td><div>{{ item.user_name }}</div><div class="text-muted small">{{ item.user_email }}</div></td>
+                    <td>{{ item.ip_address }}</td>
+                    <td class="small text-muted">{{ item.user_agent }}</td>
+                    <td>{{ item.created_at_label }}</td>
+                    <td>{% if item.is_active %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Revoked</span>{% endif %}</td>
+                    <td class="text-end">
+                        {% if item.is_active %}
+                        <form method="post" action="{{ url_for('admin.users_session_revoke', session_id=item.id) }}" class="d-inline">
+                            {{ session_action_form.hidden_tag() }}
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Revoke</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" class="text-center text-muted py-4">No sessions found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include 'admin/users/_pagination.html' %}
+</div>

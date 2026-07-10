@@ -1,0 +1,34 @@
+{# Emergency contact — prominent after-hours line #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8" data-animate>
+            {% set extra = block.extra if block and block.extra else {} %}
+            {% set emerg = emergency if emergency else none %}
+            <div class="pb-emergency-card text-center">
+                <div class="pb-emergency-icon" aria-hidden="true">
+                    <i class="bi {{ extra.icon or (emerg.icon if emerg else 'bi-exclamation-triangle-fill') }}"></i>
+                </div>
+                {{ pb_heading(section, block, 'center') }}
+                {% if block and block.short_summary %}
+                <p class="pb-emergency-desc">{{ block.short_summary }}</p>
+                {% endif %}
+                {% set phone = extra.phone or (emerg.phone if emerg else '') %}
+                {% set phone_href = extra.phone_tel if extra and extra.phone_tel else (emerg.phone_tel if emerg else '') %}
+                <a class="btn btn-light btn-lg pb-emergency-phone"
+                   href="tel:{{ phone_href }}"
+                   aria-label="Call emergency contact {{ phone }}">
+                    <i class="bi bi-telephone-fill me-2" aria-hidden="true"></i>{{ phone }}
+                </a>
+                {% if extra.availability or (emerg and emerg.availability) %}
+                <p class="pb-emergency-availability mt-3 mb-0">
+                    <i class="bi bi-clock me-1" aria-hidden="true"></i>
+                    {{ extra.availability or emerg.availability }}
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{{ pb_close_section() }}

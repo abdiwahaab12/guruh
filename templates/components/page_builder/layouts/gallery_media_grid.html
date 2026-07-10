@@ -1,0 +1,116 @@
+{# Premium masonry gallery grid with rich media cards and lightbox #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{% from 'macros/media.html' import smart_image %}
+{% set media_items = gallery_images if gallery_images else [] %}
+{% set block_items = block.items if block and block.items else [] %}
+{% set use_dynamic = media_items | length > 0 %}
+{% set use_seed = (not use_dynamic) and block_items %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-4 mb-lg-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+    </div>
+
+    <div class="pb-gallery-masonry pb-gallery-masonry--cards"
+         id="galleryMediaGrid"
+         data-animate
+         aria-live="polite">
+        {% if use_dynamic %}
+        {% for img in media_items if img.is_active %}
+        <article class="pb-gallery-card"
+                 data-project="{{ img.project_title }}"
+                 data-service="{{ img.service_title }}"
+                 data-equipment="{{ img.equipment_title }}"
+                 data-category="{{ img.category }}"
+                 data-county="{{ img.county }}"
+                 data-year="{{ img.year }}"
+                 data-album="{{ img.album }}"
+                 data-search="{{ (img.title ~ ' ' ~ img.project_title ~ ' ' ~ img.service_title ~ ' ' ~ img.location ~ ' ' ~ img.category) | lower }}">
+            <button type="button"
+                    class="pb-gallery-trigger pb-gallery-card-trigger"
+                    data-lightbox-src="{{ url_for('static', filename=img.image) }}"
+                    data-lightbox-caption="{{ img.title }}{% if img.location %} — {{ img.location }}{% endif %}"
+                    aria-label="Open image: {{ img.title }}">
+                {{ smart_image(img.image, img.title, 'gallery', 'pb-gallery-image', lazy=true) }}
+                <span class="pb-gallery-card-overlay" aria-hidden="true"><i class="bi bi-zoom-in"></i></span>
+            </button>
+            <div class="pb-gallery-card-body">
+                <h3 class="pb-gallery-card-title">{{ img.title }}</h3>
+                {% if img.category %}<span class="pb-gallery-card-badge">{{ img.category }}</span>{% endif %}
+                <ul class="pb-gallery-card-meta list-unstyled small mb-0">
+                    {% if img.project_title %}<li><i class="bi bi-building me-1"></i>{{ img.project_title }}</li>{% endif %}
+                    {% if img.location %}<li><i class="bi bi-geo-alt me-1"></i>{{ img.location }}</li>{% endif %}
+                    {% if img.date %}<li><i class="bi bi-calendar3 me-1"></i>{{ img.date }}</li>{% endif %}
+                </ul>
+            </div>
+        </article>
+        {% endfor %}
+        {% elif use_seed %}
+        {% for item in block_items if item.is_active %}
+        {% set ex = item.extra if item.extra else {} %}
+        <article class="pb-gallery-card"
+                 data-project="{{ ex.project_title | default('', true) }}"
+                 data-service="{{ ex.service_title | default('', true) }}"
+                 data-equipment="{{ ex.equipment_title | default('', true) }}"
+                 data-category="{{ ex.category | default('', true) }}"
+                 data-county="{{ ex.county | default('', true) }}"
+                 data-year="{{ ex.year | default('', true) }}"
+                 data-album="{{ ex.album | default('', true) }}"
+                 data-search="{{ (item.title ~ ' ' ~ ex.project_title ~ ' ' ~ ex.service_title ~ ' ' ~ ex.location ~ ' ' ~ ex.category) | lower }}">
+            <button type="button"
+                    class="pb-gallery-trigger pb-gallery-card-trigger"
+                    data-lightbox-src="{{ url_for('static', filename=item.image) }}"
+                    data-lightbox-caption="{{ item.title }}{% if ex.location %} — {{ ex.location }}{% endif %}"
+                    aria-label="Open image: {{ item.title }}">
+                {{ smart_image(item.image, item.title, 'gallery', 'pb-gallery-image', lazy=true) }}
+                <span class="pb-gallery-card-overlay" aria-hidden="true">
+                    <i class="bi bi-zoom-in"></i>
+                </span>
+            </button>
+            <div class="pb-gallery-card-body">
+                <h3 class="pb-gallery-card-title">{{ item.title }}</h3>
+                {% if ex.category %}
+                <span class="pb-gallery-card-badge">{{ ex.category }}</span>
+                {% endif %}
+                <ul class="pb-gallery-card-meta list-unstyled small mb-0">
+                    {% if ex.project_title %}
+                    <li><i class="bi bi-building me-1" aria-hidden="true"></i>{{ ex.project_title }}</li>
+                    {% endif %}
+                    {% if ex.location %}
+                    <li><i class="bi bi-geo-alt me-1" aria-hidden="true"></i>{{ ex.location }}</li>
+                    {% endif %}
+                    {% if ex.date %}
+                    <li><i class="bi bi-calendar3 me-1" aria-hidden="true"></i>{{ ex.date }}</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </article>
+        {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="pb-gallery-empty text-center py-5 d-none" id="galleryEmptyState" role="status">
+        <i class="bi bi-images fs-1 text-muted mb-3 d-block" aria-hidden="true"></i>
+        <p class="text-muted mb-0">No media matches your filters. Try adjusting your search or reset filters.</p>
+    </div>
+</div>
+
+<div class="pb-lightbox" id="galleryLightbox" hidden role="dialog" aria-modal="true" aria-label="Gallery image preview">
+    <div class="pb-lightbox-backdrop" data-lightbox-close></div>
+    <div class="pb-lightbox-dialog">
+        <button type="button" class="pb-lightbox-close" data-lightbox-close aria-label="Close preview">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="pb-lightbox-nav pb-lightbox-prev" data-lightbox-prev aria-label="Previous image">
+            <i class="bi bi-chevron-left" aria-hidden="true"></i>
+        </button>
+        <figure class="pb-lightbox-figure">
+            <img src="" alt="" class="pb-lightbox-image" id="galleryLightboxImage">
+            <figcaption class="pb-lightbox-caption" id="galleryLightboxCaption"></figcaption>
+        </figure>
+        <button type="button" class="pb-lightbox-nav pb-lightbox-next" data-lightbox-next aria-label="Next image">
+            <i class="bi bi-chevron-right" aria-hidden="true"></i>
+        </button>
+    </div>
+</div>
+{{ pb_close_section() }}

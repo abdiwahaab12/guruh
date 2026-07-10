@@ -1,0 +1,54 @@
+{# Awards & corporate events gallery #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{% from 'macros/media.html' import smart_image %}
+{% set items = awards_items if awards_items else [] %}
+{% set block_items = block.items if block and block.items else [] %}
+{% set media_items = gallery_images if gallery_images else [] %}
+{% set use_dynamic = items | length > 0 %}
+{% set use_seed = (not use_dynamic) and (media_items | length == 0) and block_items %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+    </div>
+    <div class="row g-4">
+        {% if use_dynamic %}
+        {% for item in items if item.is_active %}
+        <div class="col-md-6 col-lg-3" data-animate>
+            <article class="premium-card pb-awards-card h-100">
+                <div class="pb-awards-image-wrap">
+                    {{ smart_image(item.image, item.title, 'about', 'pb-awards-image', lazy=true) }}
+                </div>
+                <div class="premium-card-body">
+                    {% if item.category %}<span class="pb-gallery-card-badge">{{ item.category }}</span>{% endif %}
+                    <h3 class="premium-card-title">{{ item.title }}</h3>
+                    <p class="premium-card-text small">{{ item.caption }}</p>
+                    {% if item.date %}<p class="small text-muted mb-0"><i class="bi bi-calendar3 me-1"></i>{{ item.date }}</p>{% endif %}
+                </div>
+            </article>
+        </div>
+        {% endfor %}
+        {% elif use_seed %}
+        {% for item in block_items if item.is_active %}
+        {% set ex = item.extra if item.extra else {} %}
+        <div class="col-md-6 col-lg-3" data-animate>
+            <article class="premium-card pb-awards-card h-100">
+                <div class="pb-awards-image-wrap">
+                    {{ smart_image(item.image, item.title, 'about', 'pb-awards-image', lazy=true) }}
+                </div>
+                <div class="premium-card-body">
+                    {% if item.subtitle %}<span class="pb-gallery-card-badge">{{ item.subtitle }}</span>{% endif %}
+                    <h3 class="premium-card-title">{{ item.title }}</h3>
+                    <p class="premium-card-text small">{{ item.short_summary }}</p>
+                    {% if ex.date %}<p class="small text-muted mb-0"><i class="bi bi-calendar3 me-1"></i>{{ ex.date }}</p>{% endif %}
+                </div>
+            </article>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+    {% if not use_dynamic and not use_seed %}
+    <p class="text-center text-muted mb-0">No awards or events yet. Add gallery items with category <strong>Awards</strong> or <strong>Company Events</strong> in the admin.</p>
+    {% endif %}
+</div>
+{{ pb_close_section() }}

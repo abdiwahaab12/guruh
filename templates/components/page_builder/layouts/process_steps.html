@@ -1,0 +1,27 @@
+{# Working process steps #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+    </div>
+    {% if block and block.items %}
+    <div class="pb-process-steps" role="list" aria-label="{{ section.section_title }}">
+        {% for item in block.items %}
+        {% if item.is_active %}
+        <div class="pb-process-step" role="listitem" data-animate>
+            <div class="pb-process-step-marker" aria-hidden="true">
+                <span class="pb-process-step-number">{{ item.extra.step_number if item.extra and item.extra.step_number else loop.index }}</span>
+                <div class="pb-process-step-icon"><i class="bi {{ item.icon or 'bi-circle' }}"></i></div>
+            </div>
+            <div class="pb-process-step-content">
+                <h3 class="pb-process-step-title">{{ item.title }}</h3>
+                <p class="pb-process-step-text">{{ item.full_content or item.short_summary }}</p>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{{ pb_close_section() }}

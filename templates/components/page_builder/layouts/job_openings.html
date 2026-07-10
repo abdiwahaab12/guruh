@@ -1,0 +1,68 @@
+{# Current job openings — dynamic job cards #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+    </div>
+    {% set job_list = jobs if jobs else [] %}
+    {% if job_list %}
+    <div class="row g-4">
+        {% for job in job_list if job.is_active %}
+        <div class="col-md-6 col-xl-4" data-animate>
+            <article class="premium-card pb-job-card h-100">
+                <div class="premium-card-body">
+                    <div class="pb-job-card-meta mb-3">
+                        {% if job.department %}
+                        <span class="pb-job-badge">{{ job.department }}</span>
+                        {% endif %}
+                        {% if job.employment_type %}
+                        <span class="pb-job-badge pb-job-badge--muted">{{ job.employment_type }}</span>
+                        {% endif %}
+                    </div>
+                    <h3 class="premium-card-title">
+                        <a href="{{ url_for('main.career_detail', slug=job.slug) }}">{{ job.title }}</a>
+                    </h3>
+                    <ul class="pb-job-meta list-unstyled small text-muted mb-3">
+                        {% if job.location %}
+                        <li><i class="bi bi-geo-alt me-2" aria-hidden="true"></i>{{ job.location }}</li>
+                        {% endif %}
+                        {% if job.experience_required %}
+                        <li><i class="bi bi-briefcase me-2" aria-hidden="true"></i>{{ job.experience_required }} experience</li>
+                        {% endif %}
+                        {% if job.deadline %}
+                        <li><i class="bi bi-calendar-event me-2" aria-hidden="true"></i>Apply by {{ job.deadline }}</li>
+                        {% endif %}
+                    </ul>
+                    <p class="premium-card-text">{{ job.short_description }}</p>
+                    <a href="{{ url_for('main.career_detail', slug=job.slug) }}"
+                       class="btn btn-primary mt-2"
+                       aria-label="Apply for {{ job.title }}">
+                        Apply Now <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </article>
+        </div>
+        {% endfor %}
+    </div>
+    {% elif block and block.items %}
+    <div class="row g-4">
+        {% for item in block.items if item.is_active %}
+        {% set extra = item.extra if item.extra else {} %}
+        <div class="col-md-6 col-xl-4" data-animate>
+            <article class="premium-card pb-job-card h-100">
+                <div class="premium-card-body">
+                    <h3 class="premium-card-title">
+                        <a href="{{ url_for('main.career_detail', slug=extra.job_slug) if extra.job_slug else '#' }}">{{ item.title }}</a>
+                    </h3>
+                    <p class="premium-card-text">{{ item.short_summary }}</p>
+                    <a href="{{ url_for('main.career_detail', slug=extra.job_slug) if extra.job_slug else '#' }}"
+                       class="btn btn-primary mt-2">Apply Now</a>
+                </div>
+            </article>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{{ pb_close_section() }}

@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" role="img" aria-label="Infrastructure and civil engineering">
+  <defs>
+    <linearGradient id="sky2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1a5276"/>
+      <stop offset="55%" stop-color="#2A2A2A"/>
+      <stop offset="100%" stop-color="#1e1e1e"/>
+    </linearGradient>
+    <linearGradient id="road2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3D3D3D"/>
+      <stop offset="50%" stop-color="#4a4a4a"/>
+      <stop offset="100%" stop-color="#3D3D3D"/>
+    </linearGradient>
+    <linearGradient id="vignette2" x1="0%" y1="50%" x2="65%" y2="50%">
+      <stop offset="0%" stop-color="#000" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="glow2" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#sky2)"/>
+  <!-- Distant hills -->
+  <path d="M0,620 Q320,520 640,580 T1280,560 T1920,600 L1920,1080 L0,1080 Z" fill="#243447" opacity="0.85"/>
+  <!-- Bridge structure -->
+  <g transform="translate(720,380)" filter="url(#glow2)">
+    <rect x="0" y="280" width="480" height="12" fill="#33A8FF" opacity="0.35" rx="2"/>
+    <path d="M40,280 L40,120 Q240,40 440,120 L440,280" fill="none" stroke="#33A8FF" stroke-width="4" opacity="0.45"/>
+    <line x1="120" y1="280" x2="120" y2="180" stroke="#33A8FF" stroke-width="2" opacity="0.3"/>
+    <line x1="240" y1="280" x2="240" y2="140" stroke="#33A8FF" stroke-width="2" opacity="0.35"/>
+    <line x1="360" y1="280" x2="360" y2="180" stroke="#33A8FF" stroke-width="2" opacity="0.3"/>
+    <rect x="20" y="292" width="440" height="8" fill="#E91E63" opacity="0.25" rx="1"/>
+  </g>
+  <!-- Road works -->
+  <rect x="0" y="820" width="1920" height="260" fill="url(#road2)"/>
+  <rect x="0" y="900" width="1920" height="6" fill="#E91E63" opacity="0.5"/>
+  <g stroke="#f0c040" stroke-width="4" stroke-dasharray="40 30" opacity="0.35">
+    <line x1="0" y1="950" x2="1920" y2="950"/>
+  </g>
+  <!-- Workers / equipment silhouettes -->
+  <g fill="#2A2A2A" opacity="0.7">
+    <rect x="180" y="760" width="90" height="60" rx="4"/>
+    <rect x="200" y="740" width="50" height="24" rx="2" fill="#33A8FF" opacity="0.4"/>
+    <circle cx="215" cy="830" r="22" fill="#3D3D3D"/>
+    <circle cx="245" cy="830" r="22" fill="#3D3D3D"/>
+  </g>
+  <g transform="translate(1400,720)" fill="#33A8FF" opacity="0.2">
+    <rect x="0" y="80" width="120" height="40" rx="3"/>
+    <polygon points="60,0 120,80 0,80"/>
+  </g>
+  <!-- Grid overlay -->
+  <g stroke="#33A8FF" stroke-width="0.5" opacity="0.04">
+    <line x1="0" y1="270" x2="1920" y2="270"/><line x1="0" y1="540" x2="1920" y2="540"/>
+    <line x1="480" y1="0" x2="480" y2="1080"/><line x1="960" y1="0" x2="960" y2="1080"/>
+    <line x1="1440" y1="0" x2="1440" y2="1080"/>
+  </g>
+  <rect width="1920" height="1080" fill="url(#vignette2)"/>
+</svg>

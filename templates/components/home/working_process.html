@@ -1,0 +1,33 @@
+{# Working process timeline #}
+{% if section %}
+<section class="home-section working-process home-section--muted" id="process" aria-labelledby="process-heading">
+    <div class="container">
+        <div class="text-center mb-5 pb-2" data-animate>
+            {% if section.subheading %}
+            <p class="section-subheading">{{ section.subheading }}</p>
+            {% endif %}
+            <h2 class="section-title" id="process-heading">{{ section.heading }}</h2>
+            <div class="section-divider mx-auto"></div>
+            {% if section.intro %}
+            <p class="section-intro mx-auto">{{ section.intro }}</p>
+            {% endif %}
+        </div>
+
+        <div class="process-timeline">
+            {% for step in section.steps %}
+            <div class="process-step" data-animate>
+                <div class="process-step-marker">
+                    <span class="process-step-number">{{ step.step_number }}</span>
+                    <div class="process-step-icon"><i class="bi {{ step.icon }}" aria-hidden="true"></i></div>
+                </div>
+                <div class="process-step-content">
+                    <h3 class="process-step-title">{{ step.title }}</h3>
+                    <p class="process-step-text">{{ step.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% include "components/ui/section_divider.html" %}
+{% endif %}

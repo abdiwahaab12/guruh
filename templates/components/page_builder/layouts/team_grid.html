@@ -1,0 +1,41 @@
+{# Leadership team grid #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading, pb_paragraphs %}
+{% from 'macros/media.html' import smart_image %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+        {% if block and block.full_content %}
+        <p class="section-intro mx-auto text-center">{{ block.full_content }}</p>
+        {% endif %}
+    </div>
+    {% if block and block.items %}
+    <div class="row g-4 justify-content-center">
+        {% for item in block.items %}
+        {% if item.is_active %}
+        <div class="col-md-6 col-lg-5" data-animate>
+            <div class="premium-card pb-team-card h-100 text-center">
+                <div class="premium-card-body">
+                    <div class="pb-team-avatar mx-auto mb-3">
+                        {% if item.image %}
+                        {{ smart_image(item.image, '', 'team', 'pb-team-photo rounded-circle', lazy=true) }}
+                        {% else %}
+                        <span class="pb-team-avatar-fallback" aria-hidden="true"><i class="bi {{ item.icon or 'bi-person-badge' }}"></i></span>
+                        {% endif %}
+                    </div>
+                    <h3 class="premium-card-title">{{ item.title }}</h3>
+                    {% if item.subtitle %}
+                    <p class="text-primary fw-semibold mb-3">{{ item.subtitle }}</p>
+                    {% endif %}
+                    {% if item.full_content %}
+                    <p class="premium-card-text mb-0">{{ item.full_content }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{{ pb_close_section() }}

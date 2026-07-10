@@ -1,0 +1,35 @@
+{# About section — data from home.about or about page #}
+{% from 'macros/media.html' import smart_image %}
+{% if about %}
+<section class="about-section section-padding" aria-labelledby="about-section-heading">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            {% if about.image %}
+            <div class="col-lg-6">
+                {{ smart_image(about.image, about.heading, 'about', 'img-fluid rounded about-image') }}
+            </div>
+            {% endif %}
+            <div class="col-lg-6">
+                {% if about.subheading %}
+                <p class="section-subheading">{{ about.subheading }}</p>
+                {% endif %}
+                <h2 class="section-title" id="about-section-heading">{{ about.heading }}</h2>
+                <div class="section-divider"></div>
+                <p class="about-content">{{ about.content }}</p>
+
+                {% if about.highlights %}
+                <ul class="about-highlights list-unstyled">
+                    {% for item in about.highlights %}
+                    <li><i class="bi bi-check-circle-fill text-primary me-2" aria-hidden="true"></i>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% if about.cta_text and about.cta_url %}
+                <a href="{{ about.cta_url | safe_href }}" class="btn btn-primary mt-3">{{ about.cta_text }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}

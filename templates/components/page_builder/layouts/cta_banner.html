@@ -1,0 +1,39 @@
+{# Call to action banner — CMS block driven #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_paragraphs %}
+{% from 'macros/media.html' import page_hero_bg_style, hero_media_class %}
+{{ pb_open_section(section, block) }}
+<div class="pb-cta-bg{{ hero_media_class(block.hero_image if block else '') }}"
+     {% if block and block.hero_image %}style="{{ page_hero_bg_style(block.hero_image) }}"{% endif %}
+     aria-hidden="true"></div>
+<div class="pb-cta-overlay" aria-hidden="true"></div>
+<div class="pb-cta-shapes" aria-hidden="true">
+    <span class="pb-cta-shape"></span>
+    <span class="pb-cta-shape pb-cta-shape--2"></span>
+</div>
+<div class="container position-relative">
+    <div class="pb-cta-content text-center" data-animate>
+        <h2 class="pb-cta-heading" id="{{ section.seo_anchor }}-heading">{{ section.section_title }}</h2>
+        {% if block and block.subtitle %}
+        <p class="pb-cta-subheading">{{ block.subtitle }}</p>
+        {% elif block and block.short_summary %}
+        <p class="pb-cta-subheading">{{ block.short_summary }}</p>
+        {% endif %}
+        {% if block and block.items %}
+        <div class="pb-cta-actions">
+            {% for item in block.items %}
+            {% if item.is_active %}
+            {% set btn_url = item.extra.button_url if item.extra and item.extra.button_url else '#' %}
+            {% set btn_style = item.extra.button_style if item.extra and item.extra.button_style else 'accent' %}
+            <a href="{{ btn_url | safe_href }}"
+               class="btn btn-lg {% if btn_style == 'outline' %}btn-hero-outline{% else %}btn-accent{% endif %}"
+               {% if item.subtitle %}aria-label="{{ item.title }} — {{ item.subtitle }}"{% endif %}>
+                {% if item.icon %}<i class="bi {{ item.icon }} me-2" aria-hidden="true"></i>{% endif %}
+                {{ item.title }}
+            </a>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{{ pb_close_section() }}

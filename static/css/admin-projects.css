@@ -1,0 +1,132 @@
+.admin-projects-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-bottom: 1rem;
+}
+
+.admin-projects-tab {
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid var(--admin-border);
+    background: var(--admin-surface);
+    text-decoration: none;
+    color: var(--admin-text);
+    font-size: 0.88rem;
+}
+
+.admin-projects-tab.active,
+.admin-projects-tab:hover {
+    background: var(--admin-primary-soft);
+    border-color: var(--admin-primary);
+    color: var(--admin-primary-dark);
+}
+
+.admin-projects-stat {
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+    padding: 1rem;
+    box-shadow: var(--admin-shadow);
+}
+
+.admin-projects-stat .label {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--admin-text-muted);
+}
+
+.admin-projects-stat .value {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.admin-projects-table th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--admin-text-muted);
+}
+
+.admin-projects-thumb {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.admin-projects-form-tabs {
+    margin-bottom: 0;
+    border-bottom: 0;
+}
+
+.admin-projects-tab-content {
+    border-top-left-radius: 0;
+    margin-top: 0;
+}
+
+.admin-media-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+}
+
+.admin-media-picker-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.5rem;
+    border: 1px solid var(--admin-border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+.admin-media-picker-item:has(input:checked) {
+    border-color: var(--admin-primary);
+    background: var(--admin-primary-soft);
+}
+
+.admin-media-picker-item img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.admin-media-picker-btn {
+    border: 1px solid var(--admin-border);
+    border-radius: 8px;
+    padding: 0;
+    overflow: hidden;
+    background: none;
+    cursor: pointer;
+}
+
+.admin-media-picker-btn img {
+    width: 100%;
+    display: block;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+}
+
+.admin-projects-featured-preview {
+    max-width: 200px;
+    border-radius: 8px;
+}
+
+.admin-projects-filters {
+    margin-bottom: 0;
+}
+
+.admin-chart-wrap--compact {
+    height: 240px;
+    position: relative;
+}
+
+[data-admin-theme="dark"] .admin-projects-table {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--admin-text);
+}

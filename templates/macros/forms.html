@@ -1,0 +1,242 @@
+{#
+  Dynamic CMS form field renderer — validation-ready, no submission yet.
+#}
+
+{% macro render_form_field(field, services=none, quote_form_options=none, jobs=none, job_application_options=none, prefill_position_slug=none) %}
+{% set field_id = field.name | replace('_', '-') %}
+{% set required_attr = 'required aria-required="true"' if field.required else '' %}
+{% set disabled_attr = 'disabled' if field.disabled else '' %}
+<div class="{{ field.col_class }}">
+    <label for="{{ field_id }}" class="form-label pb-form-label">
+        {{ field.label }}{% if field.required %} <span class="text-danger" aria-hidden="true">*</span>{% endif %}
+    </label>
+
+    {% if field.field_type == 'textarea' %}
+    <textarea
+        class="form-control pb-form-control"
+        id="{{ field_id }}"
+        name="{{ field.name }}"
+        rows="{{ field.rows or 4 }}"
+        placeholder="{{ field.placeholder }}"
+        {{ required_attr }}
+        {{ disabled_attr }}
+        {% if field.autocomplete %}autocomplete="{{ field.autocomplete }}"{% endif %}></textarea>
+
+    {% elif field.field_type == 'select' %}
+    <select
+        class="form-select pb-form-control"
+        id="{{ field_id }}"
+        name="{{ field.name }}"
+        {{ required_attr }}
+        {{ disabled_attr }}>
+        <option value="" disabled selected>{{ field.placeholder or 'Select an option' }}</option>
+        {% if field.options_source == 'services' and services %}
+            {% for service in services %}
+            <option value="{{ service.slug }}">{{ service.title }}</option>
+            {% endfor %}
+        {% elif field.options_source == 'project_categories' and quote_form_options %}
+            {% for opt in quote_form_options.project_categories %}
+            <option value="{{ opt }}">{{ opt }}</option>
+            {% endfor %}
+        {% elif field.options_source == 'project_types' and quote_form_options %}
+            {% for opt in quote_form_options.project_types %}
+            <option value="{{ opt }}">{{ opt }}</option>
+            {% endfor %}
+        {% elif field.options_source == 'budget_ranges' and quote_form_options %}
+            {% for opt in quote_form_options.budget_ranges %}
+            <option value="{{ opt }}">{{ opt }}</option>
+            {% endfor %}
+        {% elif field.options_source == 'currencies' and quote_form_options %}
+            {% for opt in quote_form_options.currencies %}
+            <option value="{{ opt }}">{{ opt }}</option>
+            {% endfor %}
+        {% elif field.options_source == 'priorities' and quote_form_options %}
+            {% for opt in quote_form_options.priorities %}
+            <option value="{{ opt }}">{{ opt }}</option>
+            {% endfor %}
+        {% elif field.options_source == 'timelines' and quote_form_options %}
+            {% for opt in quote_form_options.timelines %}
+            <option value="{{ opt }}">{{ opt }}</option>
+            {% endfor %}
+        {% elif field.options_source == 'contact_methods' and quote_form_options %}
+            {% for opt in quote_form_options.contact_methods %}
+            <option value="{{ opt }}">{{ opt }}</option>
+            {% endfor %}
+        {% elif field.options_source == 'jobs' and jobs %}
+            {% for job_item in jobs if job_item.is_active %}
+            <option value="{{ job_item.slug }}"
+                    {% if prefill_position_slug and job_item.slug == prefill_position_slug %}selected{% endif %}>
+                {{ job_item.title }}
+            </option>
+            {% endfor %}
+        {% elif field.options_source == 'experience_levels' and job_application_options %}
+            {% for opt in job_application_options.experience_levels %}
+            <option value="{{ opt }}">{{ opt }}</option>
+            {% endfor %}
+        {% else %}
+            {% for opt in field.options %}
+            <option value="{{ opt }}">{{ opt }}</option>
+            {% endfor %}
+        {% endif %}
+    </select>
+
+    {% elif field.field_type == 'file' %}
+    <input
+        type="file"
+        class="form-control pb-form-control pb-form-file"
+        id="{{ field_id }}"
+        name="{{ field.name }}"
+        {% if field.accept %}accept="{{ field.accept }}"{% endif %}
+        {% if field.multiple %}multiple{% endif %}
+        data-upload-ready="true"
+        {{ disabled_attr }}
+        aria-describedby="{{ field_id }}-help">
+
+    {% else %}
+    <input
+        type="{{ field.field_type }}"
+        class="form-control pb-form-control"
+        id="{{ field_id }}"
+        name="{{ field.name }}"
+        placeholder="{{ field.placeholder }}"
+        {{ required_attr }}
+        {{ disabled_attr }}
+        {% if field.autocomplete %}autocomplete="{{ field.autocomplete }}"{% endif %}
+        {% if field.field_type == 'date' %}{% endif %}>
+    {% endif %}
+
+    {% if field.help_text %}
+    <div id="{{ field_id }}-help" class="form-text pb-form-help">{{ field.help_text }}</div>
+    {% endif %}
+    <div class="invalid-feedback" role="alert"></div>
+</div>
+{% endmacro %}
+
+
+{% macro render_dynamic_form(form_id, fields, action_url, submit_label, success_message, services=none, quote_form_options=none, jobs=none, job_application_options=none, prefill_position_slug=none) %}
+<form id="{{ form_id }}"
+      class="pb-dynamic-form needs-validation"
+      action="{{ action_url }}"
+      method="post"
+      novalidate
+      data-validate-form
+      data-csrf-ready="true"
+      data-sanitize-ready="true"
+      data-success-message="{{ success_message }}"
+      aria-label="{{ submit_label }}">
+    <input type="hidden" name="csrf_token" value="" data-csrf-token disabled aria-hidden="true" tabindex="-1">
+    <div class="row g-3 g-md-4">
+        {% for field in fields %}
+        {{ render_form_field(field, services, quote_form_options, jobs, job_application_options, prefill_position_slug) }}
+        {% endfor %}
+    </div>
+    <div class="pb-form-actions mt-4">
+        <button type="submit" class="btn btn-primary btn-lg px-4">
+            <i class="bi bi-send me-2" aria-hidden="true"></i>{{ submit_label }}
+        </button>
+        <p class="pb-form-note text-muted small mt-3 mb-0">
+            <i class="bi bi-shield-check me-1" aria-hidden="true"></i>
+            Form validation is active. Submission will be connected to the database in a future release.
+        </p>
+    </div>
+    <div class="pb-form-feedback alert alert-success d-none mt-3" role="status" aria-live="polite"></div>
+</form>
+{% endmacro %}
+
+
+{% macro render_multistep_form(form_id, steps, fields, action_url, submit_label, success_message, services=none, quote_form_options=none, autosave_key='guruh-quote-draft', company=none) %}
+<form id="{{ form_id }}"
+      class="pb-dynamic-form pb-multistep-form needs-validation"
+      action="{{ action_url }}"
+      method="post"
+      novalidate
+      data-validate-form
+      data-multistep-form
+      data-csrf-ready="true"
+      data-sanitize-ready="true"
+      data-autosave-key="{{ autosave_key }}"
+      data-success-message="{{ success_message }}"
+      aria-label="{{ submit_label }}">
+    <input type="hidden" name="csrf_token" value="" data-csrf-token disabled aria-hidden="true" tabindex="-1">
+
+    <nav class="pb-quote-stepper mb-4" aria-label="Quote form progress">
+        <ol class="pb-quote-stepper-list list-unstyled mb-0">
+            {% for step in steps %}
+            <li class="pb-quote-stepper-item{% if loop.first %} is-active{% endif %}"
+                data-step-key="{{ step.key }}"
+                data-step-index="{{ loop.index0 }}"
+                aria-current="{% if loop.first %}step{% else %}false{% endif %}">
+                <span class="pb-quote-stepper-icon" aria-hidden="true">
+                    <i class="bi {{ step.icon or 'bi-circle' }}"></i>
+                </span>
+                <span class="pb-quote-stepper-text">
+                    <span class="pb-quote-stepper-title">{{ step.title }}</span>
+                    <span class="pb-quote-stepper-sub">{{ step.subtitle }}</span>
+                </span>
+            </li>
+            {% endfor %}
+        </ol>
+        <div class="pb-quote-progress mt-3" role="progressbar"
+             aria-valuemin="1"
+             aria-valuemax="{{ steps | length }}"
+             aria-valuenow="1"
+             aria-label="Form completion progress">
+            <div class="pb-quote-progress-bar" style="width: {{ (100 / steps | length) | round(0) }}%;"></div>
+        </div>
+    </nav>
+
+    {% for step in steps %}
+    <div class="pb-quote-step-panel{% if not loop.first %} d-none{% endif %}"
+         data-step-panel="{{ step.key }}"
+         data-step-type="{{ step.step_type }}"
+         role="group"
+         aria-labelledby="{{ form_id }}-step-{{ step.key }}-title">
+        <div class="pb-quote-step-header mb-4">
+            <h3 class="h5 mb-1" id="{{ form_id }}-step-{{ step.key }}-title">{{ step.title }}</h3>
+            {% if step.description %}
+            <p class="text-muted mb-0">{{ step.description }}</p>
+            {% endif %}
+        </div>
+
+        {% if step.step_type == 'confirmation' %}
+        <div class="pb-quote-review premium-card" id="quoteReviewSummary" aria-live="polite">
+            <div class="premium-card-body p-4">
+                <p class="text-muted mb-3">Please review your details before submitting. You can go back to edit any step.</p>
+                <dl class="pb-quote-review-list mb-0" id="quoteReviewList"></dl>
+            </div>
+        </div>
+        {% else %}
+        <div class="row g-3 g-md-4">
+            {% for field in fields if field.step_key == step.key %}
+            {{ render_form_field(field, services, quote_form_options) }}
+            {% endfor %}
+        </div>
+        {% if step.key == 'attachments' %}
+        <p class="pb-form-note text-muted small mt-3 mb-0">
+            <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
+            File uploads will be enabled when the admin media library is connected. Email documents to
+            <a href="mailto:{{ company.email if company else 'guruhconstructionsomalia@gmail.com' }}">{{ company.email if company else 'guruhconstructionsomalia@gmail.com' }}</a> if needed.
+        </p>
+        {% endif %}
+        {% endif %}
+    </div>
+    {% endfor %}
+
+    <div class="pb-form-actions pb-quote-form-actions mt-4 d-flex flex-wrap gap-2 align-items-center">
+        <button type="button" class="btn btn-outline-secondary btn-lg px-4 d-none" id="quoteStepBack" aria-label="Go to previous step">
+            <i class="bi bi-arrow-left me-2" aria-hidden="true"></i>Back
+        </button>
+        <button type="button" class="btn btn-primary btn-lg px-4" id="quoteStepNext" aria-label="Go to next step">
+            Next<i class="bi bi-arrow-right ms-2" aria-hidden="true"></i>
+        </button>
+        <button type="submit" class="btn btn-accent btn-lg px-4 d-none" id="quoteStepSubmit">
+            <i class="bi bi-send me-2" aria-hidden="true"></i>{{ submit_label }}
+        </button>
+        <p class="pb-form-note text-muted small mb-0 ms-auto">
+            <i class="bi bi-cloud-check me-1" aria-hidden="true"></i>
+            <span id="quoteAutosaveStatus">Draft autosave ready</span>
+        </p>
+    </div>
+    <div class="pb-form-feedback alert alert-success d-none mt-3" role="status" aria-live="polite"></div>
+</form>
+{% endmacro %}

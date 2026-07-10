@@ -1,0 +1,12 @@
+{# Team member card — expects `member` variable #}
+{% from 'macros/media.html' import smart_image %}
+<div class="card team-card h-100 border-0 shadow-sm text-center">
+    {{ smart_image(member.photo, member.name, 'team', 'card-img-top team-photo', true) }}
+    <div class="card-body">
+        <h3 class="card-title h5">{{ member.name }}</h3>
+        <p class="text-primary mb-2">{{ member.position }}</p>
+        {% if member.bio %}
+        <p class="card-text text-muted small">{{ member.bio | truncate(100) }}</p>
+        {% endif %}
+    </div>
+</div>

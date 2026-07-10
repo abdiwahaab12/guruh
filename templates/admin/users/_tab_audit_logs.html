@@ -1,0 +1,48 @@
+<form class="admin-panel admin-users-filters" method="get" action="{{ url_for('admin.users_dashboard') }}">
+    <input type="hidden" name="tab" value="audit-logs">
+    <div class="row g-2">
+        <div class="col-md-5">
+            <label class="form-label" for="q">Search</label>
+            <input type="search" class="form-control" name="q" value="{{ list_page.query }}" placeholder="Action, resource, details…">
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="action">Action filter</label>
+            <input type="text" class="form-control" name="action" value="{{ list_page.filters.action }}" placeholder="e.g. users.create">
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Apply</button>
+        </div>
+    </div>
+</form>
+
+<div class="admin-panel mt-3">
+    <div class="table-responsive">
+        <table class="table table-sm align-middle">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Resource</th>
+                    <th>User</th>
+                    <th>Details</th>
+                    <th>IP</th>
+                    <th>When</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in list_page.items %}
+                <tr>
+                    <td><code>{{ item.action }}</code></td>
+                    <td class="small">{{ item.resource_type }}{% if item.resource_id %} #{{ item.resource_id }}{% endif %}</td>
+                    <td>{{ item.user_email }}</td>
+                    <td class="small">{{ item.details }}</td>
+                    <td>{{ item.ip_address }}</td>
+                    <td>{{ item.created_at_label }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" class="text-center text-muted py-4">No audit logs.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include 'admin/users/_pagination.html' %}
+</div>

@@ -1,0 +1,52 @@
+<form class="admin-panel admin-users-filters" method="get" action="{{ url_for('admin.users_dashboard') }}">
+    <input type="hidden" name="tab" value="login-history">
+    <div class="row g-2">
+        <div class="col-md-6">
+            <label class="form-label" for="q">Search</label>
+            <input type="search" class="form-control" name="q" value="{{ list_page.query }}" placeholder="Email or IP…">
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="status">Result</label>
+            <select class="form-select" name="status">
+                {% for key, label in login_status_options.items() %}
+                <option value="{{ key }}"{% if list_page.filters.status == key %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Apply</button>
+        </div>
+    </div>
+</form>
+
+<div class="admin-panel mt-3">
+    <div class="table-responsive">
+        <table class="table table-sm align-middle">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>User</th>
+                    <th>IP</th>
+                    <th>Result</th>
+                    <th>Reason</th>
+                    <th>When</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in list_page.items %}
+                <tr>
+                    <td>{{ item.email_attempted }}</td>
+                    <td>{{ item.user_name or '—' }}</td>
+                    <td>{{ item.ip_address }}</td>
+                    <td>{% if item.success %}<span class="badge bg-success">Success</span>{% else %}<span class="badge bg-danger">Failed</span>{% endif %}</td>
+                    <td class="small">{{ item.failure_reason or '—' }}</td>
+                    <td>{{ item.created_at_label }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" class="text-center text-muted py-4">No login history.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include 'admin/users/_pagination.html' %}
+</div>

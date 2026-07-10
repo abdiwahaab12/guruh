@@ -1,0 +1,160 @@
+{# Advanced project portfolio — filters, search, premium grid #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{% from 'macros/media.html' import smart_image %}
+{% set filters = block.extra if block and block.extra else {} %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-4 mb-lg-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+        {% if block and block.full_content %}
+        <p class="section-intro mx-auto text-center">{{ block.full_content }}</p>
+        {% endif %}
+    </div>
+
+    <div class="pb-portfolio-toolbar mb-4" data-animate>
+        <div class="row g-3 align-items-end">
+            <div class="col-lg-4">
+                <label class="form-label pb-filter-label" for="projectsSearchInput">Search projects</label>
+                <div class="input-group pb-search-group">
+                    <span class="input-group-text" aria-hidden="true"><i class="bi bi-search"></i></span>
+                    <input type="search"
+                           class="form-control pb-search-input"
+                           id="projectsSearchInput"
+                           placeholder="Search by name, location, client…"
+                           autocomplete="off"
+                           aria-controls="projectsPortfolioGrid"
+                           aria-describedby="projectsFilterStatus">
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <p class="pb-filter-status" id="projectsFilterStatus" aria-live="polite" aria-atomic="true"></p>
+            </div>
+        </div>
+
+        <div class="pb-portfolio-filters mt-3" role="group" aria-label="Filter projects">
+            <div class="pb-filter-row">
+                <span class="pb-filter-row-label">Category</span>
+                <div class="pb-filter-options" data-filter-group="category">
+                    <button type="button" class="pb-portfolio-filter is-active" data-filter-group="category" data-filter="all" aria-pressed="true">All</button>
+                    {% for cat in filters.categories if filters.categories %}
+                    <button type="button" class="pb-portfolio-filter" data-filter-group="category" data-filter="{{ cat }}" aria-pressed="false">{{ cat }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="pb-filter-row">
+                <span class="pb-filter-row-label">Country</span>
+                <div class="pb-filter-options" data-filter-group="country">
+                    <button type="button" class="pb-portfolio-filter is-active" data-filter-group="country" data-filter="all" aria-pressed="true">All</button>
+                    {% for country in filters.countries if filters.countries %}
+                    <button type="button" class="pb-portfolio-filter" data-filter-group="country" data-filter="{{ country }}" aria-pressed="false">{{ country }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="pb-filter-row">
+                <span class="pb-filter-row-label">County</span>
+                <div class="pb-filter-options" data-filter-group="county">
+                    <button type="button" class="pb-portfolio-filter is-active" data-filter-group="county" data-filter="all" aria-pressed="true">All</button>
+                    {% for county in filters.counties if filters.counties %}
+                    <button type="button" class="pb-portfolio-filter" data-filter-group="county" data-filter="{{ county }}" aria-pressed="false">{{ county }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="pb-filter-row">
+                <span class="pb-filter-row-label">Status</span>
+                <div class="pb-filter-options" data-filter-group="status">
+                    <button type="button" class="pb-portfolio-filter is-active" data-filter-group="status" data-filter="all" aria-pressed="true">All</button>
+                    {% for status in filters.statuses if filters.statuses %}
+                    <button type="button" class="pb-portfolio-filter" data-filter-group="status" data-filter="{{ status }}" aria-pressed="false">{{ status }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="pb-filter-row">
+                <span class="pb-filter-row-label">Year</span>
+                <div class="pb-filter-options" data-filter-group="year">
+                    <button type="button" class="pb-portfolio-filter is-active" data-filter-group="year" data-filter="all" aria-pressed="true">All</button>
+                    {% for year in filters.years if filters.years %}
+                    <button type="button" class="pb-portfolio-filter" data-filter-group="year" data-filter="{{ year }}" aria-pressed="false">{{ year }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="pb-filter-row">
+                <span class="pb-filter-row-label">Client</span>
+                <div class="pb-filter-options" data-filter-group="client">
+                    <button type="button" class="pb-portfolio-filter is-active" data-filter-group="client" data-filter="all" aria-pressed="true">All</button>
+                    {% for client in filters.clients if filters.clients %}
+                    <button type="button" class="pb-portfolio-filter" data-filter-group="client" data-filter="{{ client }}" aria-pressed="false">{{ client }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="pb-filter-row">
+                <span class="pb-filter-row-label">Service</span>
+                <div class="pb-filter-options" data-filter-group="service">
+                    <button type="button" class="pb-portfolio-filter is-active" data-filter-group="service" data-filter="all" aria-pressed="true">All</button>
+                    {% for svc_slug, cat_label in (filters.service_labels or {})|dictsort %}
+                    <button type="button" class="pb-portfolio-filter" data-filter-group="service" data-filter="{{ svc_slug }}" aria-pressed="false">{{ cat_label }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if projects %}
+    <div class="row g-4 pb-portfolio-grid" id="projectsPortfolioGrid">
+        {% for project in projects if project.is_active %}
+        {% set svc_slug = project.service_slugs[0] if project.service_slugs else '' %}
+        <div class="col-md-6 col-xl-4 pb-portfolio-item"
+             id="{{ project.slug }}"
+             data-category="{{ project.category }}"
+             data-country="{{ project.country or 'Kenya' }}"
+             data-county="{{ project.county }}"
+             data-status="{{ project.status }}"
+             data-year="{{ project.completion_year }}"
+             data-client="{{ project.client }}"
+             data-service="{{ svc_slug }}"
+             data-search="{{ (project.title ~ ' ' ~ project.description ~ ' ' ~ project.location ~ ' ' ~ project.client ~ ' ' ~ project.category) | lower }}"
+             data-animate>
+            <article class="premium-card pb-portfolio-card h-100">
+                <a href="{{ url_for('main.project_detail', slug=project.slug) }}" class="pb-portfolio-card-media" tabindex="-1" aria-hidden="true">
+                    {{ smart_image(project.cover_image, project.title, 'project', 'pb-portfolio-card-image', lazy=true) }}
+                    {% if project.status %}
+                    <span class="pb-portfolio-status pb-portfolio-status--{{ project.status | lower }}">{{ project.status }}</span>
+                    {% endif %}
+                </a>
+                <div class="premium-card-body">
+                    {% if project.category %}
+                    <span class="pb-portfolio-badge">{{ project.category }}</span>
+                    {% endif %}
+                    <h3 class="premium-card-title">
+                        <a href="{{ url_for('main.project_detail', slug=project.slug) }}">{{ project.title }}</a>
+                    </h3>
+                    <ul class="pb-portfolio-meta list-unstyled mb-3">
+                        {% if project.country %}
+                        <li><i class="bi bi-globe2 me-1" aria-hidden="true"></i>{{ project.country }}{% if project.status == 'Ongoing' and project.country == 'Somalia' %} · Current{% elif project.country == 'Kenya' %} · Historical{% endif %}</li>
+                        {% endif %}
+                        {% if project.county %}
+                        <li><i class="bi bi-geo-alt me-1" aria-hidden="true"></i>{{ project.county }}</li>
+                        {% endif %}
+                        {% if project.client %}
+                        <li><i class="bi bi-building me-1" aria-hidden="true"></i>{{ project.client }}</li>
+                        {% endif %}
+                        {% if project.completion_year %}
+                        <li><i class="bi bi-calendar3 me-1" aria-hidden="true"></i>{{ project.completion_year }}</li>
+                        {% endif %}
+                    </ul>
+                    <p class="premium-card-text">{{ project.description | truncate(140) }}</p>
+                    <a href="{{ url_for('main.project_detail', slug=project.slug) }}"
+                       class="premium-card-link"
+                       aria-label="View project: {{ project.title }}">
+                        View Project <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </article>
+        </div>
+        {% endfor %}
+    </div>
+    <p class="pb-portfolio-empty text-center pb-item-desc mt-4 d-none" role="status" id="projectsPortfolioEmpty">
+        No projects match your filters. Try adjusting your search or filter criteria.
+    </p>
+    {% endif %}
+</div>
+{{ pb_close_section() }}

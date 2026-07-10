@@ -1,0 +1,37 @@
+{% extends 'admin/layouts/base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin-services.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-page-header">
+    <div>
+        <h1 class="admin-page-title">{% block services_title %}{{ page_title }}{% endblock %}</h1>
+        <p class="admin-page-subtitle">{% block services_subtitle %}Manage service offerings for GURUH Construction.{% endblock %}</p>
+    </div>
+    <div class="admin-page-actions">
+        {% block services_actions %}
+        <a href="{{ url_for('admin.services_create') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1" aria-hidden="true"></i> New Service
+        </a>
+        {% endblock %}
+    </div>
+</div>
+
+<nav class="admin-services-tabs" aria-label="Services sections">
+    <a href="{{ url_for('admin.services_dashboard') }}" class="admin-services-tab{% if services_active_section == 'dashboard' %} active{% endif %}">Dashboard</a>
+    <a href="{{ url_for('admin.services_list') }}" class="admin-services-tab{% if services_active_section == 'list' %} active{% endif %}">All Services</a>
+    <a href="{{ url_for('admin.services_create') }}" class="admin-services-tab{% if services_active_section == 'form' %} active{% endif %}">Create</a>
+</nav>
+
+{% include 'admin/partials/_breadcrumb.html' %}
+{% include 'admin/partials/_flash_messages.html' %}
+
+{% block services_content %}{% endblock %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/admin-services.js') }}" defer></script>
+{% block services_extra_js %}{% endblock %}
+{% endblock %}

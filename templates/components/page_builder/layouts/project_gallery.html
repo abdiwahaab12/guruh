@@ -1,0 +1,87 @@
+{# Interactive project gallery — masonry, categories, lightbox #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{% from 'macros/media.html' import smart_image %}
+{% set extra = block.extra if block and block.extra else {} %}
+{% set gallery_cats = extra.gallery_categories if extra.gallery_categories else [] %}
+{% set gallery_id = section.seo_anchor ~ '-gallery' %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-4 mb-lg-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+    </div>
+
+    {% if gallery_cats %}
+    <div class="pb-gallery-filters mb-4" role="toolbar" aria-label="Filter gallery by category" data-animate>
+        <button type="button" class="pb-gallery-filter is-active" data-gallery-filter="all" aria-pressed="true">All</button>
+        {% for group in gallery_cats %}
+        <button type="button"
+                class="pb-gallery-filter"
+                data-gallery-filter="{{ group.label | replace(' ', '-') | lower }}"
+                aria-pressed="false">{{ group.label }}</button>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="pb-gallery-masonry" id="{{ gallery_id }}" data-animate>
+        {% if equipment_item and equipment_item.gallery_images %}
+        {% for img in equipment_item.gallery_images %}
+        <figure class="pb-gallery-item" data-category="all">
+            <button type="button"
+                    class="pb-gallery-trigger"
+                    data-lightbox-src="{{ url_for('static', filename=img) }}"
+                    data-lightbox-caption="{{ equipment_item.name }}"
+                    aria-label="Open gallery image">
+                {{ smart_image(img, equipment_item.name, 'project', 'pb-gallery-image', lazy=true) }}
+            </button>
+        </figure>
+        {% endfor %}
+        {% elif gallery_cats %}
+        {% for group in gallery_cats %}
+        {% for img in group.images %}
+        <figure class="pb-gallery-item"
+                data-category="{{ group.label | replace(' ', '-') | lower }}">
+            <button type="button"
+                    class="pb-gallery-trigger"
+                    data-lightbox-src="{{ url_for('static', filename=img) }}"
+                    data-lightbox-caption="{{ group.label }} — {{ block.title if block else section.section_title }}"
+                    aria-label="Open image: {{ group.label }}">
+                {{ smart_image(img, group.label, 'project', 'pb-gallery-image', lazy=true) }}
+            </button>
+        </figure>
+        {% endfor %}
+        {% endfor %}
+        {% elif block and block.gallery_images %}
+        {% for img in block.gallery_images %}
+        <figure class="pb-gallery-item" data-category="all">
+            <button type="button"
+                    class="pb-gallery-trigger"
+                    data-lightbox-src="{{ url_for('static', filename=img) }}"
+                    data-lightbox-caption="{{ block.title if block else section.section_title }}"
+                    aria-label="Open gallery image">
+                {{ smart_image(img, '', 'project', 'pb-gallery-image', lazy=true) }}
+            </button>
+        </figure>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+<div class="pb-lightbox" id="projectLightbox" hidden role="dialog" aria-modal="true" aria-label="Image preview">
+    <div class="pb-lightbox-backdrop" data-lightbox-close></div>
+    <div class="pb-lightbox-dialog">
+        <button type="button" class="pb-lightbox-close" data-lightbox-close aria-label="Close preview">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="pb-lightbox-nav pb-lightbox-prev" data-lightbox-prev aria-label="Previous image">
+            <i class="bi bi-chevron-left" aria-hidden="true"></i>
+        </button>
+        <figure class="pb-lightbox-figure">
+            <img src="" alt="" class="pb-lightbox-image" id="projectLightboxImage">
+            <figcaption class="pb-lightbox-caption" id="projectLightboxCaption"></figcaption>
+        </figure>
+        <button type="button" class="pb-lightbox-nav pb-lightbox-next" data-lightbox-next aria-label="Next image">
+            <i class="bi bi-chevron-right" aria-hidden="true"></i>
+        </button>
+    </div>
+</div>
+{{ pb_close_section() }}

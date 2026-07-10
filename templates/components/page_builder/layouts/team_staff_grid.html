@@ -1,0 +1,44 @@
+{# Staff / employee grid #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{% from 'macros/media.html' import smart_image %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+    </div>
+    {% if block and block.items %}
+    <div class="row g-4">
+        {% for item in block.items if item.is_active %}
+        {% set extra = item.extra if item.extra else {} %}
+        <div class="col-sm-6 col-md-4 col-lg-3" data-animate>
+            <article class="premium-card pb-staff-card h-100 text-center">
+                <div class="premium-card-body">
+                    <div class="pb-staff-avatar mx-auto mb-3">
+                        {% if item.image %}
+                        {{ smart_image(item.image, item.title, 'team', 'pb-staff-photo rounded-circle', lazy=true) }}
+                        {% else %}
+                        <span class="pb-staff-avatar-fallback" aria-hidden="true">
+                            <i class="bi bi-person-circle"></i>
+                        </span>
+                        {% endif %}
+                    </div>
+                    <h3 class="premium-card-title h6">{{ item.title }}</h3>
+                    {% if item.subtitle %}
+                    <p class="pb-staff-position">{{ item.subtitle }}</p>
+                    {% endif %}
+                    {% if extra.department %}
+                    <p class="pb-staff-dept pb-item-desc">{{ extra.department }}</p>
+                    {% endif %}
+                    {% if extra.years_experience %}
+                    <p class="pb-staff-exp mb-0">
+                        <i class="bi bi-clock-history me-1" aria-hidden="true"></i>{{ extra.years_experience }} yrs
+                    </p>
+                    {% endif %}
+                </div>
+            </article>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{{ pb_close_section() }}

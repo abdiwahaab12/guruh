@@ -1,0 +1,222 @@
+{# Video gallery — YouTube, Vimeo, and uploaded files #}
+
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+
+{% from 'macros/media.html' import smart_image, media_static_url %}
+
+{% set videos = gallery_videos if gallery_videos else [] %}
+
+{% set block_items = block.items if block and block.items else [] %}
+
+{% set media_items = gallery_images if gallery_images else [] %}
+
+{% set use_dynamic = videos | length > 0 %}
+
+{% set use_seed = (not use_dynamic) and (media_items | length == 0) and block_items %}
+
+{{ pb_open_section(section, block) }}
+
+<div class="container">
+
+    <div class="pb-section-head text-center mb-5" data-animate>
+
+        {{ pb_heading(section, block, 'center') }}
+
+    </div>
+
+    {% if use_dynamic or use_seed %}
+
+    <div class="row g-4" id="galleryVideoGrid">
+
+        {% if use_dynamic %}
+
+        {% for video in videos if video.is_active %}
+
+        {% set provider = video.provider | default('upload', true) %}
+
+        {% set play_url = video.play_url or video.embed_url %}
+
+        {% set is_embed = play_url.startswith('http') or play_url.startswith('//') %}
+
+        <div class="col-md-6 col-lg-4" data-animate>
+
+            <article class="premium-card pb-video-card h-100">
+
+                <button type="button"
+
+                        class="pb-video-trigger{% if not video.is_ready %} pb-video-trigger--disabled{% endif %}"
+
+                        {% if video.is_ready %}
+
+                        data-video-provider="{{ provider }}"
+
+                        data-video-play-url="{{ media_static_url(play_url) if not is_embed else play_url }}"
+
+                        data-video-embed="{{ 'true' if is_embed else 'false' }}"
+
+                        data-video-title="{{ video.title }}"
+
+                        aria-label="Play video: {{ video.title }}"
+
+                        {% else %}disabled aria-disabled="true"{% endif %}>
+
+                    <div class="pb-video-thumb">
+
+                        {% if video.thumbnail %}
+
+                        {{ smart_image(video.thumbnail, video.title, 'gallery', 'pb-video-image', lazy=true) }}
+
+                        {% else %}
+
+                        <div class="pb-video-image pb-video-image--placeholder" aria-hidden="true">
+
+                            <i class="bi bi-camera-video"></i>
+
+                        </div>
+
+                        {% endif %}
+
+                        <span class="pb-video-provider-badge" aria-hidden="true">
+
+                            {% if provider == 'youtube' %}<i class="bi bi-youtube"></i> YouTube
+
+                            {% elif provider == 'vimeo' %}<i class="bi bi-vimeo"></i> Vimeo
+
+                            {% else %}<i class="bi bi-play-circle"></i> Upload{% endif %}
+
+                        </span>
+
+                        <span class="pb-video-play-overlay" aria-hidden="true"><i class="bi bi-play-fill"></i></span>
+
+                    </div>
+
+                </button>
+
+                <div class="premium-card-body">
+
+                    <h3 class="premium-card-title">{{ video.title }}</h3>
+
+                    <p class="premium-card-text">{{ video.description }}</p>
+
+                    {% if video.is_ready %}
+
+                    <span class="badge bg-success">Ready</span>
+
+                    {% else %}
+
+                    <span class="badge bg-secondary">Needs video link</span>
+
+                    {% endif %}
+
+                </div>
+
+            </article>
+
+        </div>
+
+        {% endfor %}
+
+        {% elif use_seed %}
+
+        {% for item in block_items if item.is_active %}
+
+        {% set ex = item.extra if item.extra else {} %}
+
+        {% set provider = ex.provider | default('upload', true) %}
+
+        <div class="col-md-6 col-lg-4" data-animate>
+
+            <article class="premium-card pb-video-card h-100">
+
+                <div class="pb-video-thumb">
+
+                    {{ smart_image(item.image, item.title, 'gallery', 'pb-video-image', lazy=true) }}
+
+                    <span class="pb-video-provider-badge" aria-hidden="true">
+
+                        {% if provider == 'youtube' %}
+
+                        <i class="bi bi-youtube"></i> YouTube
+
+                        {% elif provider == 'vimeo' %}
+
+                        <i class="bi bi-vimeo"></i> Vimeo
+
+                        {% else %}
+
+                        <i class="bi bi-play-circle"></i> Upload
+
+                        {% endif %}
+
+                    </span>
+
+                    <span class="pb-video-play-overlay" aria-hidden="true"><i class="bi bi-play-fill"></i></span>
+
+                </div>
+
+                <div class="premium-card-body">
+
+                    <h3 class="premium-card-title">{{ item.title }}</h3>
+
+                    <p class="premium-card-text">{{ item.short_summary }}</p>
+
+                    {% if ex.is_ready %}
+
+                    <span class="badge bg-success">Ready</span>
+
+                    {% else %}
+
+                    <span class="badge bg-secondary">Coming Soon</span>
+
+                    {% endif %}
+
+                </div>
+
+            </article>
+
+        </div>
+
+        {% endfor %}
+
+        {% endif %}
+
+    </div>
+
+    {% else %}
+
+    <p class="text-center text-muted mb-0">No videos yet. Add gallery items with <strong>Media Type: Video</strong> in the admin.</p>
+
+    {% endif %}
+
+</div>
+
+
+
+<div class="pb-lightbox pb-video-lightbox" id="galleryVideoLightbox" hidden role="dialog" aria-modal="true" aria-label="Gallery video player">
+
+    <div class="pb-lightbox-backdrop" data-video-close></div>
+
+    <div class="pb-lightbox-dialog pb-video-lightbox-dialog">
+
+        <button type="button" class="pb-lightbox-close" data-video-close aria-label="Close video">
+
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+
+        </button>
+
+        <div class="pb-video-lightbox-body">
+
+            <div class="pb-video-lightbox-embed" id="galleryVideoEmbedHost" hidden></div>
+
+            <video class="pb-video-lightbox-native" id="galleryVideoNative" controls playsinline hidden></video>
+
+        </div>
+
+        <p class="pb-video-lightbox-caption" id="galleryVideoCaption"></p>
+
+    </div>
+
+</div>
+
+{{ pb_close_section() }}
+

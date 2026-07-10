@@ -1,0 +1,46 @@
+{# Reusable hero banner image picker — Media Library integration #}
+<div class="mb-3 admin-hero-banner-field">
+    <label class="form-label" for="{{ field_id }}">{{ label }}</label>
+    <div class="input-group mb-2">
+        <input class="form-control admin-media-target"
+               type="text"
+               id="{{ field_id }}"
+               name="{{ field_name }}"
+               value="{{ value or '' }}"
+               placeholder="uploads/content/your-image.jpg">
+        <a href="{{ url_for('admin.media_upload', folder='content') }}"
+           class="btn btn-outline-secondary"
+           target="_blank"
+           rel="noopener">Upload</a>
+        <a href="{{ url_for('admin.media_library', folder='content') }}"
+           class="btn btn-outline-secondary"
+           target="_blank"
+           rel="noopener">Library</a>
+    </div>
+    <div class="form-text">Upload PNG, JPG, or WEBP in Media Library, then select below or paste the storage path.</div>
+    {% if value %}
+    <img src="{{ url_for('static', filename=value) }}"
+         alt="Hero banner preview"
+         class="admin-website-media-preview admin-hero-banner-preview"
+         loading="lazy">
+    {% else %}
+    <div class="admin-hero-banner-preview admin-hero-banner-preview--empty" aria-hidden="true">
+        <span class="text-muted small">No hero image selected — a brand gradient displays until you upload one.</span>
+    </div>
+    {% endif %}
+    {% if media_assets %}
+    <div class="admin-media-picker-grid mt-2">
+        {% for asset in media_assets[:16] %}
+        <button type="button"
+                class="admin-media-picker-btn"
+                data-target="{{ field_id }}"
+                data-path="{{ asset.storage_path }}"
+                title="{{ asset.title }}">
+            <img src="{{ url_for('static', filename=asset.storage_path) }}"
+                 alt="{{ asset.alt_text or asset.title }}"
+                 loading="lazy">
+        </button>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>

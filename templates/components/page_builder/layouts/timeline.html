@@ -1,0 +1,48 @@
+{# Company history timeline #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading, pb_paragraphs %}
+{% from 'macros/media.html' import smart_image %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="row g-5 align-items-start">
+        <div class="col-lg-4" data-animate>
+            {{ pb_heading(section, block, 'left') }}
+            {% if block and block.hero_image %}
+            {{ smart_image(block.hero_image, section.section_title, 'project', 'img-fluid rounded pb-section-image mt-4', lazy=not eager_image, eager=eager_image|default(false)) }}
+            {% endif %}
+        </div>
+        <div class="col-lg-8" data-animate>
+            <div class="pb-timeline" role="list" aria-label="{{ section.section_title }} timeline">
+                {% if block and block.items %}
+                {% for item in block.items %}
+                {% if item.is_active %}
+                <div class="pb-timeline-item" role="listitem">
+                    <div class="pb-timeline-marker" aria-hidden="true"></div>
+                    <div class="pb-timeline-content premium-card">
+                        <div class="premium-card-body">
+                            <h3 class="premium-card-title">{{ item.title }}</h3>
+                            {% if item.subtitle %}<p class="text-primary small fw-semibold">{{ item.subtitle }}</p>{% endif %}
+                            <p class="premium-card-text mb-0">{{ item.full_content or item.short_summary }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% elif block and block.full_content %}
+                {% for paragraph in block.full_content.split('\n\n') %}
+                {% if paragraph.strip() %}
+                <div class="pb-timeline-item" role="listitem">
+                    <div class="pb-timeline-marker" aria-hidden="true"></div>
+                    <div class="pb-timeline-content premium-card">
+                        <div class="premium-card-body">
+                            <p class="premium-card-text mb-0">{{ paragraph.strip() }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{{ pb_close_section() }}

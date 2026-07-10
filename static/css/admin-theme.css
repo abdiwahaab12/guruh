@@ -1,0 +1,62 @@
+/**
+ * GURUH Admin — Theme tokens (light / dark mode ready)
+ */
+
+:root,
+[data-admin-theme="light"] {
+    --admin-primary: #33A8FF;
+    --admin-primary-dark: #1A94EB;
+    --admin-primary-soft: rgba(51, 168, 255, 0.12);
+    --admin-accent: #E91E63;
+    --admin-accent-soft: rgba(233, 30, 99, 0.1);
+    --admin-success: #10B981;
+    --admin-warning: #F59E0B;
+    --admin-danger: #EF4444;
+    --admin-info: #3B82F6;
+
+    --admin-bg: #F1F5F9;
+    --admin-surface: #FFFFFF;
+    --admin-surface-elevated: #FFFFFF;
+    --admin-border: #E2E8F0;
+    --admin-text: #1E293B;
+    --admin-text-muted: #64748B;
+    --admin-sidebar-bg: #0F172A;
+    --admin-sidebar-text: #CBD5E1;
+    --admin-sidebar-active: rgba(51, 168, 255, 0.18);
+    --admin-header-bg: #FFFFFF;
+    --admin-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    --admin-shadow-lg: 0 10px 30px rgba(15, 23, 42, 0.1);
+    --admin-radius: 12px;
+    --admin-sidebar-width: 280px;
+    --admin-sidebar-collapsed-width: 84px;
+    --admin-header-height: 64px;
+    --admin-font: "Inter", "Segoe UI", Roboto, sans-serif;
+}
+
+[data-admin-theme="dark"] {
+    --admin-bg: #0B1220;
+    --admin-surface: #111827;
+    --admin-surface-elevated: #1F2937;
+    --admin-border: #374151;
+    --admin-text: #F9FAFB;
+    --admin-text-muted: #9CA3AF;
+    --admin-sidebar-bg: #030712;
+    --admin-sidebar-text: #D1D5DB;
+    --admin-sidebar-active: rgba(51, 168, 255, 0.22);
+    --admin-header-bg: #111827;
+    --admin-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+    --admin-shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+[data-admin-theme="dark"] .theme-icon-dark {
+    display: none !important;
+}
+
+[data-admin-theme="dark"] .theme-icon-light {
+    display: inline-block !important;
+}
+
+[data-admin-theme="light"] .theme-icon-light,
+:root .theme-icon-light {
+    display: none !important;
+}

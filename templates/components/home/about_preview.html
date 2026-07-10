@@ -1,0 +1,49 @@
+{% from 'macros/media.html' import smart_image %}
+{# About preview — homepage about section #}
+{% if about %}
+<section class="home-section about-preview" id="aboutPreview" aria-labelledby="about-preview-heading">
+    <div class="container">
+        <div class="row align-items-center g-5 gx-lg-6">
+            <div class="col-lg-6" data-animate>
+                <div class="about-preview-media">
+                    {{ smart_image(about.image, about.heading, 'about', 'about-preview-image') }}
+
+                    {% if stats and stats|length > 1 %}
+                    <div class="about-preview-badge">
+                        <span class="about-preview-badge-value">{{ stats[1].value }}{{ stats[1].suffix }}</span>
+                        <span class="about-preview-badge-label">{{ stats[1].label }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-6" data-animate>
+                {% if about.subheading %}
+                <p class="section-subheading">{{ about.subheading }}</p>
+                {% endif %}
+                <h2 class="section-title" id="about-preview-heading">{{ about.heading }}</h2>
+                <div class="section-divider section-divider--left"></div>
+                <p class="about-preview-text">{{ about.content }}</p>
+
+                {% if about.highlights %}
+                <div class="about-preview-highlights">
+                    {% for item in about.highlights %}
+                    <div class="highlight-pill">
+                        <i class="bi bi-check2-circle"></i>
+                        <span>{{ item }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if about.cta_text and about.cta_url %}
+                <a href="{{ about.cta_url | safe_href }}" class="btn btn-primary btn-lg mt-4">
+                    {{ about.cta_text }} <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% include "components/ui/section_divider.html" %}
+{% endif %}

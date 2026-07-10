@@ -1,0 +1,76 @@
+{% extends 'admin/website/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field %}
+
+{% block website_actions %}
+<a href="{{ url_for('admin.website_page', slug=page_slug) }}" class="btn btn-outline-secondary btn-sm">Back to Page</a>
+{% if section.block_key %}
+<a href="{{ url_for('admin.website_block_edit', block_key=section.block_key, page_slug=page_slug, section_id=section.id) }}" class="btn btn-primary btn-sm">Edit Content Block</a>
+{% endif %}
+<a href="{{ public_preview_url }}" class="btn btn-outline-secondary btn-sm" target="_blank" rel="noopener">Preview Live</a>
+{% endblock %}
+
+{% block website_content %}
+<form method="post" class="admin-website-section-form" novalidate>
+    {{ form.hidden_tag() }}
+
+    <ul class="nav nav-tabs admin-website-form-tabs" role="tablist">
+        {% for tab in section_form_tabs %}
+        <li class="nav-item" role="presentation">
+            <button class="nav-link{% if loop.first %} active{% endif %}" type="button" data-bs-toggle="tab" data-bs-target="#section-tab-{{ tab.slug }}" role="tab">
+                <i class="bi {{ tab.icon }} me-1" aria-hidden="true"></i>{{ tab.label }}
+            </button>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div class="tab-content admin-panel admin-website-tab-content">
+        <div class="tab-pane fade show active" id="section-tab-general" role="tabpanel">
+            {{ render_field(form.section_title) }}
+            {{ render_field(form.block_key, 'Primary CMS block key for this section.') }}
+            {{ render_field(form.display_order) }}
+            {{ render_field(form.seo_anchor, 'HTML anchor ID used for in-page navigation.') }}
+            <div class="form-check form-switch">{{ form.is_visible(class="form-check-input") }}{{ form.is_visible.label(class="form-check-label") }}</div>
+            <div class="form-check form-switch">{{ form.is_active(class="form-check-input") }}{{ form.is_active.label(class="form-check-label") }}</div>
+        </div>
+
+        <div class="tab-pane fade" id="section-tab-layout" role="tabpanel">
+            <p class="text-muted small">Page Builder presentation settings — layout, spacing, animation, and background.</p>
+            {{ render_field(form.layout_type) }}
+            {{ render_field(form.background_style) }}
+            {{ render_field(form.spacing) }}
+            {{ render_field(form.animation) }}
+            {{ render_field(form.extra_json, 'Optional JSON — e.g. {"block_keys": ["vision", "mission"]}') }}
+        </div>
+
+        <div class="tab-pane fade" id="section-tab-block" role="tabpanel">
+            {% if block %}
+            <div class="admin-website-block-summary">
+                <h3 class="h6">{{ block.title }}</h3>
+                <p class="text-muted small mb-2"><code>{{ block.block_key }}</code></p>
+                {% if block.short_summary %}
+                <p>{{ block.short_summary }}</p>
+                {% endif %}
+                <a href="{{ url_for('admin.website_block_edit', block_key=block.block_key, page_slug=page_slug, section_id=section.id) }}" class="btn btn-primary btn-sm">Open Block Editor</a>
+            </div>
+            {% if block_keys|length > 1 %}
+            <hr>
+            <p class="small text-muted mb-2">Additional blocks bound via extra.block_keys:</p>
+            <ul class="list-unstyled mb-0">
+                {% for key in block_keys %}
+                <li><a href="{{ url_for('admin.website_block_edit', block_key=key, page_slug=page_slug, section_id=section.id) }}"><code>{{ key }}</code></a></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% else %}
+            <p class="text-muted">This section has no CMS content block (system section such as hero banner or catalog grid).</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="admin-settings-form-actions mt-3">
+        {{ form.submit(class="btn btn-primary btn-lg") }}
+        {{ form.preview(class="btn btn-outline-secondary") }}
+        <a href="{{ url_for('admin.website_page', slug=page_slug) }}" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+</form>
+{% endblock %}

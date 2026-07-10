@@ -1,0 +1,430 @@
+/**
+ * GURUH Construction — Equipment Page (layout-specific styles)
+ * Shared shell: sections-shared.css + page-builder.css
+ */
+
+/* Category cards */
+.page-equipment .pb-equipment-category-card {
+    border: none;
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.page-equipment .pb-equipment-category-card .premium-card-icon {
+    margin-bottom: 0.75rem;
+}
+
+@media (hover: hover) {
+    .page-equipment .pb-equipment-category-card:hover {
+        box-shadow: var(--section-shadow);
+        transform: translateY(-3px);
+    }
+}
+
+/* Equipment grid filters */
+.page-equipment .pb-equipment-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.page-equipment .pb-equipment-filter {
+    border: 1px solid var(--guruh-border);
+    background: var(--guruh-white);
+    color: var(--guruh-dark);
+    border-radius: 999px;
+    padding: 0.4rem 1rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.page-equipment .pb-equipment-filter.is-active,
+.page-equipment .pb-equipment-filter[aria-pressed="true"] {
+    background: var(--guruh-primary);
+    border-color: var(--guruh-primary);
+    color: var(--guruh-white);
+}
+
+.page-equipment .pb-equipment-filter:focus-visible {
+    outline: 3px solid var(--guruh-primary);
+    outline-offset: 2px;
+}
+
+.page-equipment .pb-filter-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Equipment cards */
+.page-equipment .pb-equipment-card {
+    border: none;
+    overflow: hidden;
+}
+
+.page-equipment .pb-equipment-card-media {
+    display: block;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-equipment .pb-equipment-card-image {
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    width: 100%;
+    transition: transform 0.35s ease;
+}
+
+@media (hover: hover) {
+    .page-equipment .pb-equipment-card:hover .pb-equipment-card-image {
+        transform: scale(1.03);
+    }
+}
+
+.page-equipment .pb-equipment-condition {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(25, 135, 84, 0.92);
+    color: var(--guruh-white);
+}
+
+.page-equipment .pb-equipment-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(51, 168, 255, 0.12);
+    color: var(--guruh-primary-dark);
+    margin-bottom: 0.75rem;
+}
+
+.page-equipment .pb-equipment-capacity {
+    font-size: 0.8125rem;
+    color: var(--pb-muted);
+}
+
+.page-equipment .pb-equipment-card .premium-card-title a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.page-equipment .pb-equipment-card .premium-card-title a:hover,
+.page-equipment .pb-equipment-card .premium-card-title a:focus-visible {
+    color: var(--guruh-primary-dark);
+}
+
+.page-equipment .pb-equipment-item.is-hidden {
+    display: none;
+}
+
+/* Detail hero */
+.page-equipment-detail .page-hero--equipment .page-hero-eyebrow {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--guruh-primary-light);
+    margin-bottom: 0.75rem;
+}
+
+.page-equipment-detail .pb-equipment-hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem 2rem;
+    margin-top: 1.5rem;
+    padding: 0;
+}
+
+.page-equipment-detail .pb-equipment-hero-meta-item dt {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.75;
+    margin-bottom: 0.15rem;
+}
+
+.page-equipment-detail .pb-equipment-hero-meta-item dd {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Detail specs */
+.page-equipment-detail .pb-equipment-detail-label {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: var(--guruh-dark);
+}
+
+.page-equipment-detail .pb-equipment-spec-list {
+    margin: 0;
+    background: var(--guruh-white);
+    border-radius: 12px;
+    box-shadow: var(--section-shadow-soft);
+    overflow: hidden;
+}
+
+.page-equipment-detail .pb-equipment-spec-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.85rem 1.15rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.page-equipment-detail .pb-equipment-spec-row:last-child {
+    border-bottom: none;
+}
+
+.page-equipment-detail .pb-equipment-spec-row dt {
+    font-weight: 600;
+    color: var(--guruh-dark);
+    margin: 0;
+}
+
+.page-equipment-detail .pb-equipment-spec-row dd {
+    color: var(--pb-muted);
+    margin: 0;
+    text-align: right;
+}
+
+.page-equipment-detail .pb-equipment-facts {
+    background: var(--guruh-white);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: var(--section-shadow-soft);
+    margin: 0;
+}
+
+.page-equipment-detail .pb-equipment-fact {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.page-equipment-detail .pb-equipment-fact:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.page-equipment-detail .pb-equipment-fact dt {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--guruh-primary-dark);
+    margin-bottom: 0.25rem;
+}
+
+.page-equipment-detail .pb-equipment-fact dd {
+    font-size: 0.9375rem;
+    color: var(--guruh-gray);
+    margin: 0;
+}
+
+.page-equipment-detail .pb-equipment-maintenance-banner {
+    background: rgba(51, 168, 255, 0.08);
+    border: 1px solid rgba(51, 168, 255, 0.2);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    color: var(--guruh-dark);
+    font-size: 0.9375rem;
+}
+
+.page-equipment-detail .pb-related-subheading {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    color: var(--guruh-dark);
+}
+
+.page-equipment-detail .pb-service-card-icon {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: rgba(51, 168, 255, 0.1);
+    color: var(--guruh-primary);
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+/* Gallery & lightbox — shared with project gallery layout on equipment pages */
+.page-equipment .pb-gallery-filters,
+.page-equipment-detail .pb-gallery-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.page-equipment .pb-gallery-filter,
+.page-equipment-detail .pb-gallery-filter {
+    border: 1px solid var(--guruh-border);
+    background: var(--guruh-white);
+    border-radius: 999px;
+    padding: 0.4rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.page-equipment .pb-gallery-filter.is-active,
+.page-equipment-detail .pb-gallery-filter.is-active,
+.page-equipment .pb-gallery-filter[aria-pressed="true"],
+.page-equipment-detail .pb-gallery-filter[aria-pressed="true"] {
+    background: var(--guruh-primary);
+    border-color: var(--guruh-primary);
+    color: var(--guruh-white);
+}
+
+.page-equipment .pb-gallery-masonry,
+.page-equipment-detail .pb-gallery-masonry {
+    columns: 1;
+    column-gap: 1rem;
+}
+
+@media (min-width: 576px) {
+    .page-equipment .pb-gallery-masonry,
+    .page-equipment-detail .pb-gallery-masonry { columns: 2; }
+}
+
+@media (min-width: 992px) {
+    .page-equipment .pb-gallery-masonry,
+    .page-equipment-detail .pb-gallery-masonry { columns: 3; }
+}
+
+.page-equipment .pb-gallery-item,
+.page-equipment-detail .pb-gallery-item {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+}
+
+.page-equipment .pb-gallery-item.is-hidden,
+.page-equipment-detail .pb-gallery-item.is-hidden {
+    display: none;
+}
+
+.page-equipment .pb-gallery-trigger,
+.page-equipment-detail .pb-gallery-trigger {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: zoom-in;
+    box-shadow: var(--section-shadow-soft);
+}
+
+.page-equipment .pb-gallery-image,
+.page-equipment-detail .pb-gallery-image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+}
+
+.page-equipment .pb-lightbox,
+.page-equipment-detail .pb-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 1080;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-equipment .pb-lightbox[hidden],
+.page-equipment-detail .pb-lightbox[hidden] {
+    display: none;
+}
+
+.page-equipment .pb-lightbox-backdrop,
+.page-equipment-detail .pb-lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.88);
+}
+
+.page-equipment .pb-lightbox-dialog,
+.page-equipment-detail .pb-lightbox-dialog {
+    position: relative;
+    z-index: 1;
+    width: min(92vw, 960px);
+    max-height: 90vh;
+}
+
+.page-equipment .pb-lightbox-image,
+.page-equipment-detail .pb-lightbox-image {
+    width: 100%;
+    max-height: 75vh;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.page-equipment .pb-lightbox-caption,
+.page-equipment-detail .pb-lightbox-caption {
+    color: var(--guruh-white);
+    text-align: center;
+    margin-top: 0.75rem;
+    font-size: 0.9375rem;
+}
+
+.page-equipment .pb-lightbox-close,
+.page-equipment-detail .pb-lightbox-close,
+.page-equipment .pb-lightbox-nav,
+.page-equipment-detail .pb-lightbox-nav {
+    position: absolute;
+    border: none;
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--guruh-white);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.page-equipment .pb-lightbox-close,
+.page-equipment-detail .pb-lightbox-close { top: -3rem; right: 0; }
+.page-equipment .pb-lightbox-prev,
+.page-equipment-detail .pb-lightbox-prev { left: -3.5rem; top: 50%; transform: translateY(-50%); }
+.page-equipment .pb-lightbox-next,
+.page-equipment-detail .pb-lightbox-next { right: -3.5rem; top: 50%; transform: translateY(-50%); }
+
+@media (max-width: 575.98px) {
+    .page-equipment .premium-card-body,
+    .page-equipment-detail .premium-card-body {
+        padding: 1.25rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-equipment .pb-equipment-card-image,
+    .page-equipment .pb-equipment-category-card {
+        transition: none;
+        transform: none;
+    }
+}

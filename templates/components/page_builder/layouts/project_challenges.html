@@ -1,0 +1,39 @@
+{# Challenges and solutions side by side #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{% set solutions = block.extra.solutions if block and block.extra and block.extra.solutions else [] %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+        {% if block and block.short_summary %}
+        <p class="section-intro mx-auto text-center">{{ block.short_summary }}</p>
+        {% endif %}
+    </div>
+    <div class="row g-4 g-lg-5">
+        <div class="col-lg-6" data-animate>
+            <div class="pb-challenges-panel h-100">
+                <h3 class="pb-challenges-heading"><i class="bi bi-exclamation-triangle me-2" aria-hidden="true"></i>Challenges</h3>
+                {% if block and block.items %}
+                <ul class="pb-challenges-list">
+                    {% for item in block.items if item.is_active %}
+                    <li>{{ item.title }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-lg-6" data-animate>
+            <div class="pb-solutions-panel h-100">
+                <h3 class="pb-solutions-heading"><i class="bi bi-check-circle-fill me-2" aria-hidden="true"></i>Solutions</h3>
+                {% if solutions %}
+                <ul class="pb-solutions-list">
+                    {% for sol in solutions %}
+                    <li>{{ sol.title }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{{ pb_close_section() }}

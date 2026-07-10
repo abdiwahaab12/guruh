@@ -1,0 +1,64 @@
+{# Project progress timeline gallery #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{% from 'macros/media.html' import smart_image %}
+{% set items = progress_items if progress_items else [] %}
+{% set block_items = block.items if block and block.items else [] %}
+{% set media_items = gallery_images if gallery_images else [] %}
+{% set use_dynamic = items | length > 0 %}
+{% set use_seed = (not use_dynamic) and (media_items | length == 0) and block_items %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+    </div>
+    <div class="pb-progress-timeline">
+        {% if use_dynamic %}
+        {% for item in items if item.is_active %}
+        <article class="pb-progress-item" data-animate>
+            <div class="pb-progress-marker" aria-hidden="true">
+                <span class="pb-progress-dot"></span>
+                {% if not loop.last %}<span class="pb-progress-line"></span>{% endif %}
+            </div>
+            <div class="pb-progress-content premium-card">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-4">
+                        {{ smart_image(item.image, item.title, 'project', 'pb-progress-image rounded', lazy=true) }}
+                    </div>
+                    <div class="col-md-8">
+                        {% if item.date %}<time class="pb-progress-date" datetime="{{ item.date }}">{{ item.date }}</time>{% endif %}
+                        <h3 class="premium-card-title">{{ item.title }}</h3>
+                        {% if item.subtitle %}<p class="text-muted mb-0">{{ item.subtitle }}</p>{% endif %}
+                    </div>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+        {% elif use_seed %}
+        {% for item in block_items if item.is_active %}
+        {% set ex = item.extra if item.extra else {} %}
+        <article class="pb-progress-item" data-animate>
+            <div class="pb-progress-marker" aria-hidden="true">
+                <span class="pb-progress-dot"></span>
+                {% if not loop.last %}<span class="pb-progress-line"></span>{% endif %}
+            </div>
+            <div class="pb-progress-content premium-card">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-4">
+                        {{ smart_image(item.image, item.title, 'project', 'pb-progress-image rounded', lazy=true) }}
+                    </div>
+                    <div class="col-md-8">
+                        {% if ex.date %}<time class="pb-progress-date" datetime="{{ ex.date }}">{{ ex.date }}</time>{% endif %}
+                        <h3 class="premium-card-title">{{ item.title }}</h3>
+                        {% if item.subtitle %}<p class="text-muted mb-0">{{ item.subtitle }}</p>{% endif %}
+                    </div>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+        {% endif %}
+    </div>
+    {% if not use_dynamic and not use_seed %}
+    <p class="text-center text-muted mb-0">No progress photos yet. Add gallery items with category <strong>Project Progress</strong> in the admin.</p>
+    {% endif %}
+</div>
+{{ pb_close_section() }}

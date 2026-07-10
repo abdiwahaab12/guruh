@@ -1,0 +1,22 @@
+{# Social media links — site-wide or block-managed #}
+{% from 'macros/page_builder.html' import pb_open_section, pb_close_section, pb_heading %}
+{{ pb_open_section(section, block) }}
+<div class="container">
+    <div class="pb-section-head text-center mb-5" data-animate>
+        {{ pb_heading(section, block, 'center') }}
+    </div>
+    <div class="pb-social-grid" data-animate role="list" aria-label="Social media links">
+        {% for link in social_links if link.is_active %}
+        <a class="pb-social-link"
+           href="{{ link.url }}"
+           target="_blank"
+           rel="noopener noreferrer"
+           role="listitem"
+           aria-label="{{ link.label }} — opens in new tab">
+            <span class="pb-social-icon" aria-hidden="true"><i class="bi {{ link.icon }}"></i></span>
+            <span class="pb-social-label">{{ link.label }}</span>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{{ pb_close_section() }}

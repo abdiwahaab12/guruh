@@ -1,0 +1,37 @@
+{% extends 'admin/layouts/base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin-gallery.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-page-header">
+    <div>
+        <h1 class="admin-page-title">{% block gallery_title %}{{ page_title }}{% endblock %}</h1>
+        <p class="admin-page-subtitle">{% block gallery_subtitle %}Manage gallery media, albums, and relationships.{% endblock %}</p>
+    </div>
+    <div class="admin-page-actions">
+        {% block gallery_actions %}
+        <a href="{{ url_for('admin.gallery_create') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1" aria-hidden="true"></i> New Gallery Item
+        </a>
+        {% endblock %}
+    </div>
+</div>
+
+<nav class="admin-gallery-tabs" aria-label="Gallery sections">
+    <a href="{{ url_for('admin.gallery_dashboard') }}" class="admin-gallery-tab{% if gallery_active_section == 'dashboard' %} active{% endif %}">Dashboard</a>
+    <a href="{{ url_for('admin.gallery_list') }}" class="admin-gallery-tab{% if gallery_active_section == 'list' %} active{% endif %}">All Items</a>
+    <a href="{{ url_for('admin.gallery_create') }}" class="admin-gallery-tab{% if gallery_active_section == 'form' %} active{% endif %}">Create</a>
+</nav>
+
+{% include 'admin/partials/_breadcrumb.html' %}
+{% include 'admin/partials/_flash_messages.html' %}
+
+{% block gallery_content %}{% endblock %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/admin-gallery.js') }}" defer></script>
+{% block gallery_extra_js %}{% endblock %}
+{% endblock %}

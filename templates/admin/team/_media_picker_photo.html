@@ -1,0 +1,17 @@
+<div class="admin-media-picker-field mb-3">
+    <label class="form-label" for="photo">Profile Photo (Media Path)</label>
+    <div class="input-group mb-2">
+        {{ form.photo(class="form-control", id="photo") }}
+        <a href="{{ url_for('admin.media_library', folder='team') }}" class="btn btn-outline-secondary" target="_blank" rel="noopener">Browse Library</a>
+    </div>
+    {% if form.photo.data %}
+    <img src="{{ url_for('static', filename=form.photo.data) }}" alt="Profile preview" class="admin-team-photo-preview" loading="lazy">
+    {% endif %}
+    <div class="admin-media-picker-grid mt-2">
+        {% for asset in media_assets[:12] %}
+        <button type="button" class="admin-media-picker-btn" data-target="photo" data-path="{{ asset.storage_path }}">
+            <img src="{{ url_for('static', filename=asset.storage_path) }}" alt="{{ asset.title }}" loading="lazy">
+        </button>
+        {% endfor %}
+    </div>
+</div>

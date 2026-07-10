@@ -1,0 +1,22 @@
+{% extends 'admin/settings/layout.html' %}
+{% from 'admin/settings/_macros.html' import render_field, form_actions %}
+
+{% block settings_subtitle %}Vision, mission, company narrative, and directors message.{% endblock %}
+
+{% block settings_content %}
+<form method="post" class="admin-settings-form" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="admin-panel">
+        {{ render_field(form.company_overview) }}
+        {{ render_field(form.company_introduction) }}
+        {{ render_field(form.about_the_company) }}
+        {{ render_field(form.company_history) }}
+        <div class="row">
+            <div class="col-md-6">{{ render_field(form.vision) }}</div>
+            <div class="col-md-6">{{ render_field(form.mission) }}</div>
+        </div>
+        {{ render_field(form.directors_message) }}
+        {{ form_actions(form) }}
+    </div>
+</form>
+{% endblock %}
