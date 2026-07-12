@@ -175,6 +175,99 @@ class SettingsProvider:
         row.office_hours = data.office_hours.strip()
         return row
 
+    @staticmethod
+    def _phone_from_cms_extra(extra: dict) -> str:
+        """Combine CMS phone_primary / phone_secondary into CompanyInfo.phone format."""
+        primary = (extra.get("phone_primary") or extra.get("phone") or "").strip()
+        secondary = (extra.get("phone_secondary") or "").strip()
+        if primary and secondary:
+            return f"{primary} / {secondary}"
+        return primary or secondary
+
+    @staticmethod
+    def sync_company_contact_from_cms_block(block_key: str, payload: dict) -> CompanyInfo | None:
+        """
+        Mirror Page Content contact blocks into CompanyInfo (and HQ office when present).
+
+        The public site reads contact details from CompanyInfo via get_company_info().
+        Page Content saves CMS blocks only unless this sync runs.
+        """
+        from app.constants.content_blocks import CONTACT_SYNC_BLOCK_KEYS
+
+        if block_key not in CONTACT_SYNC_BLOCK_KEYS:
+            return None
+
+        extra = payload.get("extra") or {}
+        if not isinstance(extra, dict):
+            return None
+
+        row = SettingsProvider.get_or_create_company()
+
+        phone = SettingsProvider._phone_from_cms_extra(extra)
+        if phone:
+            row.phone = phone
+
+        email = (extra.get("email") or "").strip().lower()
+        if email:
+            row.email = email
+
+        address = (extra.get("address") or "").strip()
+        if address:
+            row.address = address
+
+        office_hours = (extra.get("office_hours") or "").strip()
+        if office_hours:
+            row.office_hours = office_hours
+
+        headquarters = (extra.get("headquarters") or "").strip()
+        if headquarters:
+            row.headquarters = headquarters
+
+        SettingsProvider._sync_headquarters_office_from_cms_extra(extra)
+        return row
+
+    @staticmethod
+    def _sync_headquarters_office_from_cms_extra(extra: dict) -> None:
+        """Keep the headquarters OfficeLocation row aligned when contact blocks are saved."""
+        try:
+            hq = OfficeLocation.query.filter_by(is_headquarters=True, is_active=True).first()
+            if not hq:
+                return
+
+            phone_primary = (extra.get("phone_primary") or extra.get("phone") or "").strip()
+            if phone_primary:
+                hq.phone_primary = phone_primary
+
+            if "phone_secondary" in extra:
+                hq.phone_secondary = (extra.get("phone_secondary") or "").strip()
+
+            email = (extra.get("email") or "").strip().lower()
+            if email:
+                hq.email = email
+
+            address = (extra.get("address") or "").strip()
+            if address:
+                hq.address = address
+
+            if "postal_address" in extra:
+                hq.postal_address = (extra.get("postal_address") or "").strip()
+
+            office_hours = (extra.get("office_hours") or "").strip()
+            if office_hours:
+                hq.office_hours = office_hours
+
+            for field, attr in (
+                ("address_area", "address_area"),
+                ("address_district", "address_district"),
+                ("address_locality", "address_locality"),
+                ("address_country", "country"),
+                ("address_country_code", "country_code"),
+            ):
+                if field in extra:
+                    setattr(hq, attr, (extra.get(field) or "").strip())
+        except SQLAlchemyError as exc:
+            current_app.logger.error("sync headquarters office from CMS failed: %s", exc)
+
     # ------------------------------------------------------------------
     # SiteSetting key-value
     # ------------------------------------------------------------------

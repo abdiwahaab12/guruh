@@ -49,6 +49,14 @@ CONTENT_BLOCK_LABELS: Final[dict[str, str]] = {
     "call_to_action": "Call To Action",
 }
 
+# CMS blocks whose contact fields must mirror CompanyInfo for the public site
+CONTACT_SYNC_BLOCK_KEYS: Final[frozenset[str]] = frozenset(
+    {
+        "company_contact_info",
+        "contact_office_info",
+    }
+)
+
 # Blocks that use nested items (lists managed in admin)
 ITEMIZED_BLOCK_KEYS: Final[frozenset[str]] = frozenset(
     {

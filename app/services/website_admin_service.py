@@ -5,7 +5,7 @@ from __future__ import annotations
 from flask import session, url_for
 from flask_login import current_user
 
-from app.constants.content_blocks import ITEMIZED_BLOCK_KEYS
+from app.constants.content_blocks import CONTACT_SYNC_BLOCK_KEYS, ITEMIZED_BLOCK_KEYS
 from app.constants.page_builder import (
     ANIMATION_LABELS,
     ANIMATION_PRESETS,
@@ -20,6 +20,7 @@ from app.constants.public_nav import MAX_HERO_SLIDES
 from app.constants.website_admin import FORM_TABS, MANAGED_PAGE_SLUGS, SECTION_FORM_TABS
 from app.forms.website_forms import WebsiteHeroSlideActionForm, WebsiteHeroSlideForm
 from app.providers.admin_dashboard_provider import AdminDashboardProvider
+from app.providers.settings_provider import SettingsProvider
 from app.providers.website_admin_provider import WebsiteAdminProvider
 from app.schemas.admin import BreadcrumbItemDTO
 from app.schemas.website_admin import SaveResultDTO, WebsiteBlockEditorDTO, WebsiteBlockItemEditorDTO
@@ -443,6 +444,8 @@ class WebsiteAdminService:
         try:
             payload = apply_form_to_block_dto(block, form_data)
             row = WebsiteAdminProvider.save_block(block_key, payload)
+            if block_key in CONTACT_SYNC_BLOCK_KEYS:
+                SettingsProvider.sync_company_contact_from_cms_block(block_key, payload)
             ok = WebsiteAdminProvider.safe_commit(
                 action="website.block.update",
                 resource_type="content_block",

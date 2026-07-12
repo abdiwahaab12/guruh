@@ -19,6 +19,26 @@ def register_auth_routes(admin_bp) -> None:
 
         form = LoginForm()
         if form.validate_on_submit():
+            from flask import current_app
+            from sqlalchemy import text
+            from sqlalchemy.exc import SQLAlchemyError
+
+            from app.extensions import db
+
+            try:
+                db.session.rollback()
+                with db.engine.connect() as conn:
+                    conn.execute(text("SELECT 1"))
+            except SQLAlchemyError as exc:
+                current_app.logger.error("Login DB ping failed: %s", exc)
+                db.engine.dispose()
+                flash(
+                    "Cannot connect to the database. Start MySQL (XAMPP or MySQL service) "
+                    "and verify DATABASE_URL or DB_* settings in your .env file.",
+                    "danger",
+                )
+                return render_template("admin/login.html", form=form)
+
             result = AuthService.authenticate(
                 form.email.data,
                 form.password.data,
