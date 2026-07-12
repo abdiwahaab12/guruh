@@ -35,6 +35,13 @@ class HeroSlide(BaseModel):
     secondary_cta_url = db.Column(db.String(255))
     overlay_opacity = db.Column(db.Float, default=0.65, nullable=False)
     text_alignment = db.Column(db.String(20), default="left", nullable=False)
+    background_type = db.Column(db.String(10), default="image", nullable=False)
+    video_path = db.Column(db.String(255), default="", nullable=False)
+    video_thumbnail = db.Column(db.String(255), default="", nullable=False)
+    autoplay = db.Column(db.Boolean, default=True, nullable=False)
+    loop = db.Column("loop", db.Boolean, default=True, nullable=False, quote=True)
+    muted = db.Column(db.Boolean, default=True, nullable=False)
+    plays_inline = db.Column(db.Boolean, default=True, nullable=False)
     sort_order = db.Column(db.Integer, default=0, nullable=False)
     is_active = db.Column(db.Boolean, default=True, nullable=False)
 

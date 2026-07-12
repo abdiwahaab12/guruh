@@ -62,8 +62,9 @@ class Config:
     ADMIN_LAST_NAME = os.environ.get("ADMIN_LAST_NAME", "Admin")
 
     MEDIA_UPLOAD_ROOT = os.environ.get("MEDIA_UPLOAD_ROOT", "uploads")
-    MEDIA_MAX_FILE_SIZE = int(os.environ.get("MEDIA_MAX_FILE_SIZE", str(20 * 1024 * 1024)))
+    MEDIA_MAX_FILE_SIZE = int(os.environ.get("MEDIA_MAX_FILE_SIZE", str(100 * 1024 * 1024)))
     MEDIA_MAX_BATCH = int(os.environ.get("MEDIA_MAX_BATCH", "20"))
+    MAX_CONTENT_LENGTH = int(os.environ.get("MAX_CONTENT_LENGTH", str(100 * 1024 * 1024)))
 
 
 class DevelopmentConfig(Config):
@@ -73,6 +74,10 @@ class DevelopmentConfig(Config):
     TESTING = False
     SESSION_COOKIE_SECURE = False
     REMEMBER_COOKIE_SECURE = False
+
+    @property
+    def DATABASE_ENABLED(self) -> bool:
+        return os.environ.get("DATABASE_ENABLED", "true").lower() == "true"
 
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> str:

@@ -62,6 +62,13 @@ class WebsiteHeroSlideEditorDTO:
     text_alignment: str
     sort_order: int
     is_active: bool
+    background_type: str = "image"
+    video_path: str = ""
+    video_thumbnail: str = ""
+    autoplay: bool = True
+    loop: bool = True
+    muted: bool = True
+    plays_inline: bool = True
 
 
 @dataclass

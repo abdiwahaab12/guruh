@@ -165,6 +165,13 @@ def hero_to_dto(row: HeroSlide) -> HeroSlideDTO:
         secondary_cta_url=getattr(row, "secondary_cta_url", None) or "",
         overlay_opacity=float(opacity),
         text_alignment=getattr(row, "text_alignment", None) or "left",
+        background_type=getattr(row, "background_type", None) or "image",
+        video_path=getattr(row, "video_path", None) or "",
+        video_thumbnail=getattr(row, "video_thumbnail", None) or "",
+        autoplay=bool(getattr(row, "autoplay", True)),
+        loop=bool(getattr(row, "loop", True)),
+        muted=bool(getattr(row, "muted", True)),
+        plays_inline=bool(getattr(row, "plays_inline", True)),
     )
 
 

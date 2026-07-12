@@ -99,6 +99,13 @@ class HeroSlideDTO:
     secondary_cta_url: str = ""
     overlay_opacity: float = 0.65
     text_alignment: str = "left"
+    background_type: str = "image"
+    video_path: str = ""
+    video_thumbnail: str = ""
+    autoplay: bool = True
+    loop: bool = True
+    muted: bool = True
+    plays_inline: bool = True
 
 
 @dataclass

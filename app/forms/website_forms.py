@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, HiddenField, IntegerField, SelectField, StringField, SubmitField, TextAreaField
+from wtforms import BooleanField, HiddenField, IntegerField, RadioField, SelectField, StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length, Optional
 
 
@@ -63,6 +63,12 @@ class WebsiteHeroSlideForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired(), Length(max=200)])
     subtitle = StringField("Subtitle", validators=[Optional(), Length(max=255)])
     description = TextAreaField("Description", validators=[Optional()])
+    background_type = RadioField(
+        "Background Type",
+        choices=[("image", "Image"), ("video", "Video")],
+        default="image",
+        validators=[DataRequired()],
+    )
     image = StringField("Background Image", validators=[Optional(), Length(max=255)])
     cta_text = StringField("Primary Button Text", validators=[Optional(), Length(max=100)])
     cta_url = StringField("Primary Button URL", validators=[Optional(), Length(max=255)])
@@ -74,6 +80,10 @@ class WebsiteHeroSlideForm(FlaskForm):
         choices=[("left", "Left"), ("center", "Center"), ("right", "Right")],
         default="left",
     )
+    autoplay = BooleanField("Autoplay", default=True)
+    loop = BooleanField("Loop", default=True)
+    muted = BooleanField("Muted", default=True)
+    plays_inline = BooleanField("Plays Inline", default=True)
     sort_order = IntegerField("Display Order", default=0)
     is_active = BooleanField("Active", default=True)
     submit = SubmitField("Save Slide")

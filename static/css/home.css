@@ -184,10 +184,26 @@
 }
 
 /* ================================================================== */
-/*  Hero — Full Screen                                                 */
+/*  Hero — Full Screen (classic layout: solid header, hero below nav)  */
 /* ================================================================== */
+.page-home {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+}
+
+.page-home .site-header .main-navbar {
+    background-color: var(--guruh-white);
+}
+
 .page-home .hero-slider {
     position: relative;
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
     min-height: calc(100dvh - var(--header-height));
     background-color: var(--guruh-dark-deep);
 }
@@ -195,6 +211,9 @@
 .page-home .hero-slider .carousel,
 .page-home .hero-slider .carousel-inner,
 .page-home .hero-slider .carousel-item {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
     min-height: calc(100dvh - var(--header-height));
 }
 
@@ -240,6 +259,8 @@
 }
 
 .hero-slide {
+    width: 100%;
+    max-width: 100%;
     min-height: calc(100dvh - var(--header-height));
     background-color: var(--guruh-dark-deep);
     background-image: linear-gradient(115deg, rgba(26, 26, 26, 0.82) 0%, rgba(26, 74, 110, 0.55) 55%, rgba(26, 26, 26, 0.45) 100%);
@@ -265,6 +286,17 @@
     background-repeat: no-repeat;
     transform: scale(1);
     will-change: transform;
+}
+
+.hero-slide-video {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    pointer-events: none;
 }
 
 .carousel-item.active .hero-slide-bg {
@@ -441,8 +473,15 @@
     border-color: var(--guruh-primary);
 }
 
-.carousel-control-prev.hero-control { left: 1.25rem; }
-.carousel-control-next.hero-control { right: 1.25rem; }
+.carousel-control-prev.hero-control { left: 0.75rem; }
+.carousel-control-next.hero-control { right: 0.75rem; }
+
+@media (max-width: 1199.98px) {
+    .carousel-control-prev.hero-control,
+    .carousel-control-next.hero-control {
+        display: none;
+    }
+}
 
 /* Hero bottom meta — trust badges + stats */
 .page-home .hero-bottom-meta {
@@ -1157,7 +1196,18 @@
 @media (max-width: 991.98px) {
     .page-home .hero-bottom-meta {
         position: static;
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
         padding: 0 0 0.5rem;
+    }
+
+    .page-home .hero-bottom-meta .container,
+    .page-home .hero-bottom-meta .container-fluid {
+        max-width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
 
     .page-home .hero-bottom-meta .row {
@@ -1178,9 +1228,6 @@
     }
 
     .process-timeline::before { display: none; }
-
-    .carousel-control-prev.hero-control,
-    .carousel-control-next.hero-control { display: none; }
 }
 
 @media (max-width: 575.98px) {

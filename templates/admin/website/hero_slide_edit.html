@@ -11,15 +11,92 @@
     <div class="col-lg-8">
         <div class="admin-panel">
             <h2 class="h5 mb-3">{% if slide_id %}Edit Hero Slide{% else %}Add Hero Slide{% endif %}</h2>
-            <form method="post" novalidate>
+            <form method="post" enctype="multipart/form-data" novalidate id="heroSlideForm">
                 {{ form.hidden_tag() }}
                 {{ render_field(form.title) }}
                 {{ render_field(form.subtitle) }}
                 {{ render_field(form.description) }}
-                {% with field_id='slide_image', field_name='image', label='Background Image', value=form.image.data, media_assets=media_assets %}
-                {% include 'admin/website/_hero_banner_picker.html' %}
-                {% endwith %}
-                <div class="row g-3">
+
+                <fieldset class="mb-4 hero-bg-type-fieldset">
+                    <legend class="form-label fw-semibold mb-2">Background Type</legend>
+                    <div class="hero-bg-type-group">
+                        {% for subfield in form.background_type %}
+                        <div class="form-check form-check-inline">
+                            {{ subfield(class="form-check-input hero-bg-type-radio") }}
+                            {{ subfield.label(class="form-check-label") }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+
+                <div id="heroBgImagePanel" class="hero-bg-panel">
+                    {% with field_id='slide_image', field_name='image', label='Background Image', value=form.image.data, media_assets=media_assets %}
+                    {% include 'admin/website/_hero_banner_picker.html' %}
+                    {% endwith %}
+                </div>
+
+                <div id="heroBgVideoPanel" class="hero-bg-panel d-none">
+                    <div class="mb-3">
+                        <label class="form-label" for="hero_video">Upload Video</label>
+                        <input type="file"
+                               class="form-control"
+                               id="hero_video"
+                               name="hero_video"
+                               accept="video/mp4,video/webm,.mp4,.webm">
+                        <div class="form-text">MP4 or WEBM only. Maximum {{ (config.MEDIA_MAX_FILE_SIZE / (1024 * 1024))|int }} MB.</div>
+                    </div>
+
+                    {% if slide and slide.video_path %}
+                    <div class="hero-video-preview mb-3" id="heroVideoPreviewBlock">
+                        <label class="form-label">Current Video</label>
+                        <video class="w-100 rounded border"
+                               controls
+                               preload="metadata"
+                               {% if slide.video_thumbnail %}poster="{{ url_for('static', filename=slide.video_thumbnail) }}"{% elif slide.image %}poster="{{ url_for('static', filename=slide.image) }}"{% endif %}>
+                            <source src="{{ url_for('static', filename=slide.video_path) }}"
+                                    type="{{ 'video/webm' if slide.video_path.endswith('.webm') else 'video/mp4' }}">
+                        </video>
+                        <p class="small text-muted mt-1 mb-0">{{ slide.video_path }}</p>
+                        <p class="small text-muted">Use the file input above to replace this video on save.</p>
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        {% with field_id='slide_fallback_image', field_name='image', label='Fallback Image', value=form.image.data, media_assets=media_assets %}
+                        {% include 'admin/website/_hero_banner_picker.html' %}
+                        {% endwith %}
+                        <div class="form-text">Shown as poster while video loads and on browsers that block autoplay.</div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <div class="form-check form-switch">
+                                {{ form.autoplay(class="form-check-input") }}
+                                {{ form.autoplay.label(class="form-check-label") }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check form-switch">
+                                {{ form.loop(class="form-check-input") }}
+                                {{ form.loop.label(class="form-check-label") }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check form-switch">
+                                {{ form.muted(class="form-check-input") }}
+                                {{ form.muted.label(class="form-check-label") }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check form-switch">
+                                {{ form.plays_inline(class="form-check-input") }}
+                                {{ form.plays_inline.label(class="form-check-label") }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-2">
                     <div class="col-md-6">{{ render_field(form.cta_text) }}</div>
                     <div class="col-md-6">{{ render_field(form.cta_url) }}</div>
                     <div class="col-md-6">{{ render_field(form.secondary_cta_text) }}</div>
@@ -39,13 +116,54 @@
                     <a href="{{ url_for('admin.website_page', slug='home') }}" class="btn btn-outline-secondary">Cancel</a>
                 </div>
             </form>
+            {% if slide and slide.video_path and hero_video_delete_form %}
+            <form method="post"
+                  action="{{ url_for('admin.website_hero_slide_video_delete', slide_id=slide.id) }}"
+                  class="mt-2"
+                  onsubmit="return confirm('Delete this hero video?');">
+                {{ hero_video_delete_form.hidden_tag() }}
+                <button type="submit" class="btn btn-outline-danger btn-sm">
+                    <i class="bi bi-trash" aria-hidden="true"></i> Delete Video
+                </button>
+            </form>
+            {% endif %}
         </div>
     </div>
     <div class="col-lg-4">
         <div class="admin-panel">
             <h3 class="h6">Media Library</h3>
-            <p class="text-muted small mb-0">Upload PNG, JPG, or WEBP in <a href="{{ url_for('admin.media_upload', folder='content') }}" target="_blank" rel="noopener">Media &rarr; Upload</a>, then click a thumbnail above to select the background image.</p>
+            <p class="text-muted small mb-0">Upload PNG, JPG, or WEBP in <a href="{{ url_for('admin.media_upload', folder='content') }}" target="_blank" rel="noopener">Media &rarr; Upload</a> for image backgrounds and video fallback posters.</p>
+            <p class="text-muted small mt-2 mb-0">Hero videos are stored in <code>static/uploads/hero_videos/</code> (MP4 / WEBM, max {{ (config.MEDIA_MAX_FILE_SIZE / (1024 * 1024))|int }} MB).</p>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block website_extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var imagePanel = document.getElementById('heroBgImagePanel');
+    var videoPanel = document.getElementById('heroBgVideoPanel');
+
+    function syncPanels() {
+        var selected = document.querySelector('input.hero-bg-type-radio:checked');
+        var isVideo = selected && selected.value === 'video';
+        if (imagePanel) {
+            imagePanel.classList.toggle('d-none', isVideo);
+            imagePanel.setAttribute('aria-hidden', isVideo ? 'true' : 'false');
+        }
+        if (videoPanel) {
+            videoPanel.classList.toggle('d-none', !isVideo);
+            videoPanel.setAttribute('aria-hidden', isVideo ? 'false' : 'true');
+        }
+    }
+
+    document.querySelectorAll('input.hero-bg-type-radio').forEach(function (radio) {
+        radio.addEventListener('change', syncPanels);
+        radio.addEventListener('click', syncPanels);
+    });
+
+    syncPanels();
+});
+</script>
 {% endblock %}

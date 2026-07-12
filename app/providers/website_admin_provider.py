@@ -683,6 +683,13 @@ class WebsiteAdminProvider:
                     text_alignment=dto.text_alignment,
                     sort_order=dto.sort_order,
                     is_active=dto.is_active,
+                    background_type=dto.background_type,
+                    video_path=dto.video_path,
+                    video_thumbnail=dto.video_thumbnail,
+                    autoplay=dto.autoplay,
+                    loop=dto.loop,
+                    muted=dto.muted,
+                    plays_inline=dto.plays_inline,
                 )
             )
         return items
@@ -724,6 +731,13 @@ class WebsiteAdminProvider:
         return cleaned
 
     @staticmethod
+    def _parse_background_type(value: str | None) -> str:
+        from app.constants.hero_video import HERO_BACKGROUND_IMAGE, HERO_BACKGROUND_VIDEO
+
+        val = (value or HERO_BACKGROUND_IMAGE).strip().lower()
+        return val if val in (HERO_BACKGROUND_IMAGE, HERO_BACKGROUND_VIDEO) else HERO_BACKGROUND_IMAGE
+
+    @staticmethod
     def save_hero_slide(
         *,
         slide_id: int | None,
@@ -731,6 +745,13 @@ class WebsiteAdminProvider:
         subtitle: str,
         description: str,
         image: str,
+        background_type: str,
+        video_path: str | None = None,
+        video_thumbnail: str | None = None,
+        autoplay: bool,
+        loop: bool,
+        muted: bool,
+        plays_inline: bool,
         cta_text: str,
         cta_url: str,
         secondary_cta_text: str,
@@ -739,9 +760,12 @@ class WebsiteAdminProvider:
         text_alignment: str,
         sort_order: int,
         is_active: bool,
+        clear_video: bool = False,
     ):
+        from app.constants.hero_video import HERO_BACKGROUND_IMAGE, HERO_BACKGROUND_VIDEO
         from app.constants.public_nav import MAX_HERO_SLIDES
         from app.models.cms import HeroSlide
+        from app.utils.hero_video import delete_hero_video_files
 
         if slide_id:
             row = HeroSlide.query.get(slide_id)
@@ -753,9 +777,11 @@ class WebsiteAdminProvider:
             row = HeroSlide(title=title.strip() or "New Slide", image="", sort_order=sort_order)
             db.session.add(row)
 
+        bg_type = WebsiteAdminProvider._parse_background_type(background_type)
         row.title = title.strip()
         row.subtitle = subtitle.strip()
         row.description = description.strip()
+        row.background_type = bg_type
         row.image = WebsiteAdminProvider._normalize_media_path(image)
         row.cta_text = cta_text.strip()
         row.cta_url = cta_url.strip()
@@ -763,10 +789,46 @@ class WebsiteAdminProvider:
         row.secondary_cta_url = secondary_cta_url.strip()
         row.overlay_opacity = WebsiteAdminProvider._parse_overlay(overlay_opacity)
         row.text_alignment = WebsiteAdminProvider._parse_text_alignment(text_alignment)
+        row.autoplay = bool(autoplay)
+        row.loop = bool(loop)
+        row.muted = bool(muted)
+        row.plays_inline = bool(plays_inline)
         row.sort_order = sort_order
         row.is_active = is_active
+
+        if clear_video and row.video_path:
+            delete_hero_video_files(row.video_path, row.video_thumbnail or "")
+            row.video_path = ""
+            row.video_thumbnail = ""
+
+        if bg_type == HERO_BACKGROUND_VIDEO:
+            if video_path:
+                if row.video_path and row.video_path != video_path:
+                    delete_hero_video_files(row.video_path, row.video_thumbnail or "")
+                row.video_path = video_path
+            if video_thumbnail is not None:
+                row.video_thumbnail = video_thumbnail or ""
+        else:
+            if row.video_path:
+                delete_hero_video_files(row.video_path, row.video_thumbnail or "")
+            row.video_path = ""
+            row.video_thumbnail = ""
+
         db.session.flush()
         return row
+
+    @staticmethod
+    def delete_hero_slide_video(slide_id: int) -> bool:
+        from app.models.cms import HeroSlide
+        from app.utils.hero_video import delete_hero_video_files
+
+        row = HeroSlide.query.get(slide_id)
+        if not row or not row.video_path:
+            return False
+        delete_hero_video_files(row.video_path, row.video_thumbnail or "")
+        row.video_path = ""
+        row.video_thumbnail = ""
+        return True
 
     @staticmethod
     def delete_hero_slide(slide_id: int) -> bool:

@@ -104,7 +104,7 @@ def _validate_file(file: FileStorage, folder: str) -> tuple[str | None, str | No
     if ext not in ALLOWED_EXTENSIONS.get(media_type, frozenset()):
         if ext not in ALL_ALLOWED_EXTENSIONS:
             return None, f"Extension .{ext} not permitted."
-    max_size = current_app.config.get("MEDIA_MAX_FILE_SIZE", 20 * 1024 * 1024)
+    max_size = current_app.config.get("MEDIA_MAX_FILE_SIZE", 100 * 1024 * 1024)
     file.stream.seek(0, os.SEEK_END)
     size = file.stream.tell()
     file.stream.seek(0)

@@ -65,6 +65,9 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
 }
 
 body {
@@ -77,6 +80,10 @@ body {
     flex-direction: column;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
 }
 
 a {
@@ -87,6 +94,9 @@ a {
     flex: 1;
     position: relative;
     z-index: 1;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 .site-footer {
@@ -157,6 +167,8 @@ a {
     right: 0;
     left: 0;
     z-index: 1030;
+    width: 100%;
+    max-width: 100%;
 }
 
 .site-header {

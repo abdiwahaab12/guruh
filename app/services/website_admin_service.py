@@ -147,6 +147,7 @@ class WebsiteAdminService:
         ctx["slide_id"] = slide_id
         ctx["form"] = WebsiteHeroSlideForm()
         ctx["media_assets"] = WebsiteAdminProvider.list_media_assets("content")
+        ctx["hero_video_delete_form"] = WebsiteHeroSlideActionForm()
         return ctx
 
     @staticmethod
@@ -156,6 +157,11 @@ class WebsiteAdminService:
         form.subtitle.data = slide.subtitle
         form.description.data = slide.description
         form.image.data = slide.image
+        form.background_type.data = getattr(slide, "background_type", None) or "image"
+        form.autoplay.data = getattr(slide, "autoplay", True)
+        form.loop.data = getattr(slide, "loop", True)
+        form.muted.data = getattr(slide, "muted", True)
+        form.plays_inline.data = getattr(slide, "plays_inline", True)
         form.cta_text.data = slide.cta_text
         form.cta_url.data = slide.cta_url
         form.secondary_cta_text.data = slide.secondary_cta_text
@@ -546,16 +552,48 @@ class WebsiteAdminService:
         )
 
     @staticmethod
-    def save_hero_slide(form_data: dict, *, ip_address: str | None) -> SaveResultDTO:
+    def save_hero_slide(
+        form_data: dict,
+        *,
+        files=None,
+        ip_address: str | None,
+    ) -> SaveResultDTO:
+        from app.constants.hero_video import HERO_BACKGROUND_VIDEO
+        from app.utils.hero_video import save_hero_video_file
+
         slide_id_raw = form_data.get("slide_id", "")
         slide_id = int(slide_id_raw) if str(slide_id_raw).isdigit() and int(slide_id_raw) > 0 else None
+        background_type = form_data.get("background_type", "image")
+        video_path = None
+        video_thumbnail = None
+
         try:
+            if background_type == HERO_BACKGROUND_VIDEO and files:
+                upload = files.get("hero_video")
+                if upload and upload.filename:
+                    fallback = form_data.get("image", "")
+                    saved_path, thumb_path, err = save_hero_video_file(
+                        upload,
+                        fallback_image=fallback,
+                    )
+                    if err:
+                        return SaveResultDTO(False, err)
+                    video_path = saved_path
+                    video_thumbnail = thumb_path
+
             row = WebsiteAdminProvider.save_hero_slide(
                 slide_id=slide_id,
                 title=form_data.get("title", ""),
                 subtitle=form_data.get("subtitle", ""),
                 description=form_data.get("description", ""),
                 image=form_data.get("image", ""),
+                background_type=background_type,
+                video_path=video_path,
+                video_thumbnail=video_thumbnail,
+                autoplay=form_data.get("autoplay") in ("1", "true", "on", "yes", "y", True),
+                loop=form_data.get("loop") in ("1", "true", "on", "yes", "y", True),
+                muted=form_data.get("muted") in ("1", "true", "on", "yes", "y", True),
+                plays_inline=form_data.get("plays_inline") in ("1", "true", "on", "yes", "y", True),
                 cta_text=form_data.get("cta_text", ""),
                 cta_url=form_data.get("cta_url", ""),
                 secondary_cta_text=form_data.get("secondary_cta_text", ""),
@@ -569,6 +607,17 @@ class WebsiteAdminService:
                 return SaveResultDTO(False, "Maximum of 5 hero slides allowed.")
             if not row:
                 return SaveResultDTO(False, "Hero slide not found.")
+
+            if background_type == HERO_BACKGROUND_VIDEO:
+                has_video = bool(video_path)
+                if not has_video and slide_id:
+                    existing = WebsiteAdminProvider.get_hero_slide(slide_id)
+                    has_video = bool(existing and existing.video_path)
+                if not has_video:
+                    return SaveResultDTO(
+                        False,
+                        "Video background requires an uploaded MP4 or WEBM file.",
+                    )
 
             ok = WebsiteAdminProvider.safe_commit(
                 action="website.hero_slide.update" if slide_id else "website.hero_slide.create",
@@ -586,9 +635,45 @@ class WebsiteAdminService:
                 resource_id=row.id,
                 redirect_url=url_for("admin.website_page", slug="home"),
             )
+        except Exception as exc:
+            WebsiteAdminProvider.rollback()
+            from flask import current_app
+
+            current_app.logger.exception("save_hero_slide failed")
+            msg = "Failed to save hero slide."
+            err_text = str(exc).lower()
+            if "unknown column" in err_text or "loop" in err_text:
+                msg = (
+                    "Failed to save hero slide. Database columns may be missing — "
+                    "run: python scripts/apply_hero_video_migration.py"
+                )
+            elif current_app.debug:
+                msg = f"Failed to save hero slide: {exc}"
+            return SaveResultDTO(False, msg)
+
+    @staticmethod
+    def delete_hero_slide_video(slide_id: int, *, ip_address: str | None) -> SaveResultDTO:
+        try:
+            if not WebsiteAdminProvider.delete_hero_slide_video(slide_id):
+                return SaveResultDTO(False, "No hero video to delete.")
+            ok = WebsiteAdminProvider.safe_commit(
+                action="website.hero_slide.video_delete",
+                resource_type="hero_slide",
+                resource_id=str(slide_id),
+                details="Deleted hero background video",
+                user_id=current_user.id,
+                ip=ip_address or "",
+            )
+            if not ok:
+                return SaveResultDTO(False, "Failed to delete hero video.")
+            return SaveResultDTO(
+                True,
+                "Hero video deleted.",
+                redirect_url=url_for("admin.website_hero_slide_edit", slide_id=slide_id),
+            )
         except Exception:
             WebsiteAdminProvider.rollback()
-            return SaveResultDTO(False, "Failed to save hero slide.")
+            return SaveResultDTO(False, "Failed to delete hero video.")
 
     @staticmethod
     def hero_slide_action(slide_id: int, action: str, *, ip_address: str | None) -> SaveResultDTO:

@@ -24,6 +24,7 @@ MIGRATION_SCRIPTS = (
     "scripts/apply_job_listing_details_migration.py",
     "scripts/apply_messages_inbox_migration.py",
     "scripts/apply_hero_slides_migration.py",
+    "scripts/apply_hero_video_migration.py",
 )
 
 

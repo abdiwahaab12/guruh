@@ -131,13 +131,33 @@ def register_website_routes(admin_bp) -> None:
             form_data = request.form.to_dict(flat=True)
             if slide_id:
                 form_data["slide_id"] = str(slide_id)
-            result = WebsiteAdminService.save_hero_slide(form_data, ip_address=request.remote_addr)
+            result = WebsiteAdminService.save_hero_slide(
+                form_data,
+                files=request.files,
+                ip_address=request.remote_addr,
+            )
             flash(result.message, "success" if result.success else "danger")
             if result.success and result.redirect_url:
                 return redirect(result.redirect_url)
 
         ctx["form"] = form
         return render_template("admin/website/hero_slide_edit.html", **ctx)
+
+    @admin_bp.route("/website/pages/home/hero-slides/<int:slide_id>/video/delete", methods=["POST"])
+    @can_manage_pages
+    def website_hero_slide_video_delete(slide_id: int):
+        form = WebsiteHeroSlideActionForm()
+        if not form.validate_on_submit():
+            flash("Invalid request.", "danger")
+            return redirect(url_for("admin.website_hero_slide_edit", slide_id=slide_id))
+        result = WebsiteAdminService.delete_hero_slide_video(
+            slide_id,
+            ip_address=request.remote_addr,
+        )
+        flash(result.message, "success" if result.success else "danger")
+        if result.redirect_url:
+            return redirect(result.redirect_url)
+        return redirect(url_for("admin.website_hero_slide_edit", slide_id=slide_id))
 
     @admin_bp.route("/website/pages/home/hero-slides/<int:slide_id>/<action>", methods=["POST"])
     @can_manage_pages

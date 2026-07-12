@@ -35,13 +35,27 @@
             {% set slide_image = slide.image or (page_banner_image if page_banner_image is defined else '') %}
             {% set slide_overlay = slide.overlay_opacity if slide.overlay_opacity is defined else 0.65 %}
             {% set slide_align = slide.text_alignment if slide.text_alignment is defined else 'left' %}
+            {% set is_video = slide.background_type == 'video' and slide.video_path %}
             <div class="carousel-item{% if loop.first %} active{% endif %}"
                  role="group"
                  aria-roledescription="slide"
                  aria-label="{{ loop.index }} of {{ slides|length }}">
-                <div class="hero-slide{{ hero_media_class(slide_image) }}"
+                <div class="hero-slide{{ hero_media_class(slide_image) if not is_video else ' has-media' }}"
                      style="--hero-overlay-opacity: {{ slide_overlay }};">
-                    {% if slide_image %}
+                    {% if is_video %}
+                    <video class="hero-slide-video"
+                           aria-hidden="true"
+                           {% if slide.autoplay %}autoplay{% endif %}
+                           {% if slide.muted %}muted{% endif %}
+                           {% if slide.loop %}loop{% endif %}
+                           {% if slide.plays_inline %}playsinline{% endif %}
+                           preload="metadata"
+                           {% if slide.video_thumbnail %}poster="{{ url_for('static', filename=slide.video_thumbnail) }}"
+                           {% elif slide_image %}poster="{{ url_for('static', filename=slide_image) }}"{% endif %}>
+                        <source src="{{ url_for('static', filename=slide.video_path) }}"
+                                type="{{ 'video/webm' if slide.video_path.endswith('.webm') else 'video/mp4' }}">
+                    </video>
+                    {% elif slide_image %}
                     <div class="hero-slide-bg" style="{{ hero_bg_image_style(slide_image) }}" aria-hidden="true"></div>
                     {% endif %}
                     <div class="hero-overlay" aria-hidden="true"></div>
@@ -95,7 +109,7 @@
         {% endif %}
 
         <div class="hero-bottom-meta">
-            <div class="container">
+            <div class="container-fluid px-3 px-lg-4">
                 <div class="row align-items-end g-3">
                     {% if trust_badges %}
                     <div class="col-lg-7">
